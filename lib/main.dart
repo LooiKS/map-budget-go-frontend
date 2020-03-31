@@ -59,3 +59,51 @@ class MainAppState extends State<MainApp> {
     );
   }
 }
+
+class MyHomePage extends StatefulWidget {
+  final toggleBrightness;
+
+  MyHomePage(
+      {Key key, this.title = 'User Settings', @required this.toggleBrightness})
+      : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Container(
+        color: Colors.amber,
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            DrawerHeader(
+              child: Container(
+                child: Text(
+                  'BudgetGo',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('User Settings'),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      UserSetting(toggleBrightness: widget.toggleBrightness))),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

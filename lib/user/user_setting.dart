@@ -4,20 +4,20 @@ import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MyHomePage extends StatefulWidget {
+class UserSetting extends StatefulWidget {
   final toggleBrightness;
 
-  MyHomePage(
+  UserSetting(
       {Key key, this.title = 'User Settings', @required this.toggleBrightness})
       : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _UserSettingState createState() => _UserSettingState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _UserSettingState extends State<UserSetting> {
   int themeValue = 10;
   String defCurrency = 'loading';
   bool receiveNoti = true, allowPhoneSearch = true;
