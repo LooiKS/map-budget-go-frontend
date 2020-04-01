@@ -47,18 +47,20 @@ class _UserSettingState extends State<UserSetting> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _buildGeneralDivider(),
-          _buildCurrencyListTile(context),
-          _buildNotiListTile(),
-          _buildThemeListTile(context),
-          _buildPhoneSearchListTile(),
-          _buildHelpDivider(),
-          _buildAboutListTile(context),
-          _buildContactUsListTile(context)
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildGeneralDivider(),
+            _buildCurrencyListTile(context),
+            _buildNotiListTile(),
+            _buildThemeListTile(context),
+            _buildPhoneSearchListTile(),
+            _buildHelpDivider(),
+            _buildAboutListTile(context),
+            _buildContactUsListTile(context)
+          ],
+        ),
       ),
     );
   }
