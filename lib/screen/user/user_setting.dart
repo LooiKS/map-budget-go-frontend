@@ -1,8 +1,8 @@
 import 'package:budgetgo/constant/currency.dart';
-import 'package:budgetgo/user/about.dart';
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'about.dart';
 
 class UserSetting extends StatefulWidget {
   final toggleBrightness;
