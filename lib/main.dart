@@ -1,7 +1,7 @@
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './screen/home_page/home_page.dart';
+import './screen/splash_screen/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,9 +53,7 @@ class MainAppState extends State<MainApp> {
         brightness: brightness,
         primarySwatch: Colors.orange,
       ),
-      home: MyHomePage(
-        toggleBrightness: toggleBrightness,
-      ),
+      home: SplashScreen(toggleBrightness: toggleBrightness),
     );
   }
 }
