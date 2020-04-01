@@ -1,3 +1,4 @@
+import 'package:budgetgo/screen/profile/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import '../user/user_setting.dart';
 import './oval-right-clipper.dart';
@@ -31,10 +32,10 @@ class _MyHomePageState extends State<MyHomePage> {
     print(choice);
     switch (choice) {
       case "My profile":
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => ProfilePage()),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
         break;
 
       case "Settings":
@@ -121,17 +122,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   Container(
-                    height: 90,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
+                      width: 100.0,
+                      height: 100.0,
+                      decoration: new BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                            colors: [Colors.orange, Colors.deepOrange])),
-                    child: CircleAvatar(
-                      radius: 40,
-                      // backgroundImage: AssetImage("assets/img/mario.png"),
-                    ),
-                  ),
+                        border: Border.all(
+                          color: Colors.orange,
+                          width: 5,
+                        ),
+                        image: new DecorationImage(
+                          image: new ExactAssetImage('assets/images/as.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
                   SizedBox(height: 5.0),
                   Text(
                     "Maria Chin",

@@ -1,4 +1,3 @@
-import './screen/user/user_setting.dart';
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
