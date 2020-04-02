@@ -1,7 +1,9 @@
 import 'package:budgetgo/screen/profile/ProfilePage.dart';
 import 'package:flutter/material.dart';
+import '../../utils/custom_shape.dart';
 import '../user/user_setting.dart';
 import './oval-right-clipper.dart';
+import '../trips/trips_main_page.dart';
 
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
@@ -21,6 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final Color active = Colors.grey.shade800;
   final Color divider = Colors.grey.shade600;
   int currentPage;
+  String appBarTitle = "Home";
 
   @override
   void initState() {
@@ -51,16 +54,12 @@ class _MyHomePageState extends State<MyHomePage> {
       case 0:
         return Center(
           child: Container(
-            child: Text("Home Page"),
+            child: Text("Home"),
           ),
         );
 
       case 1:
-        return Center(
-          child: Container(
-            child: Text("Trips"),
-          ),
-        );
+        return TripsMainPage();
 
       case 2:
         return Center(
@@ -78,11 +77,32 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void onBottomNavTabTapped(int index) {
+    setState(() {
+      currentPage = index;
+      switch (index) {
+        case 0:
+          appBarTitle = "Home";
+          break;
+        case 1:
+          appBarTitle = "Trips";
+          break;
+        case 2:
+          appBarTitle = "Budget";
+          break;
+        case 3:
+          appBarTitle = "Friends";
+          break;
+      }
+    });
+    print(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home Page"),
+        title: Text(appBarTitle),
         shape: CustomShapeBorder(),
       ),
       body: getPage(currentPage),
@@ -90,9 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: AnimatedBottomNav(
         currentIndex: currentPage,
         onChange: (index) {
-          setState(() {
-            currentPage = index;
-          });
+          onBottomNavTabTapped(index);
         },
       ),
     );
@@ -171,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget buildDrawerRow(IconData icon, String title, {bool showBadge = false}) {
+  GestureDetector buildDrawerRow(IconData icon, String title, {bool showBadge = false}) {
     final TextStyle tStyle = TextStyle(color: active, fontSize: 16.0);
     return GestureDetector(
       onTap: () {
@@ -368,20 +386,5 @@ class BottomNavItem extends StatelessWidget {
                     )
                 ],
               ));
-  }
-}
-
-class CustomShapeBorder extends ContinuousRectangleBorder {
-  @override
-  Path getOuterPath(Rect size, {TextDirection textDirection}) {
-    Path path = Path();
-    path.lineTo(0, size.height + 15);
-    path.quadraticBezierTo(
-        size.width / 4, size.height - 15, size.width / 2, size.height);
-    path.quadraticBezierTo(
-        3 / 4 * size.width, size.height + 20, size.width, size.height + 10);
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
   }
 }
