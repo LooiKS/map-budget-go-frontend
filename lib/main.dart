@@ -1,8 +1,6 @@
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './screen/home_page/home_page.dart';
-import './screen/login/login.dart';
 import './screen/splash_screen/splash_screen.dart';
 
 void main() async {
