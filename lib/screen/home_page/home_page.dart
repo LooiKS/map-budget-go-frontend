@@ -1,6 +1,6 @@
-import 'package:budgetgo/screen/profile/ProfilePage.dart';
+import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
-import '../../utils/custom_shape.dart';
+import '../../widget/custom_shape.dart';
 import '../user/user_setting.dart';
 import './oval_right_clipper.dart';
 import '../signout/signout.dart';

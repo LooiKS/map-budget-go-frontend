@@ -31,8 +31,6 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-
-
   Widget _passwordEntryField(String title) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -97,10 +95,13 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _text.text.isEmpty ? _validate = true : _validate = false;
         });
-        if (_validate == false){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(toggleBrightness: widget.toggleBrightness)));
+        if (_validate == false) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      MyHomePage(toggleBrightness: widget.toggleBrightness)));
         }
-         
       },
       // onTap: () {
       //    Navigator.push(
@@ -122,7 +123,8 @@ class _LoginPageState extends State<LoginPage> {
             color: Color(0xfffbb448)),
         child: Text(
           'Login',
-          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -195,7 +197,6 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
-            
             ),
           ),
           Container(
@@ -213,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
       text: TextSpan(children: [
         TextSpan(
           text: 'Budget',
-          style: TextStyle(color: Colors.white, fontSize: 30),
+          style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
         ),
         TextSpan(
           text: 'Go',
@@ -316,10 +317,10 @@ class _LoginPageState extends State<LoginPage> {
             alignment: Alignment.topCenter,
             child: _createAccountLabel(),
           ),
-           Positioned(
-               top: -MediaQuery.of(context).size.height * .15,
-               right: -MediaQuery.of(context).size.width * .4,
-               child: BezierContainer())
+          Positioned(
+              top: -MediaQuery.of(context).size.height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              child: BezierContainer())
         ],
       ),
     )));
