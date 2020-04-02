@@ -1,6 +1,7 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import '../home_page/home_page.dart';
+import '../login/login.dart';
 
 class SplashScreen extends StatefulWidget {
   final toggleBrightness;
@@ -19,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => MyHomePage(toggleBrightness: widget.toggleBrightness),
+              builder: (context) => LoginPage(toggleBrightness: widget.toggleBrightness),
             ));
     });
   }

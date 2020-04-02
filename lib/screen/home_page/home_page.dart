@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../../utils/custom_shape.dart';
 import '../user/user_setting.dart';
 import './oval-right-clipper.dart';
-import '../trips/trips_main_page.dart';
+import '../signout/signout.dart';
+//import '../trips/trips_main_page.dart';
 
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
@@ -59,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
       case 1:
-        return TripsMainPage();
+        // return TripsMainPage();
 
       case 2:
         return Center(
@@ -136,7 +137,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         Icons.power_settings_new,
                         color: active,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => LogoutPage(toggleBrightness: widget.toggleBrightness)));
+
+                      },
                     ),
                   ),
                   Container(

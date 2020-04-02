@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
           _text.text.isEmpty ? _validate = true : _validate = false;
         });
         if (_validate == false){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(toggleBrightness: widget.toggleBrightness)));
         }
          
       },

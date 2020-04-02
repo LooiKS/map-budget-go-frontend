@@ -26,7 +26,7 @@ class _LogoutPageState extends State<LogoutPage> {
   Widget _submitButton() {
     return InkWell(
       onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage(toggleBrightness: widget.toggleBrightness)));
         
          
       },
