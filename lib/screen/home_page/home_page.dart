@@ -5,7 +5,7 @@ import '../user/user_setting.dart';
 import './oval_right_clipper.dart';
 import '../signout/signout.dart';
 import '../trips/trips_main_page.dart';
-import '../notification/notification_page.dart';
+// import '../notification/notification_page.dart';
 
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
@@ -50,8 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
 
       case "Notifications":
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => NotificationPage()));
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (context) => NotificationPage()));
         break;
     }
   }

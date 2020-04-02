@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 
+
 class TripsDetail extends StatefulWidget {
   @override
   _TripsDetailState createState() => _TripsDetailState();
@@ -26,7 +27,7 @@ class _TripsDetailState extends State<TripsDetail> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Trips To Bali",
+          "Trip To Bali",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         elevation: 0,

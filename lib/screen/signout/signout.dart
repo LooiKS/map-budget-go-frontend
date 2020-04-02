@@ -1,6 +1,6 @@
 import 'package:budgetgo/screen/login/login.dart';
 import 'package:flutter/material.dart';
-import '../../Widget/bezierContainer.dart';
+import '../../widget/bezier_container.dart';
 
 class LogoutPage extends StatefulWidget {
   final toggleBrightness;

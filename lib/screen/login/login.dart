@@ -5,7 +5,7 @@ import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 // import 'signup.dart';
 //import 'package:google_fonts/google_fonts.dart';
 
-import '../../Widget/bezierContainer.dart';
+import '../../widget/bezier_container.dart';
 import '../home_page/home_page.dart';
 
 class LoginPage extends StatefulWidget {
