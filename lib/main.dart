@@ -2,6 +2,7 @@ import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './screen/home_page/home_page.dart';
+import './screen/login/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,7 +54,7 @@ class MainAppState extends State<MainApp> {
         brightness: brightness,
         primarySwatch: Colors.orange,
       ),
-      home: MyHomePage(
+      home: LoginPage(
         toggleBrightness: toggleBrightness,
       ),
     );
