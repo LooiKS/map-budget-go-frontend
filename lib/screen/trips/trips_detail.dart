@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../utils/custom_shape.dart';
+import '../../widget/custom_shape.dart';
 
 class TripsDetail extends StatefulWidget {
   @override
