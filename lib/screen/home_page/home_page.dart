@@ -2,7 +2,7 @@ import 'package:budgetgo/screen/profile/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import '../../utils/custom_shape.dart';
 import '../user/user_setting.dart';
-import './oval-right-clipper.dart';
+import './oval_right_clipper.dart';
 import '../signout/signout.dart';
 import '../trips/trips_main_page.dart';
 import '../notification/notification_page.dart';
