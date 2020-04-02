@@ -20,7 +20,6 @@ class MapScreenState extends State<ProfilePage>
   Widget build(BuildContext context) {
     return new Scaffold(
         body: new Container(
-      // color: Colors.white,
       child: new ListView(
         children: <Widget>[
           Column(
@@ -71,7 +70,7 @@ class MapScreenState extends State<ProfilePage>
                                 height: 140.0,
                                 decoration: new BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(),
+                                  border: Border.all(width: 3),
                                   image: new DecorationImage(
                                     image: new ExactAssetImage(
                                         'assets/images/as.png'),
@@ -101,7 +100,6 @@ class MapScreenState extends State<ProfilePage>
                 ),
               ),
               new Container(
-                // color: Colors.black87,
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 25.0),
                   child: new Column(
@@ -131,7 +129,52 @@ class MapScreenState extends State<ProfilePage>
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  _status ? _getEditIcon() : new Container(),
+                                  Row(
+                                    children: <Widget>[
+                                      RaisedButton(
+                                        child: new Text("Qr Code"),
+                                        textColor: Colors.white,
+                                        color: Colors.red,
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return Dialog(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40),
+                                                    ),
+                                                    child: Container(
+                                                      height: 400.0,
+                                                      width: 400.0,
+                                                      padding:
+                                                          EdgeInsets.all(20),
+                                                      child: Column(
+                                                        children: <Widget>[
+                                                          Image(
+                                                            image: new ExactAssetImage(
+                                                                'assets/images/frame.png'),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ));
+                                              });
+                                        },
+                                        shape: new RoundedRectangleBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(
+                                                    20.0)),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 15.0),
+                                      ),
+                                      _status
+                                          ? _getEditIcon()
+                                          : new Container(),
+                                    ],
+                                  )
                                 ],
                               )
                             ],
@@ -139,6 +182,64 @@ class MapScreenState extends State<ProfilePage>
                       Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
+                          child: new Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  child: new Text(
+                                    'Username',
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                flex: 2,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  child: new Text(
+                                    'User ID',
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                flex: 2,
+                              ),
+                            ],
+                          )),
+                      Padding(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: new Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Flexible(
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 10.0),
+                                  child: new TextField(
+                                    controller: TextEditingController()
+                                      ..text = 'maria97',
+                                    enabled: false,
+                                  ),
+                                ),
+                                flex: 2,
+                              ),
+                              Flexible(
+                                child: new TextField(
+                                  controller: TextEditingController()
+                                    ..text = 'BG00010',
+                                  enabled: false,
+                                ),
+                                flex: 2,
+                              ),
+                            ],
+                          )),
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 15.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
@@ -157,8 +258,7 @@ class MapScreenState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 2.0),
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
@@ -177,77 +277,7 @@ class MapScreenState extends State<ProfilePage>
                           )),
                       Padding(
                           padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'User ID',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 2.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Flexible(
-                                child: new TextField(
-                                  controller: TextEditingController()
-                                    ..text = 'BG00010',
-                                  enabled: false,
-                                ),
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'Username',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 2.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Flexible(
-                                child: new TextField(
-                                  controller: TextEditingController()
-                                    ..text = 'maria97',
-                                  enabled: false,
-                                ),
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
+                              left: 25.0, right: 25.0, top: 15.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
@@ -266,8 +296,7 @@ class MapScreenState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 2.0),
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
@@ -282,7 +311,7 @@ class MapScreenState extends State<ProfilePage>
                           )),
                       Padding(
                           padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
+                              left: 25.0, right: 25.0, top: 15.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
@@ -301,8 +330,7 @@ class MapScreenState extends State<ProfilePage>
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 2.0),
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
@@ -317,60 +345,35 @@ class MapScreenState extends State<ProfilePage>
                           )),
                       Padding(
                           padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
+                              left: 25.0, right: 25.0, top: 15.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  child: new Text(
-                                    'Mobile',
+                              new Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  new Text(
+                                    'Mobile Number',
                                     style: TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                flex: 2,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  child: new Text(
-                                    'Reference Code',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                flex: 2,
+                                ],
                               ),
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 2.0),
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: new Row(
                             mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 10.0),
-                                  child: new TextField(
-                                    decoration: const InputDecoration(
-                                        hintText: "Enter Mobile Number"),
-                                    enabled: !_status,
-                                  ),
-                                ),
-                                flex: 2,
-                              ),
-                              Flexible(
+                              new Flexible(
                                 child: new TextField(
-                                  controller: TextEditingController()
-                                    ..text = 'BG1zA',
-                                  enabled: false,
+                                  decoration: const InputDecoration(
+                                      hintText: "Enter Mobile Number"),
+                                  enabled: !_status,
                                 ),
-                                flex: 2,
                               ),
                             ],
                           )),

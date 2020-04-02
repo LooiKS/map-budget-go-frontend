@@ -1,10 +1,6 @@
 import 'package:budgetgo/screen/login/login.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-
-
-import '../../Widget/bezierContainer.dart';
-import '../home_page/home_page.dart';
+import '../../widget/bezier_container.dart';
 
 class LogoutPage extends StatefulWidget {
   final toggleBrightness;
@@ -20,15 +16,14 @@ class LogoutPage extends StatefulWidget {
 }
 
 class _LogoutPageState extends State<LogoutPage> {
-  
-  
-  
   Widget _submitButton() {
     return InkWell(
       onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage(toggleBrightness: widget.toggleBrightness)));
-        
-         
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    LoginPage(toggleBrightness: widget.toggleBrightness)));
       },
       // onTap: () {
       //    Navigator.push(
@@ -50,13 +45,13 @@ class _LogoutPageState extends State<LogoutPage> {
             color: Color(0xfffbb448)),
         child: Text(
           'Proceed to Login Screen',
-          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
     );
   }
 
-  
   Widget _title() {
     return RichText(
       textAlign: TextAlign.center,
@@ -79,17 +74,18 @@ class _LogoutPageState extends State<LogoutPage> {
       text: TextSpan(children: [
         TextSpan(
           text: 'You are now logget out.\n\n\n',
-          style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
         ),
         TextSpan(
-          text: 'Thank you for using BudgetGO mobile application. Hope you enjoyed your trip.',
+          text:
+              'Thank you for using BudgetGO mobile application. Hope you enjoyed your trip.',
           style: TextStyle(color: Colors.white, fontSize: 17),
         ),
       ]),
     );
   }
 
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,10 +124,10 @@ class _LogoutPageState extends State<LogoutPage> {
               ],
             ),
           ),
-           Positioned(
-               top: -MediaQuery.of(context).size.height * .15,
-               right: -MediaQuery.of(context).size.width * .4,
-               child: BezierContainer())
+          Positioned(
+              top: -MediaQuery.of(context).size.height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              child: BezierContainer())
         ],
       ),
     )));

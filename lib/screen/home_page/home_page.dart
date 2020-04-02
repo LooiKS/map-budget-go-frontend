@@ -1,10 +1,11 @@
-import 'package:budgetgo/screen/profile/ProfilePage.dart';
+import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
-import '../../utils/custom_shape.dart';
+import '../../widget/custom_shape.dart';
 import '../user/user_setting.dart';
 import './oval_right_clipper.dart';
 import '../signout/signout.dart';
 import '../trips/trips_main_page.dart';
+// import '../notification/notification_page.dart';
 
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
@@ -46,6 +47,11 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
                 UserSetting(toggleBrightness: widget.toggleBrightness)));
+        break;
+
+      case "Notifications":
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (context) => NotificationPage()));
         break;
     }
   }
@@ -138,8 +144,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: active,
                       ),
                       onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => LogoutPage(toggleBrightness: widget.toggleBrightness)));
-
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LogoutPage(
+                                    toggleBrightness:
+                                        widget.toggleBrightness)));
                       },
                     ),
                   ),
@@ -193,7 +203,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  GestureDetector buildDrawerRow(IconData icon, String title, {bool showBadge = false}) {
+  GestureDetector buildDrawerRow(IconData icon, String title,
+      {bool showBadge = false}) {
     final TextStyle tStyle = TextStyle(color: active, fontSize: 16.0);
     return GestureDetector(
       onTap: () {
@@ -227,7 +238,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   borderRadius: BorderRadius.circular(5.0),
                 ),
                 child: Text(
-                  "10+",
+                  "2",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 12.0,
@@ -269,7 +280,7 @@ class AnimatedBottomNav extends StatelessWidget {
             child: InkWell(
               onTap: () => onChange(1),
               child: BottomNavItem(
-                icon: Icons.local_airport,
+                icon: Icons.place,
                 title: "Trips",
                 isActive: currentIndex == 1,
               ),
@@ -279,7 +290,7 @@ class AnimatedBottomNav extends StatelessWidget {
             child: InkWell(
               onTap: () => onChange(2),
               child: BottomNavItem(
-                icon: Icons.attach_money,
+                icon: Icons.monetization_on,
                 title: "Budget",
                 isActive: currentIndex == 2,
               ),
@@ -289,7 +300,7 @@ class AnimatedBottomNav extends StatelessWidget {
             child: InkWell(
               onTap: () => onChange(3),
               child: BottomNavItem(
-                icon: Icons.chat,
+                icon: Icons.person,
                 title: "Friends",
                 isActive: currentIndex == 3,
               ),
@@ -379,7 +390,7 @@ class BottomNavItem extends StatelessWidget {
                           maxHeight: 20,
                         ),
                         child: Text(
-                          "10",
+                          "2",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 11,

@@ -8,7 +8,7 @@ class TripsMainPage extends StatefulWidget {
 }
 
 class _TripsMainPageState extends State<TripsMainPage> {
-  List<String> items = ["Trip to Ocean", "Trip to Sky"];
+  List<String> items = ["Trip To Bali", "Trip to Sky"];
 
   Widget buildList(BuildContext ctxt, int index) {
     return Card(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../utils/custom_shape.dart';
+import '../../widget/custom_shape.dart';
+
 
 class TripsDetail extends StatefulWidget {
   @override
@@ -8,12 +9,27 @@ class TripsDetail extends StatefulWidget {
 
 class _TripsDetailState extends State<TripsDetail> {
   List<String> planTitle = ["KumKoiKum", "SuiMakMak"];
-List<String> expensesTitle = ["Hotel","Transport"];
+  List<String> expensesTitle = ["Hotel", "Transport"];
+  List<Icon> icons = [
+    Icon(
+      Icons.hotel,
+      size: 38.0,
+      color: Colors.black45,
+    ),
+    Icon(
+      Icons.motorcycle,
+      size: 38.0,
+      color: Colors.black45,
+    )
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Trips to ocean"),
+        title: Text(
+          "Trip To Bali",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         elevation: 0,
         shape: CustomShapeBorder(),
       ),
@@ -93,7 +109,7 @@ List<String> expensesTitle = ["Hotel","Transport"];
 
   Widget buildPlansCard(BuildContext ctxt, int index) {
     return Card(
-      margin: EdgeInsets.all(16.0),
+      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
       child: ListTile(
         selected: true,
         leading: Container(
@@ -106,6 +122,7 @@ List<String> expensesTitle = ["Hotel","Transport"];
                 Icon(
                   Icons.calendar_today,
                   size: 28.0,
+                  color: Colors.black45,
                 ),
                 Text(
                   "Day ${index + 1}",
@@ -116,30 +133,28 @@ List<String> expensesTitle = ["Hotel","Transport"];
             ),
           ),
         ),
-        // contentPadding: EdgeInsets.all(16.0),
         trailing: Icon(
           Icons.keyboard_arrow_right,
           size: 30.0,
         ),
         title: Text(
           planTitle[index],
-          style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
-        isThreeLine: true,
         subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 "10a.m. - Depart to ocean.",
-                style: TextStyle(),
+                style: TextStyle(color: Colors.black54),
               ),
               Text(
                 "11a.m. - Eat beside ocean.",
-                style: TextStyle(),
+                style: TextStyle(color: Colors.black54),
               ),
               Text(
                 "12p.m. - Sleep beside ocean.",
-                style: TextStyle(),
+                style: TextStyle(color: Colors.black54),
               ),
             ]),
         onTap: () {},
@@ -149,34 +164,32 @@ List<String> expensesTitle = ["Hotel","Transport"];
 
   Widget buildExpensesCard(BuildContext ctxt, int index) {
     return Card(
-      margin: EdgeInsets.all(16.0),
+      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
       child: ListTile(
         selected: true,
-        leading: Icon(Icons.hotel),
-        // contentPadding: EdgeInsets.all(16.0),
+        leading: Container(width: 48.0, child: icons[index]),
         trailing: Icon(
           Icons.keyboard_arrow_right,
           size: 30.0,
         ),
         title: Text(
           expensesTitle[index],
-          style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
-        isThreeLine: true,
         subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                "Paid by Handsome",
-                style: TextStyle(),
+                "Paid by John",
+                style: TextStyle(color: Colors.black54),
               ),
               Text(
                 "02-02-2020 10:20 a.m.",
-                style: TextStyle(),
+                style: TextStyle(color: Colors.black54),
               ),
               Text(
                 "RM 200.00",
-                style: TextStyle(),
+                style: TextStyle(color: Colors.black54),
               ),
             ]),
         onTap: () {},
@@ -198,7 +211,7 @@ class TripMemberList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80.0,
+      height: 70.0,
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         scrollDirection: Axis.horizontal,
