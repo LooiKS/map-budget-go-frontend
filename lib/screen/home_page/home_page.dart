@@ -52,6 +52,14 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => NotificationPage()));
         break;
+
+      case "Log out":
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    LogoutPage(toggleBrightness: widget.toggleBrightness)));
+        break;
     }
   }
 
