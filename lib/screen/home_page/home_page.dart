@@ -1,7 +1,7 @@
 import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
-import '../user/user_setting.dart';
+import '../user_setting/user_setting.dart';
 import './oval_right_clipper.dart';
 import '../signout/signout.dart';
 import '../trips/trips_main_page.dart';
