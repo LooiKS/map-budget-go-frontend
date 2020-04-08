@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import '../user_setting/user_setting.dart';
 import './oval_right_clipper.dart';
+import './animatedBottomNav.dart';
 import '../signout/signout.dart';
 import '../trips/trips_main_page.dart';
 import '../notification/notification_page.dart';
@@ -21,9 +22,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Color primary = Colors.white;
-  final Color active = Colors.grey.shade800;
-  final Color divider = Colors.grey.shade600;
+  Color active = Colors.grey.shade800;
   int currentPage;
   String appBarTitle = "Home";
 
@@ -33,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  void drawerChoice(String choice) {
+  void onDrawerRowTapped(String choice) {
     print(choice);
     switch (choice) {
       case "My profile":
@@ -102,7 +101,6 @@ class _MyHomePageState extends State<MyHomePage> {
           break;
       }
     });
-    print(index);
   }
 
   @override
@@ -130,7 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           padding: const EdgeInsets.only(left: 16.0, right: 40),
           decoration: BoxDecoration(
-              color: primary, boxShadow: [BoxShadow(color: Colors.black45)]),
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black45)]),
           width: 300,
           child: SafeArea(
             child: SingleChildScrollView(
@@ -156,14 +155,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                       width: 100.0,
                       height: 100.0,
-                      decoration: new BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: Colors.orange,
                           width: 5,
                         ),
-                        image: new DecorationImage(
-                          image: new ExactAssetImage('assets/images/as.png'),
+                        image: DecorationImage(
+                          image: ExactAssetImage('assets/images/as.png'),
                           fit: BoxFit.cover,
                         ),
                       )),
@@ -188,6 +187,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       showBadge: true),
                   buildDivider(),
                   buildDrawerRow(Icons.settings, "Settings"),
+                  buildDivider(),
+                  buildDrawerRow(Icons.power_settings_new, "Log out"),
                 ],
               ),
             ),
@@ -199,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Divider buildDivider() {
     return Divider(
-      color: divider,
+      color: Colors.grey.shade600,
     );
   }
 
@@ -208,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final TextStyle tStyle = TextStyle(color: active, fontSize: 16.0);
     return GestureDetector(
       onTap: () {
-        drawerChoice(title);
+        onDrawerRowTapped(title);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -249,157 +250,5 @@ class _MyHomePageState extends State<MyHomePage> {
         ]),
       ),
     );
-  }
-}
-
-class AnimatedBottomNav extends StatelessWidget {
-  final int currentIndex;
-  final Function(int) onChange;
-
-  const AnimatedBottomNav({Key key, this.currentIndex, this.onChange})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: kToolbarHeight,
-      decoration: BoxDecoration(color: Colors.white),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: InkWell(
-              onTap: () => onChange(0),
-              child: BottomNavItem(
-                icon: Icons.home,
-                title: "Home",
-                isActive: currentIndex == 0,
-              ),
-            ),
-          ),
-          Expanded(
-            child: InkWell(
-              onTap: () => onChange(1),
-              child: BottomNavItem(
-                icon: Icons.place,
-                title: "Trips",
-                isActive: currentIndex == 1,
-              ),
-            ),
-          ),
-          Expanded(
-            child: InkWell(
-              onTap: () => onChange(2),
-              child: BottomNavItem(
-                icon: Icons.monetization_on,
-                title: "Budget",
-                isActive: currentIndex == 2,
-              ),
-            ),
-          ),
-          Expanded(
-            child: InkWell(
-              onTap: () => onChange(3),
-              child: BottomNavItem(
-                icon: Icons.person,
-                title: "Friends",
-                isActive: currentIndex == 3,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class BottomNavItem extends StatelessWidget {
-  final bool isActive;
-  final IconData icon;
-  final Color activeColor;
-  final Color inactiveColor;
-  final String title;
-
-  const BottomNavItem(
-      {Key key,
-      this.isActive = false,
-      this.icon,
-      this.activeColor,
-      this.inactiveColor,
-      this.title})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-        transitionBuilder: (child, animation) {
-          return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          );
-        },
-        duration: Duration(milliseconds: 500),
-        reverseDuration: Duration(milliseconds: 200),
-        child: isActive
-            ? Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: activeColor ?? Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5.0,
-                    ),
-                    Container(
-                      width: 5.0,
-                      height: 5.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: activeColor ?? Theme.of(context).primaryColor,
-                      ),
-                    )
-                  ],
-                ),
-              )
-            : Stack(
-                children: <Widget>[
-                  Icon(
-                    icon,
-                    size: 35.0,
-                    color: inactiveColor ?? Colors.grey,
-                  ),
-                  if (title == "Trips")
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: Container(
-                        padding: EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        constraints: BoxConstraints(
-                          minWidth: 15,
-                          maxHeight: 20,
-                        ),
-                        child: Text(
-                          "2",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    )
-                ],
-              ));
   }
 }
