@@ -1,4 +1,4 @@
-import 'package:budgetgo/constant/currency.dart';
+import 'package:budgetgo/screen/user_setting/currency_dropdown.dart';
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -224,36 +224,12 @@ class _UserSettingState extends State<UserSetting> {
       subtitle: Text(defCurrency),
       onTap: () => showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-                title: Text('Default Currency'),
-                content: DropdownButton<String>(
-                    value: defCurrency,
-                    items: Currency.currency.map<DropdownMenuItem<String>>(
-                      (currencyCode) {
-                        return DropdownMenuItem(
-                          child: Text(currencyCode),
-                          value: currencyCode,
-                        );
-                      },
-                    ).toList(),
-                    onChanged: (a) {
-                      setState(() {
-                        defCurrency = a;
-                        themeValue = 100;
-                      });
-                      sharedPreferences.setString('defCurrency', a);
-                      Navigator.of(context).pop();
-                    }),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Text('Cancel'),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                  )
-                ],
-              )),
+          builder: (context) => CurrencyDropdown(onChange: (newCurrency) {
+                setState(() {
+                  defCurrency = newCurrency;
+                });
+                sharedPreferences.setString('defCurrency', newCurrency);
+              })),
     );
   }
 }
