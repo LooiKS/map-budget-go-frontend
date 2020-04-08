@@ -8,9 +8,56 @@ class TripsMainPage extends StatefulWidget {
 }
 
 class _TripsMainPageState extends State<TripsMainPage> {
+  Color titleColor = Colors.black54;
+  Color locationColor = Colors.black38;
   List<String> items = ["Trip To Bali", "Trip to Sky"];
 
-  Widget buildList(BuildContext ctxt, int index) {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      initialIndex: 0,
+      child: Scaffold(
+        appBar: buildTripsTab(),
+        body: buildTabBarView(),
+        floatingActionButton: buildFloatingActionButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      ),
+    );
+  }
+
+  PreferredSize buildTripsTab() {
+    return PreferredSize(
+        preferredSize: Size.fromHeight(100),
+        child: TabBar(
+          tabs: <Widget>[
+            Tab(icon: Icon(Icons.notifications_active), text: "In Progress"),
+            Tab(
+              icon: Icon(Icons.schedule),
+              text: "Coming Soon",
+            ),
+            Tab(
+              icon: Icon(Icons.event_available),
+              text: "Past",
+            ),
+          ],
+        ));
+  }
+
+  TabBarView buildTabBarView() {
+    return TabBarView(children: <Widget>[
+      Container(
+        child: ListView.builder(
+          itemBuilder: (BuildContext ctxt, int index) => buildList(ctxt, index),
+          itemCount: items.length,
+        ),
+      ),
+      Container(child: Text("Coming Soon")),
+      Container(child: Text("Past")),
+    ]);
+  }
+
+  Card buildList(BuildContext ctxt, int index) {
     return Card(
       child: Slidable(
         actionPane: SlidableDrawerActionPane(),
@@ -28,6 +75,9 @@ class _TripsMainPageState extends State<TripsMainPage> {
                   Text(
                     "20 NOV",
                     textAlign: TextAlign.center,
+                    style:TextStyle(
+                      fontWeight: FontWeight.bold,
+                    )
                   ),
                 ],
               ),
@@ -40,7 +90,8 @@ class _TripsMainPageState extends State<TripsMainPage> {
           ),
           title: Text(
             "${items[index]}",
-            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: titleColor, fontSize: 22.0, fontWeight: FontWeight.bold),
           ),
           isThreeLine: true,
           subtitle: Column(
@@ -49,7 +100,10 @@ class _TripsMainPageState extends State<TripsMainPage> {
                 Row(
                   children: <Widget>[
                     Icon(Icons.place),
-                    Text("Bali, Indonesia")
+                    Text(
+                      "Bali, Indonesia",
+                      style: TextStyle(color: locationColor),
+                    )
                   ],
                 ),
                 Row(
@@ -108,55 +162,17 @@ class _TripsMainPageState extends State<TripsMainPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      initialIndex: 0,
-      child: Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(100),
-            child: TabBar(
-              tabs: <Widget>[
-                Tab(
-                    icon: Icon(Icons.notifications_active),
-                    text: "In Progress"),
-                Tab(
-                  icon: Icon(Icons.schedule),
-                  text: "Coming Soon",
-                ),
-                Tab(
-                  icon: Icon(Icons.event_available),
-                  text: "Past",
-                ),
-              ],
-            )),
-        body: TabBarView(children: <Widget>[
-          Container(
-            child: ListView.builder(
-              itemBuilder: (BuildContext ctxt, int index) =>
-                  buildList(ctxt, index),
-              itemCount: items.length,
-            ),
-          ),
-          Container(child: Text("hi")),
-          Container(child: Text("hi")),
-        ]),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {},
-          label: Text(
-            "Add Trips",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 15.0,
-                fontWeight: FontWeight.bold),
-          ),
-          icon: Icon(
-            Icons.location_on,
-            color: Colors.white,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+  FloatingActionButton buildFloatingActionButton() {
+    return FloatingActionButton.extended(
+      onPressed: () {},
+      label: Text(
+        "Add Trips",
+        style: TextStyle(
+            color: Colors.white, fontSize: 15.0, fontWeight: FontWeight.bold),
+      ),
+      icon: Icon(
+        Icons.location_on,
+        color: Colors.white,
       ),
     );
   }
