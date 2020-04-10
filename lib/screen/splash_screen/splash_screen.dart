@@ -1,6 +1,5 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import '../home_page/home_page.dart';
 import '../login/login.dart';
 
 class SplashScreen extends StatefulWidget {
