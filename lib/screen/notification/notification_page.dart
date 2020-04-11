@@ -101,7 +101,13 @@ class _NotificationPageState extends State<NotificationPage> {
     return ListTile(
       selected: true,
       leading: Container(
-        child: dummyList[index].status ? buildReadedIcon() : buildUnreadIcon(),
+        child: dummyList[index].status
+            ? NoticeIcons(
+                icons: Icons.notifications_none,
+                status: dummyList[index].status)
+            : NoticeIcons(
+                icons: Icons.notification_important,
+                status: dummyList[index].status),
       ),
       contentPadding: const EdgeInsets.all(7.0),
       trailing: Icon(
@@ -120,39 +126,6 @@ class _NotificationPageState extends State<NotificationPage> {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => TripsDetail()));
       },
-    );
-  }
-
-  Icon buildReadedIcon() {
-    return Icon(
-      Icons.notifications_none,
-      size: 35.0,
-    );
-  }
-
-  Stack buildUnreadIcon() {
-    return Stack(
-      children: <Widget>[
-        Icon(
-          Icons.notification_important,
-          size: 35.0,
-        ),
-        Positioned(
-          right: 0,
-          top: 0,
-          child: Container(
-            padding: EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              color: Colors.red,
-              shape: BoxShape.circle,
-            ),
-            constraints: BoxConstraints(
-              minWidth: 10,
-              maxHeight: 10,
-            ),
-          ),
-        )
-      ],
     );
   }
 
@@ -180,5 +153,48 @@ class _NotificationPageState extends State<NotificationPage> {
                 : Colors.black26),
       ),
     ]);
+  }
+}
+
+class NoticeIcons extends StatelessWidget {
+  const NoticeIcons({
+    Key key,
+    @required this.icons,
+    @required this.status,
+  }) : super(key: key);
+
+  final IconData icons;
+  final bool status;
+
+  @override
+  Widget build(BuildContext context) {
+    return status
+        ? Icon(
+            icons,
+            size: 35.0,
+          )
+        : Stack(
+            children: <Widget>[
+              Icon(
+                icons,
+                size: 35.0,
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Container(
+                  padding: EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 10,
+                    maxHeight: 10,
+                  ),
+                ),
+              )
+            ],
+          );
   }
 }
