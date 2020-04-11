@@ -28,21 +28,6 @@ class TripMemberList extends StatelessWidget {
     );
   }
 
-  // GestureDetector buildAddMemberButton() {
-  //   return GestureDetector(
-  //     onTap: () {},
-  //     child: Column(children: <Widget>[
-  //       ClipOval(
-  //         child: Icon(
-  //           Icons.add_circle,
-  //           size: 40.0,
-  //           color: Colors.green,
-  //         ),
-  //       ),
-  //     ]),
-  //   );
-  // }
-
   GestureDetector buildMemberAvatar(int index) {
     return GestureDetector(
       onTap: () {},
