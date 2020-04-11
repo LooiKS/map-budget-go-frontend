@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AnimatedBottomNav extends StatelessWidget {
+  final state;
   final int currentIndex;
   final Function(int) onChange;
 
-  const AnimatedBottomNav({Key key, this.currentIndex, this.onChange})
+  const AnimatedBottomNav(
+      {Key key, this.state, this.currentIndex, this.onChange})
       : super(key: key);
 
   @override
@@ -14,47 +16,24 @@ class AnimatedBottomNav extends StatelessWidget {
       decoration: BoxDecoration(color: Colors.white),
       child: Row(
         children: <Widget>[
-          Expanded(
-            child: InkWell(
-              onTap: () => onChange(0),
-              child: BottomNavItem(
-                icon: Icons.home,
-                title: "Home",
-                isActive: currentIndex == 0,
-              ),
-            ),
-          ),
-          Expanded(
-            child: InkWell(
-              onTap: () => onChange(1),
-              child: BottomNavItem(
-                icon: Icons.place,
-                title: "Trips",
-                isActive: currentIndex == 1,
-              ),
-            ),
-          ),
-          Expanded(
-            child: InkWell(
-              onTap: () => onChange(2),
-              child: BottomNavItem(
-                icon: Icons.monetization_on,
-                title: "Budget",
-                isActive: currentIndex == 2,
-              ),
-            ),
-          ),
-          Expanded(
-            child: InkWell(
-              onTap: () => onChange(3),
-              child: BottomNavItem(
-                icon: Icons.person,
-                title: "Friends",
-                isActive: currentIndex == 3,
-              ),
-            ),
-          ),
+          buildExpanded(0, Icons.home, "Home"),
+          buildExpanded(1, Icons.place, "Trips"),
+          buildExpanded(2, Icons.monetization_on, "Budget"),
+          buildExpanded(3, Icons.person, "Friends"),
         ],
+      ),
+    );
+  }
+
+  Expanded buildExpanded(int index, IconData icons, String title) {
+    return Expanded(
+      child: InkWell(
+        onTap: () => onChange(index),
+        child: BottomNavItem(
+          icon: icons,
+          title: title,
+          isActive: currentIndex == index,
+        ),
       ),
     );
   }

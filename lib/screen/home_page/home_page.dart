@@ -121,9 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: buildDrawer(),
       bottomNavigationBar: AnimatedBottomNav(
         currentIndex: currentPage,
-        onChange: (index) {
-          onBottomNavTabTapped(index);
-        },
+        onChange: (index) => onBottomNavTabTapped(index),
       ),
     );
   }
@@ -133,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
       clipper: OvalRightBorderClipper(),
       child: Drawer(
         child: Container(
-          padding: const EdgeInsets.only(left: 16.0, right: 40),
+          padding: const EdgeInsets.only(left: 16.0, right: 35),
           width: 300,
           child: SafeArea(
             child: SingleChildScrollView(
@@ -207,8 +205,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  GestureDetector buildDrawerRow(IconData icon, String title,{bool showBadge = false}) {
-    final TextStyle tStyle = TextStyle(fontSize: 16.0);
+  GestureDetector buildDrawerRow(IconData icon, String title,
+      {bool showBadge = false}) {
     return GestureDetector(
       onTap: () {
         onDrawerRowTapped(title);
@@ -222,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
           SizedBox(width: 10.0),
           Text(
             title,
-            style: tStyle,
+            style: TextStyle(fontSize: 16.0),
           ),
           Spacer(),
           if (showBadge)
