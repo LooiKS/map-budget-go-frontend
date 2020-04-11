@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import './trips_detail.dart';
+import '../../main.dart';
 
 class TripsMainPage extends StatefulWidget {
   @override
@@ -8,9 +9,8 @@ class TripsMainPage extends StatefulWidget {
 }
 
 class _TripsMainPageState extends State<TripsMainPage> {
-  Color titleColor = Colors.black54;
-  Color locationColor = Colors.black38;
-  List<String> items = ["Trip To Bali", "Trip to Sky"];
+  List<String> dummyTrips = ["Trip To Bali", "Trip to Sky"];
+  List<String> dummyLocation = ["Bali, Indonesia", "Genting, Malaysia"];
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
       Container(
         child: ListView.builder(
           itemBuilder: (BuildContext ctxt, int index) => buildList(ctxt, index),
-          itemCount: items.length,
+          itemCount: dummyTrips.length,
         ),
       ),
       Container(child: Text("Coming Soon")),
@@ -72,37 +72,50 @@ class _TripsMainPageState extends State<TripsMainPage> {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Icon(Icons.calendar_today),
-                  Text(
-                    "20 NOV",
-                    textAlign: TextAlign.center,
-                    style:TextStyle(
-                      fontWeight: FontWeight.bold,
-                    )
-                  ),
+                  Text("20 NOV",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )),
                 ],
               ),
             ),
           ),
           contentPadding: EdgeInsets.all(8.0),
-          trailing: Icon(
-            Icons.keyboard_arrow_right,
-            size: 30.0,
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.keyboard_arrow_right,
+                size: 30.0,
+              ),
+            ],
           ),
-          title: Text(
-            "${items[index]}",
-            style: TextStyle(
-                color: titleColor, fontSize: 22.0, fontWeight: FontWeight.bold),
+          title: SizedBox(
+            height: 27,
+            child: Text(
+              "${dummyTrips[index]}",
+              style: TextStyle(
+                  color: key.currentState.brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black54,
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
-          isThreeLine: true,
           subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Icon(Icons.place),
                     Text(
-                      "Bali, Indonesia",
-                      style: TextStyle(color: locationColor),
+                      dummyLocation[index],
+                      style: TextStyle(
+                          color: key.currentState.brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black54),
                     )
                   ],
                 ),
@@ -147,7 +160,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
         secondaryActions: <Widget>[
           IconSlideAction(
             caption: 'More',
-            color: Colors.black45,
+            color: Colors.grey,
             icon: Icons.more_horiz,
             onTap: () {},
           ),
