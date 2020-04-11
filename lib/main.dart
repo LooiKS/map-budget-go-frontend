@@ -12,11 +12,16 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MainApp();
+    return MainApp(
+      key:key,
+    );
   }
 }
 
+var key = new GlobalKey<MainAppState>();
+
 class MainApp extends StatefulWidget {
+  MainApp({Key key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return MainAppState();

@@ -83,7 +83,7 @@ class _NotificationPageState extends State<NotificationPage> {
       secondaryActions: <Widget>[
         IconSlideAction(
           caption: 'More',
-          // color: Colors.black45,
+          color: Colors.black45,
           icon: Icons.more_horiz,
           onTap: () {},
         ),
@@ -101,18 +101,20 @@ class _NotificationPageState extends State<NotificationPage> {
     return ListTile(
       selected: true,
       leading: Container(
-        child: index < 2 ? buildUnreadIcon() : buildReadedIcon(),
+        child: dummyList[index].status ? buildReadedIcon() : buildUnreadIcon(),
       ),
       contentPadding: const EdgeInsets.all(7.0),
       trailing: Icon(
         Icons.arrow_forward_ios,
         size: 15.0,
       ),
-      title: index < 2 ? buildUnreadTitle(index) : buildReadedTitle(index),
+      title: buildUnreadTitle(index, dummyList[index].status),
       subtitle: Text(
         "${dummyList[index].username} created a trip group. You are invited. Check it more!",
-        // style: TextStyle(
-        //   color: key.currentState.brightness == Brightness.dark ?Colors.white:Colors.black26),
+        style: TextStyle(
+            color: key.currentState.brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black26),
       ),
       onTap: () {
         Navigator.of(context)
@@ -156,32 +158,16 @@ class _NotificationPageState extends State<NotificationPage> {
     );
   }
 
-  Row buildUnreadTitle(int index) {
-    return Row(children: <Widget>[
-      Text(
-        dummyList[index].title,
-        style: TextStyle(
-          fontSize: 20.0, fontWeight: FontWeight.bold,
-          // color: titleColor,
-        ),
-      ),
-      SizedBox(
-        width: 16.0,
-      ),
-      Text(
-        dummyList[index].time,
-        style: TextStyle(fontSize: 12.0),
-      ),
-    ]);
-  }
-
-  Row buildReadedTitle(int index) {
+  Row buildUnreadTitle(int index, bool status) {
     return Row(children: <Widget>[
       Text(
         dummyList[index].title,
         style: TextStyle(
           fontSize: 20.0,
-          fontWeight: FontWeight.normal,
+          fontWeight: status ? FontWeight.w500 : FontWeight.bold,
+          color: key.currentState.brightness == Brightness.dark
+              ? Colors.white
+              : Colors.black87,
         ),
       ),
       SizedBox(
@@ -189,7 +175,11 @@ class _NotificationPageState extends State<NotificationPage> {
       ),
       Text(
         dummyList[index].time,
-        style: TextStyle(fontSize: 12.0),
+        style: TextStyle(
+            fontSize: 12.0,
+            color: key.currentState.brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black26),
       ),
     ]);
   }
