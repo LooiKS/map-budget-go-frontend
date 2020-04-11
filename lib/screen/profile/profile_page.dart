@@ -147,8 +147,8 @@ class MapScreenState extends State<ProfilePage>
                                                               40),
                                                     ),
                                                     child: Container(
-                                                      height: 400.0,
-                                                      width: 400.0,
+                                                      height: 450.0,
+                                                      width: 500.0,
                                                       padding:
                                                           EdgeInsets.all(20),
                                                       child: Column(

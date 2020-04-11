@@ -38,7 +38,7 @@ class _CurrencyDropdownState extends State<CurrencyDropdown> {
         height: MediaQuery.of(context).size.height * 0.5,
         width: MediaQuery.of(context).size.width * 0.5,
         child: ListView(
-          children: Currency.currency
+          children: currency
               .where((friend) =>
                   RegExp('^(?:.*$currencyFilter).*\$').hasMatch(friend))
               .map((currencyCode) {
