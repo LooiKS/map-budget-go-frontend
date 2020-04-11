@@ -157,20 +157,20 @@ class _TripsMainPageState extends State<TripsMainPage> {
           },
         ),
         secondaryActions: <Widget>[
-          IconSlideAction(
-            caption: 'More',
-            color: Colors.grey,
-            icon: Icons.more_horiz,
-            onTap: () {},
-          ),
-          IconSlideAction(
-            caption: 'Delete',
-            color: Colors.red,
-            icon: Icons.delete,
-            onTap: () {},
-          ),
+          buildIconSlideAction("More", Colors.grey, Icons.more_horiz),
+          buildIconSlideAction("Delete", Colors.red, Icons.delete),
         ],
       ),
+    );
+  }
+
+  IconSlideAction buildIconSlideAction(
+      String caption, Color colors, IconData icons) {
+    return IconSlideAction(
+      caption: caption,
+      color: colors,
+      icon: icons,
+      onTap: () {},
     );
   }
 
