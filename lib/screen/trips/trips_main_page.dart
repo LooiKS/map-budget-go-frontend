@@ -18,8 +18,26 @@ class _TripsMainPageState extends State<TripsMainPage> {
       length: 3,
       initialIndex: 0,
       child: Scaffold(
-        appBar: buildTripsTab(),
-        body: buildTabBarView(),
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(100),
+            child: TabBar(
+              tabs: <Widget>[
+                buildTabBarTitle("In Progress", Icons.notifications_active),
+                buildTabBarTitle("Coming Soon", Icons.schedule),
+                buildTabBarTitle("Past", Icons.event_available),
+              ],
+            )),
+        body: TabBarView(children: <Widget>[
+          Container(
+            child: ListView.builder(
+              itemBuilder: (BuildContext ctxt, int index) =>
+                  buildInProgressList(ctxt, index),
+              itemCount: dummyTrips.length,
+            ),
+          ),
+          Container(child: Text("Coming Soon")),
+          Container(child: Text("Past")),
+        ]),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {},
           label: Text(
@@ -39,18 +57,6 @@ class _TripsMainPageState extends State<TripsMainPage> {
     );
   }
 
-  PreferredSize buildTripsTab() {
-    return PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: TabBar(
-          tabs: <Widget>[
-            buildTabBarTitle("In Progress", Icons.notifications_active),
-            buildTabBarTitle("Coming Soon", Icons.schedule),
-            buildTabBarTitle("Past", Icons.event_available),
-          ],
-        ));
-  }
-
   Tab buildTabBarTitle(String title, IconData icons) {
     return Tab(
       icon: Icon(icons),
@@ -58,20 +64,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
     );
   }
 
-  TabBarView buildTabBarView() {
-    return TabBarView(children: <Widget>[
-      Container(
-        child: ListView.builder(
-          itemBuilder: (BuildContext ctxt, int index) => buildList(ctxt, index),
-          itemCount: dummyTrips.length,
-        ),
-      ),
-      Container(child: Text("Coming Soon")),
-      Container(child: Text("Past")),
-    ]);
-  }
-
-  Card buildList(BuildContext ctxt, int index) {
+  Card buildInProgressList(BuildContext ctxt, int index) {
     return Card(
       child: Slidable(
         actionPane: SlidableDrawerActionPane(),
@@ -144,9 +137,12 @@ class _TripsMainPageState extends State<TripsMainPage> {
                         imageLink:
                             "https://cdn141.picsart.com/280218394017211.png?type=webp&to=min&r=640"),
                     CircleAvatar(
-                      radius: 15.0,
-                      child: Icon(Icons.more_horiz),
-                    ),
+                        radius: 15.0,
+                        child: Icon(Icons.more_horiz),
+                        backgroundColor:
+                            key.currentState.brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black54),
                   ],
                 ),
               ]),
