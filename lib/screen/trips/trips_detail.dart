@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import './trips_member_list.dart';
+import './trips_class.dart';
+import './trip_expenses_class.dart';
 
 class TripsDetail extends StatefulWidget {
   @override
@@ -8,7 +10,9 @@ class TripsDetail extends StatefulWidget {
 }
 
 class _TripsDetailState extends State<TripsDetail> {
-  List<String> planTitle = ["KumKoiKum", "SuiMakMak"];
+  List<Trips> dummyTrip = <Trips>[];
+  List<TripExpenses> dummyExpenses = <TripExpenses>[];
+
   List<String> expensesTitle = ["Hotel", "Transport"];
   List<Icon> icons = [
     Icon(
@@ -23,6 +27,14 @@ class _TripsDetailState extends State<TripsDetail> {
 
   @override
   Widget build(BuildContext context) {
+    dummyTrip.add(Trips("KumKoiKum", "Going to beach."));
+    dummyTrip.add(Trips("SuiMakMak", "Going to shopping."));
+
+    dummyExpenses.add(
+        TripExpenses("Hotel", "02-02-2020 10:20 a.m.", "RM 200.00", "John"));
+    dummyExpenses.add(TripExpenses(
+        "Transport", "02-02-2020 10:20 a.m.", "RM 200.00", "John"));
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -85,7 +97,7 @@ class _TripsDetailState extends State<TripsDetail> {
         shrinkWrap: true,
         itemBuilder: (BuildContext ctxt, int index) =>
             buildSchedulesCard(ctxt, index),
-        itemCount: planTitle.length,
+        itemCount: dummyTrip.length,
       ),
     );
   }
@@ -120,7 +132,7 @@ class _TripsDetailState extends State<TripsDetail> {
           size: 30.0,
         ),
         title: Text(
-          planTitle[index],
+          dummyTrip[index].tripTitle,
           style: TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
