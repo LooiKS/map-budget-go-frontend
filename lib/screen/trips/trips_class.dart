@@ -1,12 +1,12 @@
 class Trips {
   final String tripTitle;
-  final String expensesTitle;
+  final String tripDetail;
 
-  Trips(this.tripTitle, this.expensesTitle);
+  Trips(this.tripTitle, this.tripDetail);
 
   String getTripTitle() => tripTitle;
-  String getExpensesTitle() => expensesTitle;
+  String getTripDetail() => tripDetail;
 
   void setTripTitle(String tripTitle) => tripTitle = tripTitle;
-  void setExpensesTitle(String expensesTitle) => expensesTitle = expensesTitle;
+  void setTripDetail(String tripDetail) => tripDetail = tripDetail;
 }
