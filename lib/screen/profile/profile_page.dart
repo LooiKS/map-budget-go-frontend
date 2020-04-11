@@ -58,44 +58,7 @@ class MapScreenState extends State<ProfilePage>
                             )
                           ],
                         )),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: new Stack(fit: StackFit.loose, children: <Widget>[
-                        new Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            new Container(
-                                width: 140.0,
-                                height: 140.0,
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(width: 3),
-                                  image: new DecorationImage(
-                                    image: new ExactAssetImage(
-                                        'assets/images/as.png'),
-                                    fit: BoxFit.cover,
-                                  ),
-                                )),
-                          ],
-                        ),
-                        Padding(
-                            padding: EdgeInsets.only(top: 90.0, right: 100.0),
-                            child: new Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new CircleAvatar(
-                                  backgroundColor: Colors.red,
-                                  radius: 25.0,
-                                  child: new Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              ],
-                            )),
-                      ]),
-                    )
+                    buildProfileImage()
                   ],
                 ),
               ),
@@ -113,60 +76,14 @@ class MapScreenState extends State<ProfilePage>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'Personal Information',
-                                    style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
+                              buildTitle(),
                               new Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Row(
                                     children: <Widget>[
-                                      RaisedButton(
-                                        child: new Text("Qr Code"),
-                                        textColor: Colors.white,
-                                        color: Colors.red,
-                                        onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return Dialog(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              40),
-                                                    ),
-                                                    child: Container(
-                                                      height: 450.0,
-                                                      width: 500.0,
-                                                      padding:
-                                                          EdgeInsets.all(20),
-                                                      child: Column(
-                                                        children: <Widget>[
-                                                          Image(
-                                                            image: new ExactAssetImage(
-                                                                'assets/images/frame.png'),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ));
-                                              });
-                                        },
-                                        shape: new RoundedRectangleBorder(
-                                            borderRadius:
-                                                new BorderRadius.circular(
-                                                    20.0)),
-                                      ),
+                                      buildQRButton(context),
                                       Padding(
                                         padding: EdgeInsets.only(right: 15.0),
                                       ),
@@ -186,28 +103,8 @@ class MapScreenState extends State<ProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  child: new Text(
-                                    'Username',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                flex: 2,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  child: new Text(
-                                    'User ID',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                flex: 2,
-                              ),
+                              ExpendedTitle('Username'),
+                              ExpendedTitle('User ID'),
                             ],
                           )),
                       Padding(
@@ -216,47 +113,11 @@ class MapScreenState extends State<ProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 10.0),
-                                  child: new TextField(
-                                    controller: TextEditingController()
-                                      ..text = 'maria97',
-                                    enabled: false,
-                                  ),
-                                ),
-                                flex: 2,
-                              ),
-                              Flexible(
-                                child: new TextField(
-                                  controller: TextEditingController()
-                                    ..text = 'BG00010',
-                                  enabled: false,
-                                ),
-                                flex: 2,
-                              ),
+                              FixedFieldValue('maria97'),
+                              FixedFieldValue('BG00010'),
                             ],
                           )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 15.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'Name',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
+                      InfoTitle('Name'),
                       Padding(
                           padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: new Row(
@@ -275,26 +136,7 @@ class MapScreenState extends State<ProfilePage>
                               ),
                             ],
                           )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 15.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'Email ID',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
+                      InfoTitle('Email Address'),
                       Padding(
                           padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: new Row(
@@ -309,26 +151,7 @@ class MapScreenState extends State<ProfilePage>
                               ),
                             ],
                           )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 15.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'Password',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
+                      InfoTitle('Password'),
                       Padding(
                           padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: new Row(
@@ -343,26 +166,7 @@ class MapScreenState extends State<ProfilePage>
                               ),
                             ],
                           )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 15.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'Mobile Number',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
+                      InfoTitle('Mobile Number'),
                       Padding(
                           padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: new Row(
@@ -387,6 +191,91 @@ class MapScreenState extends State<ProfilePage>
         ],
       ),
     ));
+  }
+
+  RaisedButton buildQRButton(BuildContext context) {
+    return RaisedButton(
+      child: new Text("Qr Code"),
+      textColor: Colors.white,
+      color: Colors.red,
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  child: Container(
+                    height: 450.0,
+                    width: 500.0,
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      children: <Widget>[
+                        Image(
+                          image: new ExactAssetImage('assets/images/frame.png'),
+                        )
+                      ],
+                    ),
+                  ));
+            });
+      },
+      shape: new RoundedRectangleBorder(
+          borderRadius: new BorderRadius.circular(20.0)),
+    );
+  }
+
+  Column buildTitle() {
+    return new Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        new Text(
+          'Personal Information',
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
+  Padding buildProfileImage() {
+    return Padding(
+      padding: EdgeInsets.only(top: 20.0),
+      child: new Stack(fit: StackFit.loose, children: <Widget>[
+        new Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new Container(
+                width: 140.0,
+                height: 140.0,
+                decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(width: 3),
+                  image: new DecorationImage(
+                    image: new ExactAssetImage('assets/images/as.png'),
+                    fit: BoxFit.cover,
+                  ),
+                )),
+          ],
+        ),
+        Padding(
+            padding: EdgeInsets.only(top: 90.0, right: 100.0),
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new CircleAvatar(
+                  backgroundColor: Colors.red,
+                  radius: 25.0,
+                  child: new Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            )),
+      ]),
+    );
   }
 
   @override
@@ -465,5 +354,68 @@ class MapScreenState extends State<ProfilePage>
         });
       },
     );
+  }
+}
+
+class FixedFieldValue extends StatelessWidget {
+  const FixedFieldValue(this.value);
+  final value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Padding(
+        padding: EdgeInsets.only(right: 10.0),
+        child: new TextField(
+          controller: TextEditingController()..text = value,
+          enabled: false,
+        ),
+      ),
+      flex: 2,
+    );
+  }
+}
+
+class ExpendedTitle extends StatelessWidget {
+  const ExpendedTitle(this.title);
+  final title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        child: new Text(
+          title,
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+        ),
+      ),
+      flex: 2,
+    );
+  }
+}
+
+class InfoTitle extends StatelessWidget {
+  final title;
+  const InfoTitle(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 15.0),
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            new Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new Text(
+                  title,
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ));
   }
 }
