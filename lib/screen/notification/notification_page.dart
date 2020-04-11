@@ -1,8 +1,8 @@
+import 'package:budgetgo/model/notification_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../widget/custom_shape.dart';
 import '../trips/trips_detail.dart';
-import './notification_class.dart';
 import '../../main.dart';
 
 class NotificationPage extends StatefulWidget {

@@ -1,8 +1,8 @@
+import 'package:budgetgo/model/trip_expenses_class.dart';
+import 'package:budgetgo/model/trips_class.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import './trips_member_list.dart';
-import './trips_class.dart';
-import './trip_expenses_class.dart';
 import '../../main.dart';
 
 class TripsDetail extends StatefulWidget {
