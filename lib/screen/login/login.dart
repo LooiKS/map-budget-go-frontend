@@ -96,11 +96,12 @@ class _LoginPageState extends State<LoginPage> {
           _text.text.isEmpty ? _validate = true : _validate = false;
         });
         if (_validate == false) {
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      MyHomePage(toggleBrightness: widget.toggleBrightness)));
+                      MyHomePage(toggleBrightness: widget.toggleBrightness)),
+              (_) => false);
         }
       },
       // onTap: () {
@@ -209,9 +210,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _title() {
-    return Text(      
-      "BudgetGo",style: TextStyle(fontSize:30),
-        );
+    return Text(
+      "BudgetGo",
+      style: TextStyle(fontSize: 30),
+    );
   }
 
   Widget _usernamePasswordWidget() {

@@ -1,4 +1,5 @@
 # BudgetGo
+This application aims to help travellers in planning group trips and managing the expenses during the trips. The owner of the trip can add other user into the trip to manage the trip together. They can make schedule and expenses using the application. The user can add other as friend using the ID or by scanning their QR code.
 
 ##### Group Members:
 1. Chin Chee Kean

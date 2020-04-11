@@ -19,11 +19,12 @@ class _LogoutPageState extends State<LogoutPage> {
   Widget _submitButton() {
     return InkWell(
       onTap: () {
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    LoginPage(toggleBrightness: widget.toggleBrightness)));
+                    LoginPage(toggleBrightness: widget.toggleBrightness)),
+            (_) => false);
       },
       // onTap: () {
       //    Navigator.push(
@@ -55,10 +56,9 @@ class _LogoutPageState extends State<LogoutPage> {
   Widget _title() {
     return Text(
       "BudgetGo",
-      style: TextStyle( fontSize: 30),
+      style: TextStyle(fontSize: 30),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

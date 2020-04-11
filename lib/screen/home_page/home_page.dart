@@ -48,9 +48,11 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
 
       case "Log out":
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                LogoutPage(toggleBrightness: widget.toggleBrightness)));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) =>
+                    LogoutPage(toggleBrightness: widget.toggleBrightness)),
+            (_) => false);
         break;
     }
   }
@@ -137,12 +139,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         Icons.power_settings_new,
                       ),
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => LogoutPage(
-                                    toggleBrightness:
-                                        widget.toggleBrightness)));
+                                    toggleBrightness: widget.toggleBrightness)),
+                            (_) => false);
                       },
                     ),
                   ),
