@@ -209,19 +209,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(children: [
-        TextSpan(
-          text: 'Budget',
-          style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
-        ),
-        TextSpan(
-          text: 'Go',
-          style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
-        ),
-      ]),
-    );
+    return Text(      
+      "BudgetGo",style: TextStyle(fontSize:30),
+        );
   }
 
   Widget _usernamePasswordWidget() {

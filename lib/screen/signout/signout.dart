@@ -53,38 +53,12 @@ class _LogoutPageState extends State<LogoutPage> {
   }
 
   Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(children: [
-        TextSpan(
-          text: 'Budget',
-          style: TextStyle(color: Colors.white, fontSize: 30),
-        ),
-        TextSpan(
-          text: 'Go',
-          style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
-        ),
-      ]),
+    return Text(
+      "BudgetGo",
+      style: TextStyle( fontSize: 30),
     );
   }
 
-  Widget _text() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(children: [
-        TextSpan(
-          text: 'You are now logget out.\n\n\n',
-          style: TextStyle(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        TextSpan(
-          text:
-              'Thank you for using BudgetGO mobile application. Hope you enjoyed your trip.',
-          style: TextStyle(color: Colors.white, fontSize: 17),
-        ),
-      ]),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +83,15 @@ class _LogoutPageState extends State<LogoutPage> {
                 SizedBox(
                   height: 90,
                 ),
-                _text(),
+                Text(
+                  "You are now logged out.\n\n",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Text(
+                  "Thank you for using BudgetGo mobile application. Hope you enjoyed your trip.",
+                  style: TextStyle(fontSize: 17),
+                  textAlign: TextAlign.center,
+                ),
                 SizedBox(
                   height: 100,
                 ),
