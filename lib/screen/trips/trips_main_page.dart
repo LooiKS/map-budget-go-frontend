@@ -20,7 +20,20 @@ class _TripsMainPageState extends State<TripsMainPage> {
       child: Scaffold(
         appBar: buildTripsTab(),
         body: buildTabBarView(),
-        floatingActionButton: buildFloatingActionButton(),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {},
+          label: Text(
+            "Add Trips",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold),
+          ),
+          icon: Icon(
+            Icons.location_on,
+            color: Colors.white,
+          ),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
@@ -123,26 +136,12 @@ class _TripsMainPageState extends State<TripsMainPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    ClipOval(
-                      child: FadeInImage.assetNetwork(
-                        placeholder: "assets/images/loading.gif",
-                        image:
-                            'https://i.pinimg.com/736x/5a/0c/7b/5a0c7b76e2a8bcdbe571c5ba916f93fe.jpg',
-                        fit: BoxFit.contain,
-                        width: 30.0,
-                        height: 30.0,
-                      ),
-                    ),
-                    ClipOval(
-                      child: FadeInImage.assetNetwork(
-                        placeholder: "assets/images/loading.gif",
-                        image:
-                            'https://cdn141.picsart.com/280218394017211.png?type=webp&to=min&r=640',
-                        fit: BoxFit.contain,
-                        width: 30.0,
-                        height: 30.0,
-                      ),
-                    ),
+                    buildMemberAvatar(
+                        imageLink:
+                            "https://i.pinimg.com/736x/5a/0c/7b/5a0c7b76e2a8bcdbe571c5ba916f93fe.jpg"),
+                    buildMemberAvatar(
+                        imageLink:
+                            "https://cdn141.picsart.com/280218394017211.png?type=webp&to=min&r=640"),
                     CircleAvatar(
                       radius: 15.0,
                       child: Icon(Icons.more_horiz),
@@ -175,17 +174,14 @@ class _TripsMainPageState extends State<TripsMainPage> {
     );
   }
 
-  FloatingActionButton buildFloatingActionButton() {
-    return FloatingActionButton.extended(
-      onPressed: () {},
-      label: Text(
-        "Add Trips",
-        style: TextStyle(
-            color: Colors.white, fontSize: 15.0, fontWeight: FontWeight.bold),
-      ),
-      icon: Icon(
-        Icons.location_on,
-        color: Colors.white,
+  ClipOval buildMemberAvatar({String imageLink, bool icon}) {
+    return ClipOval(
+      child: FadeInImage.assetNetwork(
+        placeholder: "assets/images/loading.gif",
+        image: imageLink,
+        fit: BoxFit.contain,
+        width: 30.0,
+        height: 30.0,
       ),
     );
   }
