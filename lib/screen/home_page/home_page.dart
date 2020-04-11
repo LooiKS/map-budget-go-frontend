@@ -203,12 +203,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Divider buildDivider() {
     return Divider(
-      color: Colors.grey.shade600,
+      color: Colors.grey.shade500,
     );
   }
 
-  GestureDetector buildDrawerRow(IconData icon, String title,
-      {bool showBadge = false}) {
+  GestureDetector buildDrawerRow(IconData icon, String title,{bool showBadge = false}) {
     final TextStyle tStyle = TextStyle(fontSize: 16.0);
     return GestureDetector(
       onTap: () {
@@ -243,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text(
                   "2",
                   style: TextStyle(
-                      // color: Colors.white,
+                      color: Colors.white,
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold),
                 ),
