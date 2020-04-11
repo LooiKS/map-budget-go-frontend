@@ -48,11 +48,11 @@ class _TripsDetailState extends State<TripsDetail> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            buildMemberTitle(),
+            buildCategoryTitle("Members"),
             TripMemberList(),
-            buildTitle("Schedule"),
+            buildCategoryTitle("Schedule"),
             buildSchedules(),
-            buildTitle("Expenses"),
+            buildCategoryTitle("Expenses"),
             buildExpenses(),
           ],
         ),
@@ -70,7 +70,7 @@ class _TripsDetailState extends State<TripsDetail> {
     );
   }
 
-  Padding buildTitle(String title) {
+  Padding buildCategoryTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
       child: Row(
@@ -80,12 +80,14 @@ class _TripsDetailState extends State<TripsDetail> {
               title,
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
-            Text("View All",
-                style: TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.orange,
-                )),
+            title != "Members"
+                ? Text("View All",
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.orange,
+                    ))
+                : Text(""),
           ]),
     );
   }
@@ -95,66 +97,53 @@ class _TripsDetailState extends State<TripsDetail> {
       height: 200.0,
       child: ListView.builder(
         shrinkWrap: true,
-        itemBuilder: (BuildContext ctxt, int index) =>
-            buildSchedulesCard(ctxt, index),
-        itemCount: dummyTrip.length,
-      ),
-    );
-  }
-
-  Card buildSchedulesCard(BuildContext ctxt, int index) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
-      child: ListTile(
-        selected: true,
-        leading: Container(
-          width: 48.0,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Icon(
-                  Icons.calendar_today,
-                  size: 28.0,
+        itemBuilder: (BuildContext ctxt, int index) => Card(
+          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+          child: ListTile(
+            selected: true,
+            leading: Container(
+              width: 48.0,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Icon(
+                      Icons.calendar_today,
+                      size: 28.0,
+                    ),
+                    Text(
+                      "Day ${index + 1}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 15.0, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                Text(
-                  "Day ${index + 1}",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-                ),
-              ],
+              ),
             ),
+            trailing: Icon(
+              Icons.keyboard_arrow_right,
+              size: 30.0,
+            ),
+            title: Text(
+              dummyTrip[index].tripTitle,
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54),
+            ),
+            subtitle: Text(
+              dummyTrip[index].tripDetail,
+              style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.black45),
+            ),
+            onTap: () {},
           ),
         ),
-        trailing: Icon(
-          Icons.keyboard_arrow_right,
-          size: 30.0,
-        ),
-        title: Text(
-          dummyTrip[index].tripTitle,
-          style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black54),
-        ),
-        subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "10a.m. - Depart to ocean.",
-                style: TextStyle(color: Colors.black54),
-              ),
-              Text(
-                "11a.m. - Eat beside ocean.",
-                style: TextStyle(color: Colors.black54),
-              ),
-              Text(
-                "12p.m. - Sleep beside ocean.",
-                style: TextStyle(color: Colors.black54),
-              ),
-            ]),
-        onTap: () {},
+        itemCount: dummyTrip.length,
       ),
     );
   }
