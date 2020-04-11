@@ -11,11 +11,7 @@ import '../notification/notification_page.dart';
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
 
-  MyHomePage(
-      {Key key, this.title = 'User Settings', @required this.toggleBrightness})
-      : super(key: key);
-
-  final String title;
+  MyHomePage({Key key, @required this.toggleBrightness}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -32,7 +28,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onDrawerRowTapped(String choice) {
-    print(choice);
     switch (choice) {
       case "My profile":
         Navigator.push(
@@ -53,11 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
 
       case "Log out":
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    LogoutPage(toggleBrightness: widget.toggleBrightness)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                LogoutPage(toggleBrightness: widget.toggleBrightness)));
         break;
     }
   }
