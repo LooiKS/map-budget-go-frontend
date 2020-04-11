@@ -108,7 +108,7 @@ class _NotificationPageState extends State<NotificationPage> {
         Icons.arrow_forward_ios,
         size: 15.0,
       ),
-      title: buildUnreadTitle(index, dummyList[index].status),
+      title: buildTitle(index, dummyList[index].status),
       subtitle: Text(
         "${dummyList[index].username} created a trip group. You are invited. Check it more!",
         style: TextStyle(
@@ -127,7 +127,6 @@ class _NotificationPageState extends State<NotificationPage> {
     return Icon(
       Icons.notifications_none,
       size: 35.0,
-      // color: titleColor,
     );
   }
 
@@ -137,7 +136,6 @@ class _NotificationPageState extends State<NotificationPage> {
         Icon(
           Icons.notification_important,
           size: 35.0,
-          // color: titleColor,
         ),
         Positioned(
           right: 0,
@@ -158,7 +156,7 @@ class _NotificationPageState extends State<NotificationPage> {
     );
   }
 
-  Row buildUnreadTitle(int index, bool status) {
+  Row buildTitle(int index, bool status) {
     return Row(children: <Widget>[
       Text(
         dummyList[index].title,
