@@ -22,7 +22,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Color active = Colors.grey.shade800;
   int currentPage;
   String appBarTitle = "Home";
 
@@ -135,9 +134,6 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Drawer(
         child: Container(
           padding: const EdgeInsets.only(left: 16.0, right: 40),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black45)]),
           width: 300,
           child: SafeArea(
             child: SingleChildScrollView(
@@ -148,7 +144,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: IconButton(
                       icon: Icon(
                         Icons.power_settings_new,
-                        color: active,
                       ),
                       onPressed: () {
                         Navigator.push(
@@ -177,14 +172,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(height: 5.0),
                   Text(
                     "Maria Chin",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w600),
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
                   ),
                   Text(
                     "@maria97",
-                    style: TextStyle(color: active, fontSize: 16.0),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
                   ),
                   SizedBox(height: 30.0),
                   buildDrawerRow(Icons.home, "Home"),
@@ -214,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   GestureDetector buildDrawerRow(IconData icon, String title,
       {bool showBadge = false}) {
-    final TextStyle tStyle = TextStyle(color: active, fontSize: 16.0);
+    final TextStyle tStyle = TextStyle(fontSize: 16.0);
     return GestureDetector(
       onTap: () {
         onDrawerRowTapped(title);
@@ -224,7 +219,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(children: [
           Icon(
             icon,
-            color: active,
           ),
           SizedBox(width: 10.0),
           Text(
@@ -249,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text(
                   "2",
                   style: TextStyle(
-                      color: Colors.white,
+                      // color: Colors.white,
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold),
                 ),
