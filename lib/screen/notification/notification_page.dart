@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../widget/custom_shape.dart';
 import '../trips/trips_detail.dart';
+import './notification_class.dart';
+import '../../main.dart';
 
 class NotificationPage extends StatefulWidget {
   @override
@@ -9,31 +11,17 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  Color titleColor = Colors.black87;
-  Color subTitleColor = Colors.black45;
-
-  List<String> noticeTitle = [
-    "Bali Trip",
-    "Thailand Trip",
-    "Korea Trip",
-    "Malaysia Trip",
-    "Langkawi Trip",
-    "Genting Trip"
-  ];
-
-  List<String> dummyName = ["John", "Chan", "Looi", "Tan", "Chin", "Yang"];
-
-  List<String> dummyTime = [
-    "14 mins ago",
-    "14:15",
-    "11:55",
-    "3 days ago",
-    "10 days ago",
-    "30 days ago"
-  ];
-
+  //Dummy notification
+  List<Notifications> dummyList = <Notifications>[];
   @override
   Widget build(BuildContext context) {
+    dummyList.add(Notifications("Bali Trip", false, "3 mins ago", "John"));
+    dummyList.add(Notifications("Thailand Trip", false, "14:15", "Chan"));
+    dummyList.add(Notifications("Korea Trip", true, "11:55", "Looi"));
+    dummyList.add(Notifications("Genting Trip", true, "3 days ago", "Tan"));
+    dummyList.add(Notifications("Langkawi Trip", true, "10 days ago", "Chin"));
+    dummyList.add(Notifications("Japan Trip", true, "30 days ago", "Yang"));
+
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -59,7 +47,7 @@ class _NotificationPageState extends State<NotificationPage> {
               separatorBuilder: (context, index) => buildDivider(),
               itemBuilder: (BuildContext ctxt, int index) =>
                   buildNoticeList(ctxt, index),
-              itemCount: noticeTitle.length,
+              itemCount: dummyList.length,
             ),
           ]),
         ));
@@ -83,7 +71,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
   Divider buildDivider() {
     return Divider(
-      color: Colors.black,
+      color: Colors.grey.shade500,
     );
   }
 
@@ -95,7 +83,7 @@ class _NotificationPageState extends State<NotificationPage> {
       secondaryActions: <Widget>[
         IconSlideAction(
           caption: 'More',
-          color: Colors.black45,
+          // color: Colors.black45,
           icon: Icons.more_horiz,
           onTap: () {},
         ),
@@ -122,8 +110,9 @@ class _NotificationPageState extends State<NotificationPage> {
       ),
       title: index < 2 ? buildUnreadTitle(index) : buildReadedTitle(index),
       subtitle: Text(
-        "${dummyName[index]} created a trip group. You are invited. Check it more!",
-        style: TextStyle(color: subTitleColor),
+        "${dummyList[index].username} created a trip group. You are invited. Check it more!",
+        // style: TextStyle(
+        //   color: key.currentState.brightness == Brightness.dark ?Colors.white:Colors.black26),
       ),
       onTap: () {
         Navigator.of(context)
@@ -136,7 +125,7 @@ class _NotificationPageState extends State<NotificationPage> {
     return Icon(
       Icons.notifications_none,
       size: 35.0,
-      color: titleColor,
+      // color: titleColor,
     );
   }
 
@@ -146,7 +135,7 @@ class _NotificationPageState extends State<NotificationPage> {
         Icon(
           Icons.notification_important,
           size: 35.0,
-          color: titleColor,
+          // color: titleColor,
         ),
         Positioned(
           right: 0,
@@ -170,16 +159,18 @@ class _NotificationPageState extends State<NotificationPage> {
   Row buildUnreadTitle(int index) {
     return Row(children: <Widget>[
       Text(
-        noticeTitle[index],
+        dummyList[index].title,
         style: TextStyle(
-            fontSize: 20.0, fontWeight: FontWeight.bold, color: titleColor),
+          fontSize: 20.0, fontWeight: FontWeight.bold,
+          // color: titleColor,
+        ),
       ),
       SizedBox(
         width: 16.0,
       ),
       Text(
-        dummyTime[index],
-        style: TextStyle(color: titleColor, fontSize: 12.0),
+        dummyList[index].time,
+        style: TextStyle(fontSize: 12.0),
       ),
     ]);
   }
@@ -187,16 +178,18 @@ class _NotificationPageState extends State<NotificationPage> {
   Row buildReadedTitle(int index) {
     return Row(children: <Widget>[
       Text(
-        noticeTitle[index],
+        dummyList[index].title,
         style: TextStyle(
-            fontSize: 20.0, fontWeight: FontWeight.normal, color: titleColor),
+          fontSize: 20.0,
+          fontWeight: FontWeight.normal,
+        ),
       ),
       SizedBox(
         width: 16.0,
       ),
       Text(
-        dummyTime[index],
-        style: TextStyle(color: titleColor, fontSize: 12.0),
+        dummyList[index].time,
+        style: TextStyle(fontSize: 12.0),
       ),
     ]);
   }
