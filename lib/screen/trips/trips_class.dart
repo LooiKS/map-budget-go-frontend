@@ -1,8 +1,8 @@
-class Notifications {
+class Trips {
   final String tripTitle;
   final String expensesTitle;
 
-  Notifications(this.tripTitle, this.expensesTitle);
+  Trips(this.tripTitle, this.expensesTitle);
 
   String getTripTitle() => tripTitle;
   String getExpensesTitle() => expensesTitle;
