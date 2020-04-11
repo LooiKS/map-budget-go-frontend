@@ -26,19 +26,18 @@ class _UserSettingState extends State<UserSetting> {
   @override
   void initState() {
     super.initState();
-    var onValue = Preference.pref;
-    sharedPreferences = onValue;
-    themeValue =
-        onValue.getString('brightness') == 'Brightness.light' ? 10 : 100;
-    defCurrency = onValue.getString('defCurrency') == null
+    var pref = Preference.pref;
+    sharedPreferences = pref;
+    themeValue = pref.getString('brightness') == 'Brightness.light' ? 10 : 100;
+    defCurrency = pref.getString('defCurrency') == null
         ? 'MYR'
-        : onValue.getString('defCurrency');
-    receiveNoti = onValue.getBool('receiveNoti') == null
+        : pref.getString('defCurrency');
+    receiveNoti = pref.getBool('receiveNoti') == null
         ? true
-        : onValue.getBool('receiveNoti');
-    allowPhoneSearch = onValue.getBool('allowPhoneSearch') == null
+        : pref.getBool('receiveNoti');
+    allowPhoneSearch = pref.getBool('allowPhoneSearch') == null
         ? true
-        : onValue.getBool('allowPhoneSearch');
+        : pref.getBool('allowPhoneSearch');
   }
 
   @override
@@ -51,12 +50,12 @@ class _UserSettingState extends State<UserSetting> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _buildGeneralDivider(),
+            _buildDivider('General'),
             _buildCurrencyListTile(context),
             _buildNotiListTile(),
             _buildThemeListTile(context),
             _buildPhoneSearchListTile(),
-            _buildHelpDivider(),
+            _buildDivider('Help'),
             _buildAboutListTile(context),
             _buildContactUsListTile(context)
           ],
@@ -65,31 +64,13 @@ class _UserSettingState extends State<UserSetting> {
     );
   }
 
-  Padding _buildGeneralDivider() {
+  Padding _buildDivider(String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, left: 15.0, right: 30.0),
       child: Row(
         children: <Widget>[
           Text(
-            'General  ',
-            style: TextStyle(color: Colors.blue, fontSize: 20),
-          ),
-          Expanded(
-              child: Divider(
-            color: Colors.black,
-          ))
-        ],
-      ),
-    );
-  }
-
-  Padding _buildHelpDivider() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 15.0, right: 30.0),
-      child: Row(
-        children: <Widget>[
-          Text(
-            'Help  ',
+            '$title  ',
             style: TextStyle(color: Colors.blue, fontSize: 20),
           ),
           Expanded(
@@ -131,11 +112,9 @@ class _UserSettingState extends State<UserSetting> {
       title: Text('Allow others to search your account by phone number'),
       trailing: Switch(
           value: allowPhoneSearch,
-          onChanged: (_) {
-            setState(() {
-              allowPhoneSearch = _;
-            });
-            sharedPreferences.setBool('allowPhoneSearch', _);
+          onChanged: (value) {
+            setState(() => allowPhoneSearch = value);
+            sharedPreferences.setBool('allowPhoneSearch', value);
           }),
     );
   }
@@ -146,8 +125,8 @@ class _UserSettingState extends State<UserSetting> {
       subtitle: Text(themeValue == 10 ? 'Light' : 'Dark'),
       onTap: () => showDialog(
           context: context,
-          builder: (context) => StatefulBuilder(
-                builder: (context, setState) => AlertDialog(
+          builder: (context) => Builder(
+                builder: (context) => AlertDialog(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8.0))),
                   title: Text('Theme'),
@@ -156,37 +135,10 @@ class _UserSettingState extends State<UserSetting> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      RadioListTile(
-                        value: 10,
-                        groupValue: themeValue,
-                        onChanged: (theme) {
-                          setState(() {
-                            themeValue = theme;
-                          });
-                          SharedPreferences.getInstance().then((onValue) =>
-                              onValue.setString(
-                                  'brightness', Brightness.light.toString()));
-                          widget.toggleBrightness();
-                          Navigator.of(context).pop();
-                        },
-                        selected: false,
-                        title: Text('Light'),
-                      ),
-                      RadioListTile(
-                        value: 100,
-                        groupValue: themeValue,
-                        onChanged: (theme) {
-                          setState(() {
-                            themeValue = theme;
-                          });
-                          SharedPreferences.getInstance().then((onValue) =>
-                              onValue.setString(
-                                  'brightness', Brightness.dark.toString()));
-                          widget.toggleBrightness();
-                          Navigator.of(context).pop();
-                        },
-                        title: Text('Dark'),
-                      )
+                      _buildBrightnessRadio(
+                          10, Brightness.light, 'Light', context),
+                      _buildBrightnessRadio(
+                          100, Brightness.dark, 'Dark', context)
                     ],
                   ),
                   actions: <Widget>[
@@ -203,6 +155,23 @@ class _UserSettingState extends State<UserSetting> {
     );
   }
 
+  RadioListTile<int> _buildBrightnessRadio(
+      int value, Brightness brightness, String title, BuildContext context) {
+    return RadioListTile(
+      value: value,
+      groupValue: themeValue,
+      onChanged: (theme) => _chengeTheme(theme, brightness, context),
+      title: Text(title),
+    );
+  }
+
+  void _chengeTheme(int theme, Brightness brightness, BuildContext context) {
+    setState(() => themeValue = theme);
+    Preference.pref.setString('brightness', brightness.toString());
+    widget.toggleBrightness();
+    Navigator.of(context).pop();
+  }
+
   ListTile _buildNotiListTile() {
     return ListTile(
       title: Text('Notification'),
@@ -210,9 +179,7 @@ class _UserSettingState extends State<UserSetting> {
       trailing: Switch(
           value: receiveNoti,
           onChanged: (_) {
-            setState(() {
-              receiveNoti = _;
-            });
+            setState(() => receiveNoti = _);
             sharedPreferences.setBool('receiveNoti', _);
           }),
     );
@@ -225,9 +192,7 @@ class _UserSettingState extends State<UserSetting> {
       onTap: () => showDialog(
           context: context,
           builder: (context) => CurrencyDropdown(onChange: (newCurrency) {
-                setState(() {
-                  defCurrency = newCurrency;
-                });
+                setState(() => defCurrency = newCurrency);
                 sharedPreferences.setString('defCurrency', newCurrency);
               })),
     );

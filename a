@@ -1,0 +1,221 @@
+[33mcommit 03c7d469b920da75375e8eb0e698c6b5aa08d171[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Wed Apr 8 15:11:36 2020 +0800
+
+    Added animatedBottomNab class in new file
+
+[33mcommit ef95b933e0d22613098cd2d2d6f5fc2577e34b0b[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Wed Apr 8 15:10:17 2020 +0800
+
+    Extract the class animatedBottomNav, rearrange the code
+
+[33mcommit 8c2286e5ef0a85c494e7148d100c2b895f995af4[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Wed Apr 8 14:40:15 2020 +0800
+
+    Deleted unused function
+
+[33mcommit 0e9930583fe92638f80f9847f52675a9dd455902[m
+Author: Kian Seng Looi <kianseng213@gmail.com>
+Date:   Wed Apr 8 13:16:31 2020 +0800
+
+    rename folder from user to user_setting
+
+[33mcommit b6f24103e42ecd7866a828cbeef2c52ec43e0dea[m
+Author: Kian Seng Looi <kianseng213@gmail.com>
+Date:   Thu Apr 2 17:43:11 2020 +0000
+
+    reformat Widget to widget
+
+[33mcommit 134c7fb47e55f46d872e0b2a350b610c21b0aa3a[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Fri Apr 3 01:34:52 2020 +0800
+
+    added notifications route in homepage
+
+[33mcommit 34af4d38f68dc791fb4ee3afc99b3638698b853a[m[33m ([m[1;31morigin/Added_push_notification_screen[m[33m)[m
+Merge: 6739ead b2603b6
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Fri Apr 3 01:23:43 2020 +0800
+
+    Merge branch 'tripScreen' into notifications
+
+[33mcommit b2603b6dd6060408af21dcf20c9c01b8efadb5c9[m[33m ([m[1;31morigin/Added_trip_details_screen[m[33m)[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Fri Apr 3 01:22:02 2020 +0800
+
+    Updated trip screen, changed icons colors
+
+[33mcommit ac4a2be4477fb858850d34363c86d2cf8dfa8412[m
+Merge: 4be41bd be5334e
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Fri Apr 3 01:11:50 2020 +0800
+
+    Merge branch 'master' into tripScreen
+
+[33mcommit be5334e185cf50078c21b7b44c9a786628aa4b17[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Fri Apr 3 01:10:33 2020 +0800
+
+    Rename all the file with correct format
+
+[33mcommit 443119ccd43e9d32ba4c27445422610ff84bac19[m
+Merge: 22891a2 3e0ced2
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Fri Apr 3 00:59:40 2020 +0800
+
+    Merge branch 'master' of https://gitlab.com/kianseng213/budgetgo
+
+[33mcommit 22891a2e5d15a671c066816d4b6114c48b6789ff[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Fri Apr 3 00:59:08 2020 +0800
+
+    Rename the file with correct format
+
+[33mcommit 6739ead7d5f7d9e130254d46950d5d0aead20a6d[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Fri Apr 3 00:57:46 2020 +0800
+
+    Added notification screen
+
+[33mcommit 4be41bdf0677cf6e72209332af63cd3bced089d8[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Fri Apr 3 00:56:24 2020 +0800
+
+    Deleted duplicate ovalrightclipper, updated the path for ovalrightlcipper
+
+[33mcommit 0e4a26a5b39de3fa4daf08988b70f77dd72dac53[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Fri Apr 3 00:54:08 2020 +0800
+
+    Updated the trip detail page,change icons color
+
+[33mcommit 3e0ced2be8a23a0eabe499af835a61cbf5c384cb[m
+Merge: 2051e4a eb8c8bb
+Author: Asment <asment@gmail.com>
+Date:   Thu Apr 2 22:11:11 2020 +0800
+
+    Merge branch 'master' of https://gitlab.com/kianseng213/budgetgo
+
+[33mcommit 2051e4a0155373a3ac054e4087e5a91c596ba22a[m[33m ([m[1;31morigin/qrcode[m[33m)[m
+Author: Asment <asment@gmail.com>
+Date:   Thu Apr 2 22:07:43 2020 +0800
+
+    add qr code
+
+[33mcommit eb8c8bb22fbd5d7e570de4bae9556c9a6294805c[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Thu Apr 2 21:58:49 2020 +0800
+
+    Rename oval_right_clipper
+
+[33mcommit e61199cc3d6a972c4fe75df9204f72fa131b45e8[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Thu Apr 2 21:37:46 2020 +0800
+
+    Added trips main screen and details screen.
+
+[33mcommit 5e8f6745b15588bad59d30610f4fb532181c0692[m
+Author: cheeyon97 <cheeyon97@hotmail.com>
+Date:   Thu Apr 2 18:36:25 2020 +0800
+
+    cheeyon update
+
+[33mcommit a71e22a4b78191d552bc251eb4aa0d80a1e83e5b[m
+Merge: db27841 1169f15
+Author: cheeyon97 <cheeyon97@hotmail.com>
+Date:   Thu Apr 2 18:33:51 2020 +0800
+
+    update splash
+
+[33mcommit db278415b8d4e12f503f969e19126ef5a76e3115[m
+Author: cheeyon97 <cheeyon97@hotmail.com>
+Date:   Thu Apr 2 18:11:14 2020 +0800
+
+    add signin signout
+
+[33mcommit bdbfc54f4b7cefd3a6c9d8016e04f58b9cb653f8[m[33m ([m[1;31morigin/cheeyonbranch[m[33m)[m
+Author: cheeyon97 <cheeyon97@hotmail.com>
+Date:   Thu Apr 2 17:39:26 2020 +0800
+
+    login and logout screen
+
+[33mcommit 1169f154ef812bc102cd626176f41cf415e49d71[m[33m ([m[1;31morigin/Added_home_page[m[33m)[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Thu Apr 2 00:30:34 2020 +0800
+
+    Edited the appbar title show, open file for the customshape
+
+[33mcommit 8b0c09b426d27471cef207fd25659d55a44e52e5[m
+Merge: db2593c eb89798
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Wed Apr 1 23:15:02 2020 +0800
+
+    Added flr and as path
+
+[33mcommit eb897988ef189c28c0158142ed271761c16f3698[m[33m ([m[1;31morigin/Added_splash_screen[m[33m)[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Wed Apr 1 23:09:56 2020 +0800
+
+    Added SplashScreen, flr file
+
+[33mcommit db2593c1f4a57efc895191b993cfb22b87a30051[m
+Author: Kian Seng Looi <kianseng213@gmail.com>
+Date:   Wed Apr 1 22:40:54 2020 +0800
+
+    change ProfilePage colors, add SingleChildScrollView in user_setting
+
+[33mcommit 559db0cb41a9c02c90c9b7e28e4e1ce44ed12baa[m[33m ([m[1;31morigin/asment_branch[m[33m)[m
+Author: Asment <asment@gmail.com>
+Date:   Wed Apr 1 19:18:56 2020 +0800
+
+    profile
+
+[33mcommit 3a826427b6ff8343fae0c1c33fe5b9f04997439c[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Wed Apr 1 14:56:02 2020 +0800
+
+    Update the homepage with bottomnavigator,changed the setting path, created screen folder
+
+[33mcommit f51adc414c5caf83157b252a220fcf930c752369[m[33m ([m[1;31morigin/Added_default_launch_screen_[m[33m)[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Wed Apr 1 14:10:33 2020 +0800
+
+    Updated the code, fix the error
+
+[33mcommit 3e7935354cdf4bf7d3137f56bbfa9d4c74b5a5f4[m[33m ([m[1;31morigin/keanBranch[m[33m)[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Wed Apr 1 13:51:26 2020 +0800
+
+    Added lauch image, updated setting, added background color
+
+[33mcommit 90cf4951da9b4de6fdf6de45792f60cbf115b337[m
+Author: CHEE KEAN CHIN <vinlyken@gmail.com>
+Date:   Wed Apr 1 12:43:08 2020 +0800
+
+    Add launch screen background color
+
+[33mcommit 1a9a6a7121fc5269d03254445bcdaf23a83a6492[m
+Author: Kian Seng Looi <kianseng213@gmail.com>
+Date:   Wed Apr 1 03:18:12 2020 +0800
+
+    add drawer
+
+[33mcommit edd0192a4ab65161df07a30733cad81eb7fe6cbf[m
+Author: Kian Seng Looi <kianseng213@gmail.com>
+Date:   Wed Apr 1 02:59:28 2020 +0800
+
+    create user settings
+
+[33mcommit c2987c91ff30765752d89a5a94798ff991a53673[m[33m ([m[1;32mkian-seng-branch[m[33m)[m
+Author: Kian Seng Looi <kianseng213@gmail.com>
+Date:   Mon Mar 30 23:18:00 2020 +0800
+
+    change ic_launcher and app name
+
+[33mcommit e8d0456c27736e589d822211d6f78ee9f125ccd4[m
+Author: Kian Seng Looi <kianseng213@gmail.com>
+Date:   Mon Mar 30 22:39:20 2020 +0800
+
+    Init Project
