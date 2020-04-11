@@ -49,6 +49,7 @@ class MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'BudgetGo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: brightness,
         primarySwatch: Colors.orange,
