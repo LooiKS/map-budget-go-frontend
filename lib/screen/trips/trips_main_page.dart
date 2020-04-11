@@ -44,17 +44,18 @@ class _TripsMainPageState extends State<TripsMainPage> {
         preferredSize: Size.fromHeight(100),
         child: TabBar(
           tabs: <Widget>[
-            Tab(icon: Icon(Icons.notifications_active), text: "In Progress"),
-            Tab(
-              icon: Icon(Icons.schedule),
-              text: "Coming Soon",
-            ),
-            Tab(
-              icon: Icon(Icons.event_available),
-              text: "Past",
-            ),
+            buildTabBarTitle("In Progress", Icons.notifications_active),
+            buildTabBarTitle("Coming Soon", Icons.schedule),
+            buildTabBarTitle("Past", Icons.event_available),
           ],
         ));
+  }
+
+  Tab buildTabBarTitle(String title, IconData icons) {
+    return Tab(
+      icon: Icon(icons),
+      text: title,
+    );
   }
 
   TabBarView buildTabBarView() {
