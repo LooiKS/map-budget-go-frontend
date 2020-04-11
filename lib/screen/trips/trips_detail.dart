@@ -3,6 +3,7 @@ import '../../widget/custom_shape.dart';
 import './trips_member_list.dart';
 import './trips_class.dart';
 import './trip_expenses_class.dart';
+import '../../main.dart';
 
 class TripsDetail extends StatefulWidget {
   @override
@@ -12,18 +13,6 @@ class TripsDetail extends StatefulWidget {
 class _TripsDetailState extends State<TripsDetail> {
   List<Trips> dummyTrip = <Trips>[];
   List<TripExpenses> dummyExpenses = <TripExpenses>[];
-
-  List<String> expensesTitle = ["Hotel", "Transport"];
-  List<Icon> icons = [
-    Icon(
-      Icons.hotel,
-      size: 38.0,
-    ),
-    Icon(
-      Icons.motorcycle,
-      size: 38.0,
-    )
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -56,16 +45,6 @@ class _TripsDetailState extends State<TripsDetail> {
             buildExpenses(),
           ],
         ),
-      ),
-    );
-  }
-
-  Padding buildMemberTitle() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0, top: 16.0),
-      child: Text(
-        "Members",
-        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -131,14 +110,18 @@ class _TripsDetailState extends State<TripsDetail> {
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black54),
+                  color: key.currentState.brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black87),
             ),
             subtitle: Text(
               dummyTrip[index].tripDetail,
               style: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.w300,
-                  color: Colors.black45),
+                  color: key.currentState.brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black54),
             ),
             onTap: () {},
           ),
@@ -153,48 +136,81 @@ class _TripsDetailState extends State<TripsDetail> {
       height: 200.0,
       child: ListView.builder(
         shrinkWrap: true,
-        itemBuilder: (BuildContext ctxt, int index) =>
-            buildExpensesCard(ctxt, index),
-        itemCount: expensesTitle.length,
+        itemBuilder: (BuildContext ctxt, int index) => Card(
+          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+          child: ListTile(
+            selected: true,
+            leading: Container(
+                width: 48.0,
+                child: buildExpensesIcon(dummyExpenses[index].title)),
+            trailing: Icon(
+              Icons.keyboard_arrow_right,
+              size: 30.0,
+            ),
+            title: Text(
+              dummyExpenses[index].title,
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: key.currentState.brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black87),
+            ),
+            subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Paid by ${dummyExpenses[index].getPayBy()}",
+                    style: TextStyle(
+                        color: key.currentState.brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black54),
+                  ),
+                  Text(
+                    dummyExpenses[index].dateTime,
+                    style: TextStyle(
+                        color: key.currentState.brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black54),
+                  ),
+                  Text(
+                    dummyExpenses[index].amount,
+                    style: TextStyle(
+                        color: key.currentState.brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black54),
+                  ),
+                ]),
+            onTap: () {},
+          ),
+        ),
+        itemCount: dummyExpenses.length,
       ),
     );
   }
 
-  Card buildExpensesCard(BuildContext ctxt, int index) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
-      child: ListTile(
-        selected: true,
-        leading: Container(width: 48.0, child: icons[index]),
-        trailing: Icon(
-          Icons.keyboard_arrow_right,
-          size: 30.0,
-        ),
-        title: Text(
-          expensesTitle[index],
-          style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black54),
-        ),
-        subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "Paid by John",
-                style: TextStyle(color: Colors.black54),
-              ),
-              Text(
-                "02-02-2020 10:20 a.m.",
-                style: TextStyle(color: Colors.black54),
-              ),
-              Text(
-                "RM 200.00",
-                style: TextStyle(color: Colors.black54),
-              ),
-            ]),
-        onTap: () {},
-      ),
-    );
+  Icon buildExpensesIcon(String title) {
+    switch (title) {
+      case "Hotel":
+        return Icon(
+          Icons.hotel,
+          size: 38.0,
+        );
+        break;
+
+      case "Transport":
+        return Icon(
+          Icons.motorcycle,
+          size: 38.0,
+        );
+        break;
+
+      default:
+        return Icon(
+          Icons.attach_money,
+          size: 38.0,
+        );
+        break;
+    }
   }
 }
