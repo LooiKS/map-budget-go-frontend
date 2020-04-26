@@ -1,5 +1,7 @@
+import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
+import 'package:budgetgo/model/user.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import './trips_member_list.dart';
@@ -16,13 +18,21 @@ class _TripsDetailState extends State<TripsDetail> {
 
   @override
   Widget build(BuildContext context) {
-    dummyTrip.add(Trips("KumKoiKum", "Going to beach."));
-    dummyTrip.add(Trips("SuiMakMak", "Going to shopping."));
+    // dummyTrip.add(Trips("KumKoiKum", "Going to beach.", , _members, _startDt, _endDt, _schedules, _expenses, _createdDt, _currency));
+    // dummyTrip.add(Trips("SuiMakMak", "Going to shopping."));
 
-    dummyExpenses.add(
-        TripExpenses("Hotel", "02-02-2020 10:20 a.m.", "RM 200.00", "John"));
-    dummyExpenses.add(TripExpenses(
-        "Transport", "02-02-2020 10:20 a.m.", "RM 200.00", "John"));
+    // dummyExpenses.add(TripExpenses(
+    //     "Hotel",
+    //     DateTime(2020),
+    //     200.0,
+    //     User("_id", "_firstName", "_lastName", "_phoneNum", "_email",
+    //         "_profilePic", "_username")));
+    // dummyExpenses.add(TripExpenses(
+    //     "Hotel",
+    //     DateTime(2020),
+    //     200.0,
+    //     User("_id", "_firstName", "_lastName", "_phoneNum", "_email",
+    //         "_profilePic", "_username")));
 
     return Scaffold(
       appBar: AppBar(
@@ -106,7 +116,7 @@ class _TripsDetailState extends State<TripsDetail> {
               size: 30.0,
             ),
             title: Text(
-              dummyTrip[index].tripTitle,
+              mockdata[0].schedules[index].activityTitle,
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -115,7 +125,7 @@ class _TripsDetailState extends State<TripsDetail> {
                       : Colors.black87),
             ),
             subtitle: Text(
-              dummyTrip[index].tripDetail,
+              mockdata[0].schedules[index].activityDesc,
               style: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.w300,
@@ -126,7 +136,7 @@ class _TripsDetailState extends State<TripsDetail> {
             onTap: () {},
           ),
         ),
-        itemCount: dummyTrip.length,
+        itemCount: mockdata[0].schedules.length,
       ),
     );
   }
@@ -142,13 +152,13 @@ class _TripsDetailState extends State<TripsDetail> {
             selected: true,
             leading: Container(
                 width: 48.0,
-                child: buildExpensesIcon(dummyExpenses[index].title)),
+                child: buildExpensesIcon(mockdata[0].expenses[index].title)),
             trailing: Icon(
               Icons.keyboard_arrow_right,
               size: 30.0,
             ),
             title: Text(
-              dummyExpenses[index].title,
+              mockdata[0].expenses[index].title,
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -160,21 +170,21 @@ class _TripsDetailState extends State<TripsDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Paid by ${dummyExpenses[index].getPayBy()}",
+                    "Paid by ${mockdata[0].expenses[index].payBy.firstName}",
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black54),
                   ),
                   Text(
-                    dummyExpenses[index].dateTime,
+                    mockdata[0].expenses[index].createdDt.toString(),
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black54),
                   ),
                   Text(
-                    dummyExpenses[index].amount,
+                    mockdata[0].expenses[index].amount.toString(),
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
@@ -184,7 +194,7 @@ class _TripsDetailState extends State<TripsDetail> {
             onTap: () {},
           ),
         ),
-        itemCount: dummyExpenses.length,
+        itemCount: mockdata[0].expenses.length,
       ),
     );
   }
