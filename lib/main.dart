@@ -1,3 +1,4 @@
+import 'package:budgetgo/screen/trips/trips_detail.dart';
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MainApp(
-      key:key,
+      key: key,
     );
   }
 }
@@ -53,13 +54,13 @@ class MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BudgetGo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: brightness,
-        primarySwatch: Colors.orange,
-      ),
-      home: SplashScreen(toggleBrightness: toggleBrightness),
-    );
+        title: 'BudgetGo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          brightness: brightness,
+          primarySwatch: Colors.orange,
+        ),
+        home: TripsDetail() //SplashScreen(toggleBrightness: toggleBrightness),
+        );
   }
 }

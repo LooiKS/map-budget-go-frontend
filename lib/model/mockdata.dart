@@ -10,7 +10,8 @@ final User mockUser1 = User(
     "0123123123",
     "john@example.com",
     "https://cdn141.picsart.com/280218394017211.png?type=webp&to=min&r=640",
-    "john0102");
+    "john0102",
+    [mockUser2, mockUser3, mockUser4, mockUser5]);
 
 final User mockUser2 = User(
     "BG0002",
@@ -19,7 +20,7 @@ final User mockUser2 = User(
     "0123321012",
     "angela@example.com",
     "https://i.pinimg.com/736x/5a/0c/7b/5a0c7b76e2a8bcdbe571c5ba916f93fe.jpg",
-    "angela0210");
+    "angela0210", []);
 
 final User mockUser3 = User(
     "BG0003",
@@ -28,7 +29,7 @@ final User mockUser3 = User(
     "0123210121",
     "kenny@example.com",
     "https://cdn141.picsart.com/280218394017211.png?type=webp&to=min&r=640",
-    "kenny1010");
+    "kenny1010", []);
 
 final User mockUser4 = User(
     "BG0004",
@@ -37,7 +38,7 @@ final User mockUser4 = User(
     "0123120120",
     "lisa@example.com",
     "https://cdn141.picsart.com/280218394017211.png?type=webp&to=min&r=640",
-    "lisa0131");
+    "lisa0131", []);
 
 final User mockUser5 = User(
     "BG0005",
@@ -46,7 +47,7 @@ final User mockUser5 = User(
     "0131012310",
     "abdul@example.com",
     "https://i.pinimg.com/736x/5a/0c/7b/5a0c7b76e2a8bcdbe571c5ba916f93fe.jpg",
-    "abdul0130");
+    "abdul0130", []);
 
 final mockdata = [
   //Trip #1
@@ -58,8 +59,13 @@ final mockdata = [
       DateTime(2020, 10, 10),
       DateTime(2020, 10, 15),
       [
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
+        Schedule(
+            DateTime(2020, 2, 10, 8),
+            DateTime(2020, 2, 10, 11),
+            "Eat Breakfast",
+            "Search for nicee food, and cheap one",
+            mockUser2,
+            DateTime.now()),
         Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
             "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
         Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
@@ -181,3 +187,7 @@ final mockdata = [
       DateTime.now(),
       "yen")
 ];
+
+// void initMock() {
+//   mockUser1.friends = [mockUser2, mockUser3, mockUser4, mockUser5];
+// }

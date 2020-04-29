@@ -218,29 +218,30 @@ class _MyHomePageState extends State<MyHomePage> {
             style: TextStyle(fontSize: 16.0),
           ),
           Spacer(),
-          if (showBadge)
-            Material(
-              color: Colors.deepOrange,
-              elevation: 5.0,
-              shadowColor: Colors.red,
-              borderRadius: BorderRadius.circular(5.0),
-              child: Container(
-                width: 25,
-                height: 25,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
+          showBadge
+              ? Material(
                   color: Colors.deepOrange,
+                  elevation: 5.0,
+                  shadowColor: Colors.red,
                   borderRadius: BorderRadius.circular(5.0),
-                ),
-                child: Text(
-                  "2",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            )
+                  child: Container(
+                    width: 25,
+                    height: 25,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.deepOrange,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Text(
+                      "2",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              : Container()
         ]),
       ),
     );

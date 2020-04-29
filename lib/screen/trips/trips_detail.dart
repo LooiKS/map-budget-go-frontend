@@ -1,7 +1,7 @@
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
-import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/trips/schedule_screen.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import './trips_member_list.dart';
@@ -133,7 +133,10 @@ class _TripsDetailState extends State<TripsDetail> {
                       ? Colors.white
                       : Colors.black54),
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ScheduleScreen()));
+            },
           ),
         ),
         itemCount: mockdata[0].schedules.length,
