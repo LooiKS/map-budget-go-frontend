@@ -1,48 +1,85 @@
+import 'package:budgetgo/model/trip.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
+import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/trips/trips_edit.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import './trips_member_list.dart';
 import '../../main.dart';
 
 class TripsDetail extends StatefulWidget {
+  Trips tripsData;
+  TripsDetail(this.tripsData);
   @override
   _TripsDetailState createState() => _TripsDetailState();
 }
 
 class _TripsDetailState extends State<TripsDetail> {
-  List<Trips> dummyTrip = <Trips>[];
-  List<TripExpenses> dummyExpenses = <TripExpenses>[];
+ void _navigateEditTrips() async {
+    Trips returnData = await Navigator.push( 
+      context,
+      MaterialPageRoute(builder: (context) => TripsEdit(Trips.copy(widget.tripsData)),
+    ),);
+    if (returnData != null){
+      setState(() => widget.tripsData = returnData);
+    }
+    else {}
+  }
+    void _selected(String route) {
+    setState(() {
+      if (route == "Edit"){
+        _navigateEditTrips();
+      }
+      else if (route == "Delete"){
+        widget.tripsData.tripName = "cancel";
+        Navigator.pop(context, widget.tripsData);
+      }
+    });
+  } 
+    List<String> operation = ["Edit","Delete"];
+  // List<Trips> dummyTrip = <Trips>[];
+  // List<TripExpenses> dummyExpenses = <TripExpenses>[];
 
   @override
   Widget build(BuildContext context) {
-    dummyTrip.add(Trips("KumKoiKum", "Going to beach."));
-    dummyTrip.add(Trips("SuiMakMak", "Going to shopping."));
-
-    dummyExpenses.add(
-        TripExpenses("Hotel", "02-02-2020 10:20 a.m.", "RM 200.00", "John"));
-    dummyExpenses.add(TripExpenses(
-        "Transport", "02-02-2020 10:20 a.m.", "RM 200.00", "John"));
 
     return Scaffold(
       appBar: AppBar(
+      automaticallyImplyLeading: true,
+      leading: IconButton(icon:Icon(Icons.arrow_back),
+      onPressed:() => Navigator.pop(context, widget.tripsData),),
         title: Text(
-          "Trip To Bali",
+          widget.tripsData.tripName,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         elevation: 0,
         shape: CustomShapeBorder(),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+              onSelected: _selected,
+              itemBuilder: (BuildContext context) {
+                return operation.map((String choice) {
+                  return PopupMenuItem(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+
+              },
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             buildCategoryTitle("Members"),
-            TripMemberList(),
+            buildTripMemberList(context,widget.tripsData.ownerUser,widget.tripsData.memberUser),
             buildCategoryTitle("Schedule"),
-            buildSchedules(),
+          //  buildSchedules(),
             buildCategoryTitle("Expenses"),
-            buildExpenses(),
+           // buildExpenses(),
           ],
         ),
       ),
@@ -106,7 +143,7 @@ class _TripsDetailState extends State<TripsDetail> {
               size: 30.0,
             ),
             title: Text(
-              dummyTrip[index].tripTitle,
+              "safasf",
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -115,7 +152,7 @@ class _TripsDetailState extends State<TripsDetail> {
                       : Colors.black87),
             ),
             subtitle: Text(
-              dummyTrip[index].tripDetail,
+             "asfasf",
               style: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.w300,
@@ -126,7 +163,7 @@ class _TripsDetailState extends State<TripsDetail> {
             onTap: () {},
           ),
         ),
-        itemCount: dummyTrip.length,
+        //itemCount: dummyTrip.length,
       ),
     );
   }
@@ -140,15 +177,15 @@ class _TripsDetailState extends State<TripsDetail> {
           margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
           child: ListTile(
             selected: true,
-            leading: Container(
-                width: 48.0,
-                child: buildExpensesIcon(dummyExpenses[index].title)),
+           // leading: Container(
+             //   width: 48.0,
+             //   child: buildExpensesIcon(dummyExpenses[index].title)),
             trailing: Icon(
               Icons.keyboard_arrow_right,
               size: 30.0,
             ),
             title: Text(
-              dummyExpenses[index].title,
+              "asfasf",
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -160,21 +197,21 @@ class _TripsDetailState extends State<TripsDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Paid by ${dummyExpenses[index].getPayBy()}",
+                    "safasf",
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black54),
                   ),
                   Text(
-                    dummyExpenses[index].dateTime,
+                    "safasf",
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black54),
                   ),
                   Text(
-                    dummyExpenses[index].amount,
+                    "asfasf",
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
@@ -184,7 +221,53 @@ class _TripsDetailState extends State<TripsDetail> {
             onTap: () {},
           ),
         ),
-        itemCount: dummyExpenses.length,
+       // itemCount: "dummyExpenses.length",
+      ),
+    );
+  }
+  Widget buildTripMemberList(BuildContext context,Users user, List<Users> friendUser) {
+    List<Users> memberList = [];
+    memberList.clear();
+    memberList.add(user);
+    memberList.addAll(friendUser);
+    return Container(
+      height: 70.0,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        scrollDirection: Axis.horizontal,
+        itemCount: friendUser.length + 1,
+        itemBuilder: (context, index) {
+          return buildMemberAvatar(index,memberList);
+        },
+        separatorBuilder: (context, index) => SizedBox(
+          width: 10.0,
+        ),
+      ),
+    );
+  }
+
+  GestureDetector buildMemberAvatar(int index,List<Users> memberList) {
+    return GestureDetector(
+      onTap: () {},
+      child: Column(
+        children: <Widget>[
+           ClipOval(
+                  child: FadeInImage.assetNetwork(
+                    placeholder: "assets/images/loading.gif",
+                    image: memberList[index].imageURL,
+                    fit: BoxFit.contain,
+                    width: 30.0,
+                    height: 30.0,
+                  ),
+                ),
+            const SizedBox(height: 5.0),
+          Text(
+          memberList[index].userName,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }

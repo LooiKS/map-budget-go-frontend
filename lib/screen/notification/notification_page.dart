@@ -123,8 +123,8 @@ class _NotificationPageState extends State<NotificationPage> {
                 : Colors.black26),
       ),
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => TripsDetail()));
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (context) => TripsDetail()));
       },
     );
   }

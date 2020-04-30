@@ -1,3 +1,4 @@
+import 'package:budgetgo/model/mock_data.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
@@ -67,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
       case 1:
-        return TripsMainPage();
+        return TripsMainPage(tripMockData);
 
       case 2:
         return Center(

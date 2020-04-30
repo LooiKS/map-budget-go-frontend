@@ -1,16 +1,47 @@
+import 'package:budgetgo/model/mock_data.dart';
+import 'package:budgetgo/model/trip.dart';
+import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/trips/trips_create.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:intl/intl.dart';
 import './trips_detail.dart';
 import '../../main.dart';
 
 class TripsMainPage extends StatefulWidget {
+  final List<Trips> tripsData;
+  TripsMainPage(this.tripsData);
+  
   @override
   _TripsMainPageState createState() => _TripsMainPageState();
 }
 
 class _TripsMainPageState extends State<TripsMainPage> {
-  List<String> dummyTrips = ["Trip To Bali", "Trip to Sky"];
-  List<String> dummyLocation = ["Bali, Indonesia", "Genting, Malaysia"];
+ void _navigateTripDetails(int index) async {
+    Trips returnData = await Navigator.push( 
+      context,
+      MaterialPageRoute(builder: (context) => TripsDetail(Trips.copy(widget.tripsData[index])),
+    ),);
+    if (returnData != null){
+      setState(() => widget.tripsData[index] = returnData);
+      setState(() {
+        widget.tripsData.removeWhere((item) => item.tripName == 'cancel');
+      });
+    }
+    else {}
+  }
+  void _navigateCreateTrip() async{
+    Trips returnData = await Navigator.push(context,
+    MaterialPageRoute(builder: (context) => TripsCreatePage()));
+    if (returnData !=null){
+      print(returnData.currency);
+      setState(() {
+        widget.tripsData.add(returnData);
+      });
+    }
+  }
+  // List<String> dummyTrips = ["Trip To Bali", "Trip to Sky"];
+  // List<String> dummyLocation = ["Bali, Indonesia", "Genting, Malaysia"];
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +63,16 @@ class _TripsMainPageState extends State<TripsMainPage> {
             child: ListView.builder(
               itemBuilder: (BuildContext ctxt, int index) =>
                   buildInProgressList(ctxt, index),
-              itemCount: dummyTrips.length,
+              itemCount: tripMockData.length,
             ),
           ),
           Container(child: Text("Coming Soon")),
           Container(child: Text("Past")),
         ]),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {},
+          onPressed: () {
+            _navigateCreateTrip();
+          },
           label: Text(
             "Add Trips",
             style: TextStyle(
@@ -65,6 +98,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
   }
 
   Card buildInProgressList(BuildContext ctxt, int index) {
+    String formattedDate = DateFormat('dd MMM').format(widget.tripsData[index].startDate);
     return Card(
       child: Slidable(
         actionPane: SlidableDrawerActionPane(),
@@ -79,7 +113,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Icon(Icons.calendar_today),
-                  Text("20 NOV",
+                  Text(formattedDate,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -101,7 +135,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
           title: SizedBox(
             height: 27,
             child: Text(
-              "${dummyTrips[index]}",
+              "${widget.tripsData[index].tripName}",
               style: TextStyle(
                   color: key.currentState.brightness == Brightness.dark
                       ? Colors.white
@@ -118,7 +152,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
                   children: <Widget>[
                     Icon(Icons.place),
                     Text(
-                      dummyLocation[index],
+                      widget.tripsData[index].location,
                       style: TextStyle(
                           color: key.currentState.brightness == Brightness.dark
                               ? Colors.white
@@ -126,60 +160,79 @@ class _TripsMainPageState extends State<TripsMainPage> {
                     )
                   ],
                 ),
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    buildMemberAvatar(
-                        imageLink:
-                            "https://i.pinimg.com/736x/5a/0c/7b/5a0c7b76e2a8bcdbe571c5ba916f93fe.jpg"),
-                    buildMemberAvatar(
-                        imageLink:
-                            "https://cdn141.picsart.com/280218394017211.png?type=webp&to=min&r=640"),
-                    CircleAvatar(
-                        radius: 15.0,
-                        child: Icon(Icons.more_horiz),
-                        backgroundColor:
-                            key.currentState.brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black54),
+                    memberList(context,widget.tripsData[index].ownerUser,widget.tripsData[index].memberUser),
+                    // CircleAvatar(
+                    //     radius: 15.0,
+                    //     child: Icon(Icons.more_horiz),
+                    //     backgroundColor:
+                    //         key.currentState.brightness == Brightness.dark
+                    //             ? Colors.white
+                    //             : Colors.black54),
                   ],
                 ),
               ]),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TripsDetail()),
-            );
+            _navigateTripDetails(index);
+            
           },
         ),
         secondaryActions: <Widget>[
-          buildIconSlideAction("More", Colors.grey, Icons.more_horiz),
-          buildIconSlideAction("Delete", Colors.red, Icons.delete),
+          buildIconSlideAction("More", Colors.grey, Icons.more_horiz,index),
+          buildIconSlideAction("Delete", Colors.red, Icons.delete,index),
         ],
       ),
     );
   }
 
   IconSlideAction buildIconSlideAction(
-      String caption, Color colors, IconData icons) {
+      String caption, Color colors, IconData icons,int index) {
     return IconSlideAction(
       caption: caption,
       color: colors,
       icon: icons,
-      onTap: () {},
+      onTap: () {
+        if (caption=="Delete"){
+          setState(() {
+            widget.tripsData.removeWhere((item) => item.tripName == widget.tripsData[index].tripName);
+          });
+        }
+      },
     );
   }
-
-  ClipOval buildMemberAvatar({String imageLink, bool icon}) {
-    return ClipOval(
-      child: FadeInImage.assetNetwork(
-        placeholder: "assets/images/loading.gif",
-        image: imageLink,
-        fit: BoxFit.contain,
-        width: 30.0,
-        height: 30.0,
+Container memberList(BuildContext context,Users user, List<Users> friendUser) {
+     List<Users> memberList = [];
+     memberList.clear();
+     memberList.add(user);
+     memberList.addAll(friendUser);
+     return Container(
+      height: 48.0,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+        scrollDirection: Axis.horizontal,
+        itemCount: friendUser.length + 1,
+        itemBuilder: (context, index) {
+          return buildMemberAvatar(index,memberList,context);
+        },
+        separatorBuilder: (context, index) => SizedBox(
+          width: 5.0,
+        ),
       ),
     );
   }
+
+   ClipOval buildMemberAvatar(int index,List<Users> memberList,BuildContext context) {
+     return ClipOval(
+       child: FadeInImage.assetNetwork(
+         placeholder: "assets/images/loading.gif",
+         image: memberList[index].imageURL,
+         fit: BoxFit.contain,
+         width: 30.0,
+         height: 30.0,
+       ),
+     );
+   }
 }
