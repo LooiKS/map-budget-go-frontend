@@ -11,6 +11,10 @@ class Schedule {
   Schedule(this._startDt, this._endDt, this._activityTitle, this._activityDesc,
       this._createdBy, this._createdDt);
 
+  Schedule.copy(Schedule from)
+      : this(from.startDt, from.endDt, from.activityTitle, from.activityDesc,
+            from.createdBy, from.createdDt);
+
   DateTime get startDt => this._startDt;
   DateTime get endDt => this._endDt;
   String get activityTitle => this._activityTitle;

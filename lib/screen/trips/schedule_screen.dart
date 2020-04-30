@@ -1,17 +1,49 @@
 import 'dart:async';
 
 import 'package:budgetgo/model/mockdata.dart';
+import 'package:budgetgo/model/schedule.dart';
+import 'package:budgetgo/screen/trips/schedule_form.dart';
+import 'package:budgetgo/screen/trips/trips_detail.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
 
-class ScheduleScreen extends StatelessWidget {
+class ScheduleScreen extends StatefulWidget {
+  final int index;
+  ScheduleScreen(this.index);
+
+  @override
+  _ScheduleScreenState createState() => _ScheduleScreenState();
+}
+
+class _ScheduleScreenState extends State<ScheduleScreen> {
+  Schedule schedule;
+  @override
+  initState() {
+    super.initState();
+    schedule = mockdata[0].schedules[widget.index];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text('schedule'),
           shape: CustomShapeBorder(),
+          actions: (loggedInUser.id == schedule.createdBy.id)
+              ? <Widget>[
+                  IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ScheduleForm(
+                                          Schedule.copy(schedule))))
+                              .then((newSchedule) {
+                            setState(() => schedule = newSchedule);
+                          }))
+                ]
+              : [],
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -27,10 +59,8 @@ class ScheduleScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
-                          _buildFromToColumn(
-                              'from', mockdata[0].schedules[0].startDt),
-                          _buildFromToColumn(
-                              'to', mockdata[0].schedules[0].endDt),
+                          _buildFromToColumn('from', schedule.startDt),
+                          _buildFromToColumn('to', schedule.endDt),
                         ],
                       ),
                     ),
@@ -46,7 +76,7 @@ class ScheduleScreen extends StatelessWidget {
                             readOnly: true,
                             controller: TextEditingController()
                               ..value = TextEditingValue(
-                                  text: mockdata[0].schedules[0].activityTitle),
+                                  text: schedule.activityTitle),
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(0),
                                 border: OutlineInputBorder(
@@ -81,7 +111,7 @@ class ScheduleScreen extends StatelessWidget {
                                   padding:
                                       EdgeInsets.only(top: 8.0, bottom: 2.0),
                                   child: Text(
-                                    mockdata[0].schedules[0].activityDesc,
+                                    schedule.activityDesc,
                                     style: TextStyle(),
                                   ),
                                 ),
@@ -92,7 +122,8 @@ class ScheduleScreen extends StatelessWidget {
                                       fontSize: 20,
                                       color: Colors.black38),
                                 ),
-                                ScheduleStatus(),
+                                ScheduleStatus(
+                                    schedule.startDt, schedule.endDt),
                                 Divider(),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
@@ -108,7 +139,7 @@ class ScheduleScreen extends StatelessWidget {
                                                 .firstName),
                                         _buildCreatedByCreatedOnColumn(
                                           'Created on:',
-                                          '${Month[mockdata[0].schedules[0].createdDt.month]} ${mockdata[0].schedules[0].createdDt.day.toString()}, ${mockdata[0].schedules[0].createdDt.year}',
+                                          '${Month[schedule.createdDt.month]} ${schedule.createdDt.day.toString()}, ${schedule.createdDt.year}',
                                         ),
                                       ]),
                                 )
@@ -117,63 +148,7 @@ class ScheduleScreen extends StatelessWidget {
                     )
                   ],
                 ),
-              )
-              /*
-               Column(
-                 children: <Widget>[
-                   ListTile(
-                     leading: Icon(
-                       Icons.calendar_today,
-                       color: Colors.blue,
-                     ),
-                     title: Text('Start Date Time'),
-                     trailing: Text(mockdata[0].schedules[0].startDt.toString()),
-                   ),
-                   ListTile(
-                     leading: Icon(
-                       Icons.calendar_today,
-                       color: Colors.blue,
-                     ),
-                     title: Text('End Date Time'),
-                     trailing: Text(mockdata[0].schedules[0].endDt.toString()),
-                   ),
-                   ListTile(
-                     leading: Icon(
-                       Icons.local_activity,
-                       color: Colors.blue,
-                     ),
-                     title: Text('Activity'),
-                     trailing: Text(mockdata[0].schedules[0].activityTitle),
-                   ),
-                   ListTile(
-                     leading: Icon(
-                       Icons.description,
-                       color: Colors.blue,
-                     ),
-                     title: Text('Activity Description'),
-                     trailing: Text(
-                       mockdata[0].schedules[0].activityDesc.toString(),
-                     ),
-                   ),
-                   ListTile(
-                     leading: Icon(
-                       Icons.person,
-                       color: Colors.blue,
-                     ),
-                     title: Text('Created By'),
-                     trailing: Text(mockdata[0].schedules[0].createdBy.firstName),
-                   ),
-                   ListTile(
-                     leading: Icon(
-                       Icons.date_range,
-                       color: Colors.blue,
-                     ),
-                     title: Text('Created On'),
-                     trailing: Text(mockdata[0].schedules[0].createdDt.toString()),
-                   ),
-                 ],
-               ),*/
-              ),
+              )),
         ));
   }
 
@@ -215,20 +190,22 @@ class ScheduleScreen extends StatelessWidget {
 }
 
 class ScheduleStatus extends StatefulWidget {
+  final DateTime startDt, endDt;
+  ScheduleStatus(this.startDt, this.endDt);
   @override
   _ScheduleStatusState createState() => _ScheduleStatusState();
 }
 
 class _ScheduleStatusState extends State<ScheduleStatus> {
-  var countDown = mockdata[0].schedules[0].startDt.difference(DateTime.now());
-  var timeElapsed = DateTime.now().difference(mockdata[0].schedules[0].endDt);
+  var countDown;
+  var timeElapsed;
   Timer timer;
 
   _ScheduleStatusState() {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        countDown = mockdata[0].schedules[0].startDt.difference(DateTime.now());
-        timeElapsed = DateTime.now().difference(mockdata[0].schedules[0].endDt);
+        countDown = widget.startDt.difference(DateTime.now());
+        timeElapsed = DateTime.now().difference(widget.endDt);
       });
     });
   }
@@ -241,6 +218,8 @@ class _ScheduleStatusState extends State<ScheduleStatus> {
 
   @override
   Widget build(BuildContext context) {
+    countDown = widget.startDt.difference(DateTime.now());
+    timeElapsed = DateTime.now().difference(widget.endDt);
     return Column(
       children: <Widget>[
         Center(

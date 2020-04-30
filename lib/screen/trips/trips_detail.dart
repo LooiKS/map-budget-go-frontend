@@ -133,10 +133,8 @@ class _TripsDetailState extends State<TripsDetail> {
                       ? Colors.white
                       : Colors.black54),
             ),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ScheduleScreen()));
-            },
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ScheduleScreen(index))),
           ),
         ),
         itemCount: mockdata[0].schedules.length,

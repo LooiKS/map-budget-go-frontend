@@ -60,8 +60,8 @@ final mockdata = [
       DateTime(2020, 10, 15),
       [
         Schedule(
-            DateTime(2020, 2, 10, 8),
-            DateTime(2020, 2, 10, 11),
+            DateTime(2020, 4, 30, 10, 20),
+            DateTime(2020, 4, 30, 10, 21),
             "Eat Breakfast",
             "Search for nicee food, and cheap one",
             mockUser2,
@@ -191,3 +191,5 @@ final mockdata = [
 // void initMock() {
 //   mockUser1.friends = [mockUser2, mockUser3, mockUser4, mockUser5];
 // }
+
+final loggedInUser = mockUser2;
