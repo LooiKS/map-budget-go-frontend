@@ -2,12 +2,16 @@ import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/expenses/expenses_details.dart';
+import 'package:budgetgo/screen/expenses/expenses_screen.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import './trips_member_list.dart';
 import '../../main.dart';
 
 class TripsDetail extends StatefulWidget {
+  final Trips trip;
+  TripsDetail(this.trip);
   @override
   _TripsDetailState createState() => _TripsDetailState();
 }
@@ -37,7 +41,7 @@ class _TripsDetailState extends State<TripsDetail> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Trip To Bali",
+          "Trip to ${widget.trip.tripTitle}",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         elevation: 0,
@@ -70,12 +74,33 @@ class _TripsDetailState extends State<TripsDetail> {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             title != "Members"
-                ? Text("View All",
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.orange,
-                    ))
+                ? FlatButton(
+                    child: Text(
+                      'View All',
+                      // style: TextStyle(color: Colors.orange),
+                    ),
+                    onPressed: title != "Schedule"
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ExpensesScreen(
+                                  widget.trip.expenses,
+                                  widget.trip.members,
+                                  widget.trip.owner,
+                                ),
+                              ),
+                            );
+                          }
+                        : () {
+                            Navigator.push(context, null);
+                          })
+                // ? Text("View All",
+                //     style: TextStyle(
+                //       fontSize: 15.0,
+                //       fontWeight: FontWeight.w400,
+                //       color: Colors.orange,
+                //     ))
                 : Text(""),
           ]),
     );
@@ -116,7 +141,8 @@ class _TripsDetailState extends State<TripsDetail> {
               size: 30.0,
             ),
             title: Text(
-              mockdata[0].schedules[index].activityTitle,
+              // mockdata[0].schedules[index].activityTitle,
+              widget.trip.schedules[index].activityTitle,
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -125,7 +151,8 @@ class _TripsDetailState extends State<TripsDetail> {
                       : Colors.black87),
             ),
             subtitle: Text(
-              mockdata[0].schedules[index].activityDesc,
+              // mockdata[0].schedules[index].activityDesc,
+              widget.trip.schedules[index].activityDesc,
               style: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.w300,
@@ -136,7 +163,7 @@ class _TripsDetailState extends State<TripsDetail> {
             onTap: () {},
           ),
         ),
-        itemCount: mockdata[0].schedules.length,
+        itemCount: widget.trip.schedules.length,
       ),
     );
   }
@@ -152,13 +179,22 @@ class _TripsDetailState extends State<TripsDetail> {
             selected: true,
             leading: Container(
                 width: 48.0,
-                child: buildExpensesIcon(mockdata[0].expenses[index].title)),
-            trailing: Icon(
-              Icons.keyboard_arrow_right,
-              size: 30.0,
+                child: buildExpensesIcon(widget.trip.expenses[index].category)),
+            trailing: IconButton(
+              icon: Icon(
+                Icons.keyboard_arrow_right,
+                size: 30.0,
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ExpenseDetailsScreen(widget.trip.expenses[index])));
+              },
             ),
             title: Text(
-              mockdata[0].expenses[index].title,
+              widget.trip.expenses[index].title,
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -170,38 +206,37 @@ class _TripsDetailState extends State<TripsDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Paid by ${mockdata[0].expenses[index].payBy.firstName}",
+                    "Paid by ${widget.trip.expenses[index].payBy.firstName}",
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black54),
                   ),
                   Text(
-                    mockdata[0].expenses[index].createdDt.toString(),
+                    widget.trip.expenses[index].createdDt.toString(),
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black54),
                   ),
                   Text(
-                    mockdata[0].expenses[index].amount.toString(),
+                    widget.trip.expenses[index].amount.toString(),
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black54),
                   ),
                 ]),
-            onTap: () {},
           ),
         ),
-        itemCount: mockdata[0].expenses.length,
+        itemCount: widget.trip.expenses.length,
       ),
     );
   }
 
-  Icon buildExpensesIcon(String title) {
-    switch (title) {
-      case "Hotel":
+  Icon buildExpensesIcon(String category) {
+    switch (category) {
+      case "Accommodation":
         return Icon(
           Icons.hotel,
           size: 38.0,
@@ -210,7 +245,21 @@ class _TripsDetailState extends State<TripsDetail> {
 
       case "Transport":
         return Icon(
-          Icons.motorcycle,
+          Icons.airport_shuttle,
+          size: 38.0,
+        );
+        break;
+
+      case "Food & Beverage":
+        return Icon(
+          Icons.fastfood,
+          size: 38.0,
+        );
+        break;
+
+      case "Entertainment":
+        return Icon(
+          Icons.casino,
           size: 38.0,
         );
         break;

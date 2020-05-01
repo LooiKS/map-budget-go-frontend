@@ -1,3 +1,5 @@
+import 'package:budgetgo/model/mockdata.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import './trips_detail.dart';
@@ -10,7 +12,7 @@ class TripsMainPage extends StatefulWidget {
 
 class _TripsMainPageState extends State<TripsMainPage> {
   List<String> dummyTrips = ["Trip To Bali", "Trip to Sky"];
-  List<String> dummyLocation = ["Bali, Indonesia", "Genting, Malaysia"];
+  List<String> dummyLocation = ["Tokyo, Japan", "Jeju, Korea"];
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +74,15 @@ class _TripsMainPageState extends State<TripsMainPage> {
         child: ListTile(
           selected: true,
           leading: Container(
-            width: 48.0,
+            width: 65.0,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Icon(Icons.calendar_today),
-                  Text("20 NOV",
+                  Text(
+                      formatDate(mockdata[index].startDt, [yy, '-', M, '-', d]),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -101,7 +104,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
           title: SizedBox(
             height: 27,
             child: Text(
-              "${dummyTrips[index]}",
+              "Trip to ${mockdata[index].tripTitle}",
               style: TextStyle(
                   color: key.currentState.brightness == Brightness.dark
                       ? Colors.white
@@ -149,7 +152,8 @@ class _TripsMainPageState extends State<TripsMainPage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => TripsDetail()),
+              MaterialPageRoute(
+                  builder: (context) => TripsDetail(mockdata[index])),
             );
           },
         ),
