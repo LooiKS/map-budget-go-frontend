@@ -1,4 +1,3 @@
-// import 'package:budgetgo/constant/currency.dart';
 import 'package:budgetgo/constant/currency.dart';
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
