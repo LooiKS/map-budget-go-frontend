@@ -2,6 +2,7 @@ import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/screen/expenses/expenses_details.dart';
 import 'package:budgetgo/screen/expenses/expenses_screen.dart';
+import 'package:budgetgo/screen/trips/add_members.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import '../../main.dart';
@@ -87,7 +88,13 @@ class _TripsDetailState extends State<TripsDetail> {
                               icon: Icon(Icons.group_add),
                               iconSize: 40.0,
                               color: Colors.grey,
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddMember(widget.trip)));
+                              },
                             ),
                           )
                         : SizedBox(
