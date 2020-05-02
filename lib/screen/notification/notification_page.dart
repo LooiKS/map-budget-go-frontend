@@ -1,4 +1,6 @@
+import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/notification_class.dart';
+import 'package:budgetgo/screen/trips/trips_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../widget/custom_shape.dart';
@@ -124,6 +126,8 @@ class _NotificationPageState extends State<NotificationPage> {
       onTap: () {
         // Navigator.of(context)
         //     .push(MaterialPageRoute(builder: (context) => TripsDetail()));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => TripsDetail(mockdata[index])));
       },
     );
   }

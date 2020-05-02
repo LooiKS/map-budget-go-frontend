@@ -1,6 +1,12 @@
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/trips/trips_edit.dart';
+import 'package:budgetgo/model/mockdata.dart';
+import 'package:budgetgo/model/trip_expenses_class.dart';
+import 'package:budgetgo/model/trips_class.dart';
+import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/expenses/expenses_details.dart';
+import 'package:budgetgo/screen/expenses/expenses_screen.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import '../../main.dart';
@@ -31,11 +37,10 @@ class _TripsDetailState extends State<TripsDetail> {
   void _selected(String route) {
     setState(() {
       if (route == "Edit") {
-        if(widget.tripsData.status=="past"){
+        if (widget.tripsData.status == "past") {
           _tripEditError(context);
-        }
-        else{
-        _navigateEditTrips();
+        } else {
+          _navigateEditTrips();
         }
       } else if (route == "Delete") {
         _deleteConfirmationAlert(context);
@@ -82,9 +87,9 @@ class _TripsDetailState extends State<TripsDetail> {
             buildTripMemberList(
                 context, widget.tripsData.owner, widget.tripsData.members),
             buildCategoryTitle("Schedule"),
-            //  buildSchedules(),
+            buildSchedules(),
             buildCategoryTitle("Expenses"),
-            // buildExpenses(),
+            buildExpenses(),
           ],
         ),
       ),
@@ -102,12 +107,33 @@ class _TripsDetailState extends State<TripsDetail> {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             title != "Members"
-                ? Text("View All",
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.orange,
-                    ))
+                ? FlatButton(
+                    child: Text(
+                      'View All',
+                      // style: TextStyle(color: Colors.orange),
+                    ),
+                    onPressed: title != "Schedule"
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ExpensesScreen(
+                                  widget.tripsData.expenses,
+                                  widget.tripsData.members,
+                                  widget.tripsData.owner,
+                                ),
+                              ),
+                            );
+                          }
+                        : () {
+                            Navigator.push(context, null);
+                          })
+                // ? Text("View All",
+                //     style: TextStyle(
+                //       fontSize: 15.0,
+                //       fontWeight: FontWeight.w400,
+                //       color: Colors.orange,
+                //     ))
                 : Text(""),
           ]),
     );
@@ -148,7 +174,8 @@ class _TripsDetailState extends State<TripsDetail> {
               size: 30.0,
             ),
             title: Text(
-              "safasf",
+              // mockdata[0].schedules[index].activityTitle,
+              widget.tripsData.schedules[index].activityTitle,
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -157,7 +184,8 @@ class _TripsDetailState extends State<TripsDetail> {
                       : Colors.black87),
             ),
             subtitle: Text(
-              "asfasf",
+              // mockdata[0].schedules[index].activityDesc,
+              widget.tripsData.schedules[index].activityDesc,
               style: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.w300,
@@ -168,65 +196,7 @@ class _TripsDetailState extends State<TripsDetail> {
             onTap: () {},
           ),
         ),
-        //itemCount: dummyTrip.length,
-      ),
-    );
-  }
-
-  Container buildExpenses() {
-    return Container(
-      height: 200.0,
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemBuilder: (BuildContext ctxt, int index) => Card(
-          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
-          child: ListTile(
-            selected: true,
-            // leading: Container(
-            //   width: 48.0,
-            //   child: buildExpensesIcon(dummyExpenses[index].title)),
-            trailing: Icon(
-              Icons.keyboard_arrow_right,
-              size: 30.0,
-            ),
-            title: Text(
-              "asfasf",
-              style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: key.currentState.brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black87),
-            ),
-            subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "safasf",
-                    style: TextStyle(
-                        color: key.currentState.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black54),
-                  ),
-                  Text(
-                    "safasf",
-                    style: TextStyle(
-                        color: key.currentState.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black54),
-                  ),
-                  Text(
-                    "asfasf",
-                    style: TextStyle(
-                        color: key.currentState.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black54),
-                  ),
-                ]),
-            onTap: () {},
-          ),
-        ),
-        // itemCount: "dummyExpenses.length",
+        itemCount: widget.tripsData.schedules.length,
       ),
     );
   }
@@ -279,6 +249,73 @@ class _TripsDetailState extends State<TripsDetail> {
     );
   }
 
+  Container buildExpenses() {
+    return Container(
+      height: 200.0,
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (BuildContext ctxt, int index) => Card(
+          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+          child: ListTile(
+            selected: true,
+            leading: Container(
+                width: 48.0,
+                child: buildExpensesIcon(
+                    widget.tripsData.expenses[index].category)),
+            trailing: IconButton(
+              icon: Icon(
+                Icons.keyboard_arrow_right,
+                size: 30.0,
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ExpenseDetailsScreen(
+                            widget.tripsData.expenses[index])));
+              },
+            ),
+            title: Text(
+              widget.tripsData.expenses[index].title,
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: key.currentState.brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black87),
+            ),
+            subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Paid by ${widget.tripsData.expenses[index].payBy.firstName}",
+                    style: TextStyle(
+                        color: key.currentState.brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black54),
+                  ),
+                  Text(
+                    widget.tripsData.expenses[index].createdDt.toString(),
+                    style: TextStyle(
+                        color: key.currentState.brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black54),
+                  ),
+                  Text(
+                    widget.tripsData.expenses[index].amount.toString(),
+                    style: TextStyle(
+                        color: key.currentState.brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black54),
+                  ),
+                ]),
+          ),
+        ),
+        itemCount: widget.tripsData.expenses.length,
+      ),
+    );
+  }
+
   Future _deleteConfirmationAlert(BuildContext context) {
     return showDialog(
       context: context,
@@ -310,7 +347,8 @@ class _TripsDetailState extends State<TripsDetail> {
       },
     );
   }
-   Future<void> _tripEdittedAlert(BuildContext context) {
+
+  Future<void> _tripEdittedAlert(BuildContext context) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -336,7 +374,8 @@ class _TripsDetailState extends State<TripsDetail> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Trip Message'),
-          content: const Text('The trip is already over. You cannot edit this trip anymore.'),
+          content: const Text(
+              'The trip is already over. You cannot edit this trip anymore.'),
           actions: <Widget>[
             FlatButton(
               child: Text('Ok'),
@@ -361,7 +400,21 @@ class _TripsDetailState extends State<TripsDetail> {
 
       case "Transport":
         return Icon(
-          Icons.motorcycle,
+          Icons.airport_shuttle,
+          size: 38.0,
+        );
+        break;
+
+      case "Food & Beverage":
+        return Icon(
+          Icons.fastfood,
+          size: 38.0,
+        );
+        break;
+
+      case "Entertainment":
+        return Icon(
+          Icons.casino,
           size: 38.0,
         );
         break;

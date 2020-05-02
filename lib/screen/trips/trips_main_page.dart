@@ -1,6 +1,8 @@
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/trips/trips_create.dart';
+import 'package:budgetgo/model/mockdata.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
@@ -233,7 +235,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
         child: ListTile(
           selected: true,
           leading: Container(
-            width: 48.0,
+            width: 65.0,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
