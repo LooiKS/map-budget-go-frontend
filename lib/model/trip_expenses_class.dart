@@ -1,19 +1,41 @@
+import 'package:budgetgo/model/user.dart';
+
 class TripExpenses {
-  final String title;
-  final String dateTime;
-  final String amount;
-  final String payBy;
+  String _title;
+  String _desc;
+  String _category;
+  DateTime _createdDt;
+  double _amount;
+  User _payBy;
+  User _createdBy;
+  List<User> _sharedBy;
 
-  TripExpenses(this.title, this.dateTime, this.amount, this.payBy);
-  
+  TripExpenses(
+    this._title,
+    this._desc,
+    this._category,
+    this._createdDt,
+    this._amount,
+    this._payBy,
+    this._createdBy,
+    this._sharedBy,
+  );
 
-  String getTitle() => title;
-  String getDateTime() => dateTime;
-  String getAmount() => amount;
-  String getPayBy() => payBy;
+  String get title => this._title;
+  String get desc => this._desc;
+  String get category => this._category;
+  DateTime get createdDt => this._createdDt;
+  double get amount => this._amount;
+  User get payBy => this._payBy;
+  User get createdBy => this._createdBy;
+  List<User> get sharedBy => this._sharedBy;
 
-  void setTitle(String title) => title = title;
-  void setDateTime(String dateTime) => dateTime = dateTime;
-  void setAmount(String amount) => amount = amount;
-  void setPayBy(String payBy) => payBy = payBy;
+  set title(String newValue) => this._title = newValue;
+  set desc(String newValue) => this._desc = newValue;
+  set category(String newValue) => this._category = newValue;
+  set createdDt(DateTime newValue) => this._createdDt = newValue;
+  set amount(double newValue) => this._amount = newValue;
+  set payBy(User newValue) => this._payBy = newValue;
+  set createdBy(User newValue) => this._createdBy = newValue;
+  set sharedBy(List<User> newValue) => this._sharedBy = newValue;
 }
