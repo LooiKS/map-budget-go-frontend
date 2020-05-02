@@ -29,6 +29,7 @@ class _TripsDetailState extends State<TripsDetail> {
         ),
         actions: <Widget>[
           PopupMenuButton(
+            icon: Icon(Icons.more_horiz),
             itemBuilder: (BuildContext context) {
               return tripsDetailSetting.map((String setting) {
                 return PopupMenuItem<String>(
