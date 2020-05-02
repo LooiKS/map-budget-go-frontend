@@ -1,18 +1,15 @@
 import 'package:budgetgo/model/trips_class.dart';
-import 'package:budgetgo/model/user.dart';
 import 'package:flutter/material.dart';
 
 class AddMember extends StatefulWidget {
-  final Trips dummyTrips;
-  AddMember(this.dummyTrips);
+  final Trips hostData;
+  AddMember(this.hostData);
 
   @override
   _AddMemberState createState() => _AddMemberState();
 }
 
 class _AddMemberState extends State<AddMember> {
-  List<User> _friendList = List<User>();
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -34,17 +31,92 @@ class _AddMemberState extends State<AddMember> {
               onPressed: () {},
             ),
           ],
-          bottom: TabBar(tabs: [
-            Container(
-              child: Text("Hi"),
-            ),
-            Container(
-              child: Text("Hi"),
-            ),
-            Container(
-              child: Text("Hi"),
-            ),
-          ]),
+          bottom: PreferredSize(
+            preferredSize: Size(10.0, 80.0),
+            child: TabBar(tabs: [
+              Container(
+                height: 80.0,
+                child: Tab(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: 35.0,
+                        height: 35.0,
+                        margin: EdgeInsets.only(bottom: 5.0),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            image: DecorationImage(
+                              image: ExactAssetImage(
+                                  'assets/images/contact_book.png'),
+                              fit: BoxFit.contain,
+                            )),
+                      ),
+                      Text(
+                        "Friend List",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                height: 80.0,
+                child: Tab(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: 35.0,
+                        height: 35.0,
+                        margin: EdgeInsets.only(bottom: 5.0),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            image: DecorationImage(
+                              image: ExactAssetImage(
+                                  'assets/images/qrcode.png'),
+                              fit: BoxFit.contain,
+                            )),
+                      ),
+                      Text(
+                        "QR Code",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                height: 80.0,
+                child: Tab(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: 35.0,
+                        height: 35.0,
+                        margin: EdgeInsets.only(bottom: 5.0),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            image: DecorationImage(
+                              image: ExactAssetImage(
+                                  'assets/images/search_icon.png'),
+                              fit: BoxFit.contain,
+                            )),
+                      ),
+                      Text(
+                        "ID/Phone No.",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ]),
+          ),
           elevation: 0,
         ),
         body: TabBarView(
