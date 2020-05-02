@@ -10,7 +10,6 @@ import '../../main.dart';
 class TripsMainPage extends StatefulWidget {
   final List<Trips> tripsData;
   TripsMainPage(this.tripsData);
-
   @override
   _TripsMainPageState createState() => _TripsMainPageState();
 }

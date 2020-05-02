@@ -14,7 +14,6 @@ class TripsEdit extends StatefulWidget {
   final Trips _tripData;
 
   TripsEdit(this._tripData);
-
   @override
   _TripsEditState createState() => _TripsEditState();
 }
@@ -203,7 +202,6 @@ class _TripsEditState extends State<TripsEdit> {
   Container buildTripForm() {
     DateTime _dateStart = widget._tripData.startDt;
     DateTime _dateEnd = widget._tripData.endDt;
-print(widget._tripData.status);
     TextEditingController _tripTitle =
         TextEditingController(text: widget._tripData.tripTitle);
     TextEditingController _tripDetail =
