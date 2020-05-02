@@ -111,7 +111,7 @@ var mockdata = [
       "Japan",
       "Honey Moon",
       mockUser1,
-      [mockUser2, mockUser3],
+      [mockUser2, mockUser3,mockUser4,mockUser10],
       DateTime(2020, 04, 01),
       DateTime(2020, 04, 03),
       [
@@ -187,7 +187,7 @@ var mockdata = [
       "Korea",
       "Company Trip",
       mockUser1,
-      [mockUser2, mockUser3],
+      [mockUser2, mockUser3,mockUser9,mockUser6],
       DateTime(2020, 10, 10),
       DateTime(2020, 10, 15),
       [

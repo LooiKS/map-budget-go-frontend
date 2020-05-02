@@ -1,7 +1,5 @@
-import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
-import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/expenses/expenses_details.dart';
 import 'package:budgetgo/screen/expenses/expenses_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +16,7 @@ class TripsDetail extends StatefulWidget {
 class _TripsDetailState extends State<TripsDetail> {
   List<Trips> dummyTrip = <Trips>[];
   List<TripExpenses> dummyExpenses = <TripExpenses>[];
+  List<String> tripsDetailSetting = ['Trip Info', 'Report', 'Exit Group'];
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +26,19 @@ class _TripsDetailState extends State<TripsDetail> {
           "Trip to ${widget.trip.tripTitle}",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        actions: <Widget>[
+          PopupMenuButton(
+            itemBuilder: (BuildContext context) {
+              return tripsDetailSetting.map((String setting) {
+                return PopupMenuItem<String>(
+                  value: setting,
+                  child: Text(setting),
+                  height: 65.0,
+                );
+              }).toList();
+            },
+          ),
+        ],
         elevation: 0,
         shape: CustomShapeBorder(),
       ),
@@ -35,7 +47,7 @@ class _TripsDetailState extends State<TripsDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             buildCategoryTitle("Members"),
-             Container(
+            Container(
               height: 80.0,
               child: ListView.builder(
                 padding:
@@ -73,10 +85,9 @@ class _TripsDetailState extends State<TripsDetail> {
                         ? ClipOval(
                             child: IconButton(
                               icon: Icon(Icons.group_add),
-                              iconSize: 35.0,
+                              iconSize: 40.0,
                               color: Colors.grey,
-                              onPressed: () {
-                              },
+                              onPressed: () {},
                             ),
                           )
                         : SizedBox(
