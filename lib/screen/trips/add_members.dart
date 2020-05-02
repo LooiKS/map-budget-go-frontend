@@ -1,9 +1,9 @@
-import 'package:budgetgo/model/trips_class.dart';
 import 'package:flutter/material.dart';
+import '../../model/trips_class.dart';
 
 class AddMember extends StatefulWidget {
-  final Trips hostData;
-  AddMember(this.hostData);
+  final Trips trip;
+  AddMember(this.trip);
 
   @override
   _AddMemberState createState() => _AddMemberState();
@@ -73,8 +73,8 @@ class _AddMemberState extends State<AddMember> {
                         decoration: BoxDecoration(
                             shape: BoxShape.rectangle,
                             image: DecorationImage(
-                              image: ExactAssetImage(
-                                  'assets/images/qrcode.png'),
+                              image:
+                                  ExactAssetImage('assets/images/qrcode.png'),
                               fit: BoxFit.contain,
                             )),
                       ),
@@ -122,8 +122,38 @@ class _AddMemberState extends State<AddMember> {
         body: TabBarView(
           children: <Widget>[
             Container(
-              color: Colors.pink,
-              child: Center(child: Text("Call Tab")),
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.symmetric(horizontal: 5.0),
+                  itemBuilder: (context, index) => ListTile(
+                        leading: ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            fadeInCurve: Curves.bounceIn,
+                            placeholder: "assets/images/loading.gif",
+                            image: widget.trip.owner.friend[index].profilePic,
+                            fit: BoxFit.contain,
+                            width: 40.0,
+                            height: 40.0,
+                          ),
+                        ),
+                        title: Row(
+                          children: <Widget>[
+                            Text(widget.trip.owner.friend[index].username),
+                          ],
+                        ),
+                        trailing: widget.trip.members
+                                .contains(widget.trip.owner.friend[index])
+                            ? Checkbox(
+                                value: true,
+                                onChanged: (value) {},
+                              )
+                            : Checkbox(
+                                value: false,
+                                onChanged: (value) {},
+                              ),
+                      ),
+                  separatorBuilder: (context, index) => Divider(),
+                  itemCount: widget.trip.owner.friend.length),
             ),
             Container(
               color: Colors.pink,
