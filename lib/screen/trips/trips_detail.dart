@@ -6,7 +6,6 @@ import 'package:budgetgo/screen/expenses/expenses_details.dart';
 import 'package:budgetgo/screen/expenses/expenses_screen.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
-import './trips_member_list.dart';
 import '../../main.dart';
 
 class TripsDetail extends StatefulWidget {
@@ -22,22 +21,6 @@ class _TripsDetailState extends State<TripsDetail> {
 
   @override
   Widget build(BuildContext context) {
-    // dummyTrip.add(Trips("KumKoiKum", "Going to beach.", , _members, _startDt, _endDt, _schedules, _expenses, _createdDt, _currency));
-    // dummyTrip.add(Trips("SuiMakMak", "Going to shopping."));
-
-    // dummyExpenses.add(TripExpenses(
-    //     "Hotel",
-    //     DateTime(2020),
-    //     200.0,
-    //     User("_id", "_firstName", "_lastName", "_phoneNum", "_email",
-    //         "_profilePic", "_username")));
-    // dummyExpenses.add(TripExpenses(
-    //     "Hotel",
-    //     DateTime(2020),
-    //     200.0,
-    //     User("_id", "_firstName", "_lastName", "_phoneNum", "_email",
-    //         "_profilePic", "_username")));
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -52,7 +35,57 @@ class _TripsDetailState extends State<TripsDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             buildCategoryTitle("Members"),
-            TripMemberList(),
+             Container(
+              height: 80.0,
+              child: ListView.builder(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.trip.members.length,
+                itemBuilder: (context, index) => Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {},
+                      child: Column(
+                        children: <Widget>[
+                          ClipOval(
+                            child: FadeInImage.assetNetwork(
+                              placeholder: "assets/images/loading.gif",
+                              image: widget.trip.members[index].profilePic,
+                              fit: BoxFit.contain,
+                              width: 45.0,
+                              height: 45.0,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 40,
+                            child: Text(
+                              widget.trip.members[index].lastName,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    index + 1 == widget.trip.members.length
+                        ? ClipOval(
+                            child: IconButton(
+                              icon: Icon(Icons.group_add),
+                              iconSize: 35.0,
+                              color: Colors.grey,
+                              onPressed: () {
+                              },
+                            ),
+                          )
+                        : SizedBox(
+                            width: 5.0,
+                          ),
+                  ],
+                ),
+              ),
+            ),
             buildCategoryTitle("Schedule"),
             buildSchedules(),
             buildCategoryTitle("Expenses"),
