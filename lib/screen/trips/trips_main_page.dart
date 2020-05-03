@@ -51,7 +51,6 @@ class _TripsMainPageState extends State<TripsMainPage> {
     progressTrips.clear();
     upcomingTrips.clear();
     pastTrips.clear();
-    print(widget.tripsData.length);
     for (int i = 0; i < widget.tripsData.length; i++) {
       if (widget.tripsData[i].startDt.isBefore(DateTime.now()) &&
           widget.tripsData[i].endDt.isBefore(DateTime.now())) {
@@ -66,14 +65,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
         widget.tripsData[i].status = "upcoming";
         upcomingTrips.add(widget.tripsData[i]);
       }
-      print(widget.tripsData[i].tripTitle);
-      print(widget.tripsData[i].status);
-    }
-
-    print(upcomingTrips.length);
-
-    print(progressTrips.length);
-    print(pastTrips.length);
+      }
     return DefaultTabController(
       length: 3,
       initialIndex: 0,
@@ -211,7 +203,6 @@ class _TripsMainPageState extends State<TripsMainPage> {
               ]),
           onTap: () {
             int newIndex = widget.tripsData.indexOf(progressTrips[index]);
-            print("new Index " + newIndex.toString());
             _navigateTripDetails(newIndex);
           },
         ),
@@ -299,7 +290,6 @@ class _TripsMainPageState extends State<TripsMainPage> {
               ]),
           onTap: () {
             int newIndex = widget.tripsData.indexOf(upcomingTrips[index]);
-            print("new Index " + newIndex.toString());
             _navigateTripDetails(newIndex);
           },
         ),
@@ -387,7 +377,6 @@ class _TripsMainPageState extends State<TripsMainPage> {
               ]),
           onTap: () {
             int newIndex = widget.tripsData.indexOf(pastTrips[index]);
-            print("new Index " + newIndex.toString());
             _navigateTripDetails(newIndex);
           },
         ),
