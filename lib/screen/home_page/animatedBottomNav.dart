@@ -1,3 +1,4 @@
+import 'package:budgetgo/model/mockdata.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedBottomNav extends StatelessWidget {
@@ -57,6 +58,8 @@ class BottomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int count = mockdata.where((c)=> c.status == "progress").toList().length;
+    
     return AnimatedSwitcher(
         transitionBuilder: (child, animation) {
           return SlideTransition(
@@ -117,7 +120,7 @@ class BottomNavItem extends StatelessWidget {
                           maxHeight: 20,
                         ),
                         child: Text(
-                          "2",
+                          count.toString(),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 11,

@@ -13,6 +13,7 @@ class Trips {
   List<TripExpenses> _expenses;
   DateTime _createdDt;
   String _currency;
+  String _status;
 
   Trips(
     this._tripTitle,
@@ -25,6 +26,7 @@ class Trips {
     this._expenses,
     this._createdDt,
     this._currency,
+    this._status,
   );
   String get tripTitle => this._tripTitle;
   String get tripDetail => this._tripDetail;
@@ -36,6 +38,7 @@ class Trips {
   List<TripExpenses> get expenses => this._expenses;
   DateTime get createdDt => this._createdDt;
   String get currency => this._currency;
+  String get status => this._status;
 
   set tripTitle(String newValue) => this._tripTitle = newValue;
   set tripDetail(String newValue) => this._tripDetail = newValue;
@@ -47,4 +50,5 @@ class Trips {
   set expenses(List<TripExpenses> newValue) => this._expenses = newValue;
   set createdDt(DateTime newValue) => this._createdDt = newValue;
   set currency(String newValue) => this._currency = newValue;
+  set status(String newValue) => this._status = newValue;
 }

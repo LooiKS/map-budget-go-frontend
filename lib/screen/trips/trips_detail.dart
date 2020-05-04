@@ -1,5 +1,7 @@
-import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
+import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/trips/trips_edit.dart';
+import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/screen/expenses/expenses_details.dart';
 import 'package:budgetgo/screen/expenses/expenses_screen.dart';
 import 'package:budgetgo/screen/trips/add_members.dart';
@@ -8,8 +10,8 @@ import '../../widget/custom_shape.dart';
 import '../../main.dart';
 
 class TripsDetail extends StatefulWidget {
-  final Trips trip;
-  TripsDetail(this.trip);
+  Trips tripsData;
+  TripsDetail(this.tripsData);
   @override
   _TripsDetailState createState() => _TripsDetailState();
 }
@@ -19,12 +21,46 @@ class _TripsDetailState extends State<TripsDetail> {
   List<TripExpenses> dummyExpenses = <TripExpenses>[];
   List<String> tripsDetailSetting = ['Trip Info', 'Report', 'Exit Group'];
 
+  void _navigateEditTrips() async {
+    Trips returnData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TripsEdit(widget.tripsData),
+      ),
+    );
+    if (returnData != null) {
+      setState(() {
+        widget.tripsData = returnData;
+        _tripEdittedAlert(context);
+      });
+    } else {}
+  }
+
+  void _selected(String route) {
+    setState(() {
+      if (route == "Edit") {
+        if (widget.tripsData.status == "past") {
+          _tripEditError(context);
+        } else {
+          _navigateEditTrips();
+        }
+      } else if (route == "Delete") {
+        _deleteConfirmationAlert(context);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context, widget.tripsData),
+        ),
         title: Text(
-          "Trip to ${widget.trip.tripTitle}",
+          widget.tripsData.tripDetail,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
@@ -55,7 +91,7 @@ class _TripsDetailState extends State<TripsDetail> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 scrollDirection: Axis.horizontal,
-                itemCount: widget.trip.members.length,
+                itemCount: widget.tripsData.members.length,
                 itemBuilder: (context, index) => Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
@@ -66,7 +102,7 @@ class _TripsDetailState extends State<TripsDetail> {
                           ClipOval(
                             child: FadeInImage.assetNetwork(
                               placeholder: "assets/images/loading.gif",
-                              image: widget.trip.members[index].profilePic,
+                              image: widget.tripsData.members[index].profilePic,
                               fit: BoxFit.contain,
                               width: 45.0,
                               height: 45.0,
@@ -75,7 +111,7 @@ class _TripsDetailState extends State<TripsDetail> {
                           SizedBox(
                             width: 40,
                             child: Text(
-                              widget.trip.members[index].lastName,
+                              widget.tripsData.members[index].lastName,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                             ),
@@ -83,7 +119,7 @@ class _TripsDetailState extends State<TripsDetail> {
                         ],
                       ),
                     ),
-                    index + 1 == widget.trip.members.length
+                    index + 1 == widget.tripsData.members.length
                         ? ClipOval(
                             child: IconButton(
                               icon: Icon(Icons.group_add),
@@ -94,7 +130,7 @@ class _TripsDetailState extends State<TripsDetail> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            AddMember(widget.trip)));
+                                            AddMember(widget.tripsData)));
                               },
                             ),
                           )
@@ -137,9 +173,9 @@ class _TripsDetailState extends State<TripsDetail> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ExpensesScreen(
-                                  widget.trip.expenses,
-                                  widget.trip.members,
-                                  widget.trip.owner,
+                                  widget.tripsData.expenses,
+                                  widget.tripsData.members,
+                                  widget.tripsData.owner,
                                 ),
                               ),
                             );
@@ -194,7 +230,7 @@ class _TripsDetailState extends State<TripsDetail> {
             ),
             title: Text(
               // mockdata[0].schedules[index].activityTitle,
-              widget.trip.schedules[index].activityTitle,
+              widget.tripsData.schedules[index].activityTitle,
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -204,7 +240,7 @@ class _TripsDetailState extends State<TripsDetail> {
             ),
             subtitle: Text(
               // mockdata[0].schedules[index].activityDesc,
-              widget.trip.schedules[index].activityDesc,
+              widget.tripsData.schedules[index].activityDesc,
               style: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.w300,
@@ -215,7 +251,55 @@ class _TripsDetailState extends State<TripsDetail> {
             onTap: () {},
           ),
         ),
-        itemCount: widget.trip.schedules.length,
+        itemCount: widget.tripsData.schedules.length,
+      ),
+    );
+  }
+
+  Widget buildTripMemberList(
+      BuildContext context, User user, List<User> friendUser) {
+    List<User> memberList = [];
+    memberList.clear();
+    memberList.add(user);
+    memberList.addAll(friendUser);
+    return Container(
+      height: 70.0,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        scrollDirection: Axis.horizontal,
+        itemCount: friendUser.length + 1,
+        itemBuilder: (context, index) {
+          return buildMemberAvatar(index, memberList);
+        },
+        separatorBuilder: (context, index) => SizedBox(
+          width: 10.0,
+        ),
+      ),
+    );
+  }
+
+  GestureDetector buildMemberAvatar(int index, List<User> memberList) {
+    return GestureDetector(
+      onTap: () {},
+      child: Column(
+        children: <Widget>[
+          ClipOval(
+            child: FadeInImage.assetNetwork(
+              placeholder: "assets/images/loading.gif",
+              image: memberList[index].profilePic,
+              fit: BoxFit.contain,
+              width: 30.0,
+              height: 30.0,
+            ),
+          ),
+          const SizedBox(height: 5.0),
+          Text(
+            memberList[index].firstName,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -231,7 +315,8 @@ class _TripsDetailState extends State<TripsDetail> {
             selected: true,
             leading: Container(
                 width: 48.0,
-                child: buildExpensesIcon(widget.trip.expenses[index].category)),
+                child: buildExpensesIcon(
+                    widget.tripsData.expenses[index].category)),
             trailing: IconButton(
               icon: Icon(
                 Icons.keyboard_arrow_right,
@@ -241,12 +326,12 @@ class _TripsDetailState extends State<TripsDetail> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            ExpenseDetailsScreen(widget.trip.expenses[index])));
+                        builder: (context) => ExpenseDetailsScreen(
+                            widget.tripsData.expenses[index])));
               },
             ),
             title: Text(
-              widget.trip.expenses[index].title,
+              widget.tripsData.expenses[index].title,
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -258,21 +343,21 @@ class _TripsDetailState extends State<TripsDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Paid by ${widget.trip.expenses[index].payBy.firstName}",
+                    "Paid by ${widget.tripsData.expenses[index].payBy.firstName}",
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black54),
                   ),
                   Text(
-                    widget.trip.expenses[index].createdDt.toString(),
+                    widget.tripsData.expenses[index].createdDt.toString(),
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black54),
                   ),
                   Text(
-                    widget.trip.expenses[index].amount.toString(),
+                    widget.tripsData.expenses[index].amount.toString(),
                     style: TextStyle(
                         color: key.currentState.brightness == Brightness.dark
                             ? Colors.white
@@ -281,14 +366,87 @@ class _TripsDetailState extends State<TripsDetail> {
                 ]),
           ),
         ),
-        itemCount: widget.trip.expenses.length,
+        itemCount: widget.tripsData.expenses.length,
       ),
     );
   }
 
-  Icon buildExpensesIcon(String category) {
-    switch (category) {
-      case "Accommodation":
+  Future _deleteConfirmationAlert(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Trip Confirmation'),
+          content: const Text(
+              'This will delete all the trip information from this application.'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                setState(() {
+                  widget.tripsData.tripDetail = "cancel";
+                  Navigator.of(context).pop();
+                });
+                Navigator.pop(context, widget.tripsData);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _tripEdittedAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Trip Message'),
+          content: const Text('The trip is editted successfully.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _tripEditError(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Trip Message'),
+          content: const Text(
+              'The trip is already over. You cannot edit this trip anymore.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Icon buildExpensesIcon(String title) {
+    switch (title) {
+      case "Hotel":
         return Icon(
           Icons.hotel,
           size: 38.0,
