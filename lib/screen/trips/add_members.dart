@@ -12,6 +12,7 @@ class AddMember extends StatefulWidget {
 
 class _AddMemberState extends State<AddMember> {
   List<User> _friendList = List<User>();
+  bool _isMember = true;
 
   @override
   void initState() {
@@ -154,7 +155,7 @@ class _AddMemberState extends State<AddMember> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(5.0),
                     child: TextField(
                       onChanged: (value) => filterSearchResults(value),
                       decoration: InputDecoration(
@@ -167,10 +168,43 @@ class _AddMemberState extends State<AddMember> {
                       ),
                     ),
                   ),
+                  _isMember
+                      ? Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              ButtonTheme(
+                                minWidth: 10.0,
+                                height: 28.0,
+                                child: RaisedButton(
+                                  onPressed: () {},
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Text("Save"),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 2.0,
+                              ),
+                              ButtonTheme(
+                                minWidth: 10.0,
+                                height: 28.0,
+                                child: RaisedButton(
+                                  onPressed: () {},
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Text("Cancel"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Container(),
                   Expanded(
-                    child: ListView.separated(
+                    flex: 1,
+                    child: ListView.builder(
                         shrinkWrap: true,
-                        padding: EdgeInsets.symmetric(horizontal: 5.0),
                         itemBuilder: (context, index) => ListTile(
                               leading: ClipOval(
                                 child: FadeInImage.assetNetwork(
@@ -190,17 +224,20 @@ class _AddMemberState extends State<AddMember> {
                               trailing: widget.trip.members
                                       .contains(_friendList[index])
                                   ? Checkbox(
-                                      value: true,
+                                      value: _isMember,
                                       activeColor: Colors.green,
                                       checkColor: Colors.white,
-                                      onChanged: (value) {},
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _isMember = value;
+                                        });
+                                      },
                                     )
                                   : Checkbox(
-                                      value: false,
+                                      value: !_isMember,
                                       onChanged: (value) {},
                                     ),
                             ),
-                        separatorBuilder: (context, index) => Divider(),
                         itemCount: _friendList.length),
                   ),
                 ],
