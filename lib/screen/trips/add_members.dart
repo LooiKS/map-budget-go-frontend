@@ -1,10 +1,13 @@
+import 'package:budgetgo/model/trips_class.dart';
 import 'package:flutter/material.dart';
-import '../../model/trips_class.dart';
 import '../../model/user.dart';
 
 class AddMember extends StatefulWidget {
-  final Trips trip;
-  AddMember(this.trip);
+  // final List<User> members;
+  // User owner;
+  // AddMember(this.members, this.owner);
+  final Trips data;
+  AddMember(this.data);
 
   @override
   _AddMemberState createState() => _AddMemberState();
@@ -13,16 +16,17 @@ class AddMember extends StatefulWidget {
 class _AddMemberState extends State<AddMember> {
   List<User> _friendList = List<User>();
   bool _isMember = true;
+  bool _isVisible = true;
 
   @override
   void initState() {
-    _friendList.addAll(widget.trip.owner.friend);
+    _friendList.addAll(widget.data.owner.friend);
     super.initState();
   }
 
   void filterSearchResults(String query) {
     List<User> dummySearchList = List<User>();
-    dummySearchList.addAll(widget.trip.owner.friend);
+    dummySearchList.addAll(widget.data.owner.friend);
     if (query.isNotEmpty) {
       List<User> dummyListData = List<User>();
       dummySearchList.forEach((item) {
@@ -39,7 +43,7 @@ class _AddMemberState extends State<AddMember> {
     } else {
       setState(() {
         _friendList.clear();
-        _friendList.addAll(widget.trip.owner.friend);
+        _friendList.addAll(widget.data.owner.friend);
       });
     }
   }
@@ -168,7 +172,7 @@ class _AddMemberState extends State<AddMember> {
                       ),
                     ),
                   ),
-                  _isMember
+                  !_isVisible
                       ? Padding(
                           padding: const EdgeInsets.all(1.0),
                           child: Row(
@@ -221,22 +225,22 @@ class _AddMemberState extends State<AddMember> {
                                   Text(_friendList[index].username),
                                 ],
                               ),
-                              trailing: widget.trip.members
-                                      .contains(_friendList[index])
-                                  ? Checkbox(
-                                      value: _isMember,
-                                      activeColor: Colors.green,
-                                      checkColor: Colors.white,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _isMember = value;
-                                        });
-                                      },
-                                    )
-                                  : Checkbox(
-                                      value: !_isMember,
-                                      onChanged: (value) {},
-                                    ),
+                              trailing:
+                                  widget.data.members.contains(_friendList[index])
+                                      ? Checkbox(
+                                          value: _isMember,
+                                          activeColor: Colors.green,
+                                          checkColor: Colors.white,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isMember = value;
+                                            });
+                                          },
+                                        )
+                                      : Checkbox(
+                                          value: !_isMember,
+                                          onChanged: (value) {},
+                                        ),
                             ),
                         itemCount: _friendList.length),
                   ),

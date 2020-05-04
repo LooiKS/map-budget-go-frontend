@@ -10,8 +10,30 @@ class User {
   String _password;
   bool _isChecked;
 
-  User(this._id, this._firstName, this._lastName, this._phoneNum, this._email,
-      this._profilePic, this._username,this._password,this._isChecked,this._friend);
+  User(
+      this._id,
+      this._firstName,
+      this._lastName,
+      this._phoneNum,
+      this._email,
+      this._profilePic,
+      this._username,
+      this._password,
+      this._isChecked,
+      this._friend);
+
+  User.copy(User from)
+      : this(
+            from._id,
+            from._firstName,
+            from._lastName,
+            from._phoneNum,
+            from._email,
+            from._profilePic,
+            from._username,
+            from._password,
+            from._isChecked,
+            [...from._friend]);
 
   String get id => this._id;
   String get firstName => this._firstName;

@@ -28,6 +28,22 @@ class Trips {
     this._currency,
     this._status,
   );
+
+  Trips.copy(Trips from)
+      : this(
+          from._tripTitle,
+          from._tripDetail,
+          from._owner,
+          [...from.members],
+          from._startDt,
+          from._endDt,
+          from._schedules,
+          from._expenses,
+          from._createdDt,
+          from._currency,
+          from._status,
+        );
+
   String get tripTitle => this._tripTitle;
   String get tripDetail => this._tripDetail;
   User get owner => this._owner;

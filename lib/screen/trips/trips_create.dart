@@ -23,7 +23,7 @@ class _TripsCreateState extends State<TripsCreatePage> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   void _navigateEditFriend() async {
-    List<User> userList = userMockData;
+    List<User> userList = memberMockData;
     for (User u in userList) {
       if (currentUsers.contains(u)) {
         u.isChecked = true;

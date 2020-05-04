@@ -20,7 +20,7 @@ class _TripsDetailState extends State<TripsDetail> {
   List<Trips> dummyTrip = <Trips>[];
   List<TripExpenses> dummyExpenses = <TripExpenses>[];
   List<String> tripsDetailSetting = ['Trip Info', 'Report', 'Exit Group'];
-
+  List<String> operation = ["Edit", "Delete"];
   void _navigateEditTrips() async {
     Trips returnData = await Navigator.push(
       context,
@@ -38,7 +38,7 @@ class _TripsDetailState extends State<TripsDetail> {
 
   void _selected(String route) {
     setState(() {
-      if (route == "Edit") {
+      if (route == tripsDetailSetting[0]) {
         if (widget.tripsData.status == "past") {
           _tripEditError(context);
         } else {
@@ -60,17 +60,17 @@ class _TripsDetailState extends State<TripsDetail> {
           onPressed: () => Navigator.pop(context, widget.tripsData),
         ),
         title: Text(
-          widget.tripsData.tripDetail,
+          widget.tripsData.tripTitle,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
-          PopupMenuButton(
-            icon: Icon(Icons.more_horiz),
+          PopupMenuButton<String>(
+            onSelected: _selected,
             itemBuilder: (BuildContext context) {
-              return tripsDetailSetting.map((String setting) {
+              return tripsDetailSetting.map((String choice) {
                 return PopupMenuItem<String>(
-                  value: setting,
-                  child: Text(setting),
+                  value: choice,
+                  child: Text(choice),
                   height: 65.0,
                 );
               }).toList();
@@ -119,24 +119,6 @@ class _TripsDetailState extends State<TripsDetail> {
                         ],
                       ),
                     ),
-                    index + 1 == widget.tripsData.members.length
-                        ? ClipOval(
-                            child: IconButton(
-                              icon: Icon(Icons.group_add),
-                              iconSize: 40.0,
-                              color: Colors.grey,
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddMember(widget.tripsData)));
-                              },
-                            ),
-                          )
-                        : SizedBox(
-                            width: 5.0,
-                          ),
                   ],
                 ),
               ),
