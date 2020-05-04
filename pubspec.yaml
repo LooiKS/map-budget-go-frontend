@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -28,6 +28,7 @@ dependencies:
   flutter_slidable: ^0.5.4
   flare_flutter: ^1.7.3
   flutter_datetime_picker:
+  date_format: ^1.0.8
 
 dev_dependencies:
   flutter_test:

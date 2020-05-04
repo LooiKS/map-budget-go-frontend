@@ -54,13 +54,13 @@ class MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'BudgetGo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          brightness: brightness,
-          primarySwatch: Colors.orange,
-        ),
-        home: TripsDetail() //SplashScreen(toggleBrightness: toggleBrightness),
-        );
+      title: 'BudgetGo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: brightness,
+        primarySwatch: Colors.orange,
+      ),
+      home: SplashScreen(toggleBrightness: toggleBrightness),
+    );
   }
 }

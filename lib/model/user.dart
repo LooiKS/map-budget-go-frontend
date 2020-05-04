@@ -6,10 +6,10 @@ class User {
   String _email;
   String _profilePic;
   String _username;
-  List<User> _friends;
+  List<User> _friend;
 
   User(this._id, this._firstName, this._lastName, this._phoneNum, this._email,
-      this._profilePic, this._username, this._friends);
+      this._profilePic, this._username, this._friend);
 
   String get id => this._id;
   String get firstName => this._firstName;
@@ -18,14 +18,11 @@ class User {
   String get email => this._email;
   String get profilePic => this._profilePic;
   String get username => this._username;
-  List<User> get friend => this._friends;
-
-  set id(String newValue) => this._id = newValue;
+  List<User> get friend => this._friend;
   set firstName(String newValue) => this._firstName = newValue;
-  set lastName(String newValue) => this._lastName = newValue;
   set phoneNum(String newValue) => this._phoneNum = newValue;
   set email(String newValue) => this._email = newValue;
   set profilePic(String newValue) => this._profilePic = newValue;
   set username(String newValue) => this._username = newValue;
-  set friends(List<User> newValue) => this._friends = newValue;
+  set friend(List<User> newValue) => this._friend = newValue;
 }

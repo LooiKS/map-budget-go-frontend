@@ -4,7 +4,7 @@ class TripExpenses {
   String _title;
   String _desc;
   String _category;
-  DateTime _createdDt;
+  String _createdDt;
   double _amount;
   User _payBy;
   User _createdBy;
@@ -24,7 +24,7 @@ class TripExpenses {
   String get title => this._title;
   String get desc => this._desc;
   String get category => this._category;
-  DateTime get createdDt => this._createdDt;
+  String get createdDt => this._createdDt;
   double get amount => this._amount;
   User get payBy => this._payBy;
   User get createdBy => this._createdBy;
@@ -33,7 +33,7 @@ class TripExpenses {
   set title(String newValue) => this._title = newValue;
   set desc(String newValue) => this._desc = newValue;
   set category(String newValue) => this._category = newValue;
-  set createdDt(DateTime newValue) => this._createdDt = newValue;
+  set createdDt(String newValue) => this._createdDt = newValue;
   set amount(double newValue) => this._amount = newValue;
   set payBy(User newValue) => this._payBy = newValue;
   set createdBy(User newValue) => this._createdBy = newValue;
