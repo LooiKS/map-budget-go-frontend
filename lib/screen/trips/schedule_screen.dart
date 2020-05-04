@@ -37,10 +37,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ScheduleForm(
-                                          Schedule.copy(schedule))))
+                                      builder: (context) =>
+                                          ScheduleForm(schedule)))
                               .then((newSchedule) {
-                            setState(() => schedule = newSchedule);
+                            if (newSchedule != null)
+                              setState(() => schedule = newSchedule);
                           }))
                 ]
               : [],

@@ -5,9 +5,8 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class ScheduleForm extends StatefulWidget {
   final Schedule schedule;
-  // = Schedule;
 
-  ScheduleForm(this.schedule); // {}
+  ScheduleForm(this.schedule);
 
   @override
   _ScheduleFormState createState() => _ScheduleFormState();
@@ -16,32 +15,65 @@ class ScheduleForm extends StatefulWidget {
 class _ScheduleFormState extends State<ScheduleForm> {
   DateTime startDate, startTime;
   DateTime endDate, endTime;
-  // _ScheduleFormState() {
+  Schedule schedule;
+
   @override
   void initState() {
     super.initState();
-    startDate = startTime = widget.schedule.startDt; //, startTime;
-    endDate = endTime = widget.schedule.endDt; //, startTime;
+    schedule = Schedule.copy(widget.schedule);
+    startDate = startTime = schedule.startDt;
+    endDate = endTime = schedule.endDt;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
+        title: Text('Edit Schedule'),
+        leading: IconButton(
+            onPressed: () {
+              if (!widget.schedule.equalTo(schedule))
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text('Message'),
+                          content: Text(
+                              'Are you sure you want to quit without saving?'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Yes'),
+                              onPressed: () {},
+                            ),
+                            FlatButton(
+                              child: Text('No'),
+                              onPressed: () => Navigator.pop(context),
+                            )
+                          ],
+                        ));
+              else
+                Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back)),
         actions: <Widget>[
           FlatButton(
               onPressed: () {
-                widget.schedule.startDt = DateTime(
-                    startDate.year,
-                    startDate.month,
-                    startDate.day,
-                    startTime.hour,
-                    startTime.minute,
-                    startTime.second);
-                widget.schedule.endDt = DateTime(endDate.year, endDate.month,
-                    endDate.day, endTime.hour, endTime.minute, endTime.second);
-                Navigator.pop(context, widget.schedule);
+                if (schedule.startDt.isAfter(schedule.endDt))
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text('Message'),
+                            content: Text(
+                                'Activity must not ends before start time. Please change the date or time.'),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('OK'),
+                              )
+                            ],
+                          ));
+                else {
+                  Navigator.pop(context, schedule);
+                }
               },
               child: Text('Save'))
         ],
@@ -52,165 +84,171 @@ class _ScheduleFormState extends State<ScheduleForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Card(
-                margin: EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18.0, top: 8.0),
-                      child: Text(
-                        'Start',
-                        style: TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                    ),
-                    ListTile(
-                        leading: Icon(
-                          Icons.calendar_today,
-                          color: Colors.blue,
-                        ),
-                        title: Text('Start Date'),
-                        trailing: Text(
-                            '${Month[startDate.month]} ${startDate.day}, ${startDate.year}'),
-                        onTap: () => DatePicker.showDatePicker(context,
-                            currentTime: startDate,
-                            onConfirm: ((date) =>
-                                setState(() => startDate = date)))),
-                    ListTile(
-                        leading: Icon(
-                          Icons.access_time,
-                          color: Colors.blue,
-                        ),
-                        title: Text('Start Time'),
-                        trailing: Text(
-                            '${startTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')}:${startTime.second.toString().padLeft(2, '0')}'),
-                        onTap: () => DatePicker.showTimePicker(context,
-                            currentTime: startTime,
-                            onConfirm: (date) =>
-                                setState(() => startTime = date))),
-                  ],
-                ),
-              ),
-              Card(
-                margin: EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18.0, top: 8.0),
-                      child: Text(
-                        'End',
-                        style: TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                    ),
-                    ListTile(
-                        leading: Icon(
-                          Icons.calendar_today,
-                          color: Colors.blue,
-                        ),
-                        title: Text('End Date'),
-                        trailing: Text(
-                            '${Month[endDate.month]} ${endDate.day}, ${endDate.year}'),
-                        onTap: () => DatePicker.showDatePicker(context,
-                            currentTime: endDate,
-                            onConfirm: ((date) =>
-                                setState(() => endDate = date)))),
-                    ListTile(
-                        leading: Icon(
-                          Icons.calendar_today,
-                          color: Colors.blue,
-                        ),
-                        title: Text('End Time'),
-                        trailing: Text(
-                            '${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}:${endTime.second.toString().padLeft(2, '0')}'),
-                        onTap: () => DatePicker.showTimePicker(context,
-                            currentTime: endTime,
-                            onConfirm: (date) =>
-                                setState(() => endTime = date))),
-                  ],
-                ),
-              ),
-              Card(
-                margin: EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18.0, top: 8.0),
-                      child: Text(
-                        'Details',
-                        style: TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.local_activity,
-                        color: Colors.blue,
-                      ),
-                      title: Text('Activity'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18.0, right: 18.0),
-                      child: TextField(
-                        controller: TextEditingController()
-                          ..text = widget.schedule.activityTitle,
-                        textAlign: TextAlign.center,
-                        onChanged: (value) =>
-                            widget.schedule.activityTitle = value,
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.description,
-                        color: Colors.blue,
-                      ),
-                      title: Text('Activity Description'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 18.0, right: 18.0, bottom: 10),
-                      child: TextField(
-                        controller: TextEditingController()
-                          ..text = widget.schedule.activityDesc.toString(),
-                        onChanged: (value) =>
-                            widget.schedule.activityDesc = value,
-                        // textAlign: TextAlign.center,
-                        maxLines: null,
-                        keyboardType: TextInputType.multiline,
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.person,
-                        color: Colors.blue,
-                      ),
-                      title: Text('Created By'),
-                      trailing: Text(widget.schedule.createdBy.firstName),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.date_range,
-                        color: Colors.blue,
-                      ),
-                      title: Text('Created On'),
-                      trailing: Text(
-                          '${Month[widget.schedule.createdDt.month]} ${widget.schedule.createdDt.day}, ${widget.schedule.createdDt.year} ${widget.schedule.createdDt.hour.toString().padLeft(2, '0')}:${widget.schedule.createdDt.minute.toString().padLeft(2, '0')}:${widget.schedule.endDt.second.toString().padLeft(2, '0')}'), //widget.schedule.createdDt.toString()),
-                    ),
-                  ],
-                ),
-              ),
+              _buildStartCard(),
+              _buildEndCard(),
+              _buildDetailsCard(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Card _buildDetailsCard() {
+    return Card(
+      margin: EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _buildCardTitle('Details'),
+          ListTile(
+            leading: Icon(
+              Icons.local_activity,
+              color: Colors.blue,
+            ),
+            title: Text('Activity'),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+            child: TextField(
+              controller: TextEditingController()
+                ..text = schedule.activityTitle,
+              textAlign: TextAlign.center,
+              onChanged: (value) => schedule.activityTitle = value,
+            ),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.description,
+              color: Colors.blue,
+            ),
+            title: Text('Activity Description'),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 18.0, right: 18.0, bottom: 10),
+            child: TextField(
+              controller: TextEditingController()
+                ..text = schedule.activityDesc.toString(),
+              onChanged: (value) => schedule.activityDesc = value,
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+            ),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.person,
+              color: Colors.blue,
+            ),
+            title: Text('Created By'),
+            trailing: Text(schedule.createdBy.firstName),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.date_range,
+              color: Colors.blue,
+            ),
+            title: Text('Created On'),
+            trailing: Text(
+                '${Month[schedule.createdDt.month]} ${schedule.createdDt.day}, ${schedule.createdDt.year} ${schedule.createdDt.hour.toString().padLeft(2, '0')}:${schedule.createdDt.minute.toString().padLeft(2, '0')}:${schedule.endDt.second.toString().padLeft(2, '0')}'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Card _buildEndCard() {
+    return Card(
+      margin: EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _buildCardTitle('End'),
+          _buildDateTimeTile(
+              schedule.endDt,
+              'End Date',
+              Icons.calendar_today,
+              (date) => setState(() => schedule.endDt = DateTime(
+                  date.year,
+                  date.month,
+                  date.day,
+                  schedule.endDt.hour,
+                  schedule.endDt.minute,
+                  schedule.endDt.second))),
+          _buildDateTimeTile(
+              schedule.endDt,
+              'End Time',
+              Icons.access_time,
+              (date) => setState(() => schedule.endDt = DateTime(
+                  schedule.endDt.year,
+                  schedule.endDt.month,
+                  schedule.endDt.day,
+                  date.hour,
+                  date.minute,
+                  date.second))),
+        ],
+      ),
+    );
+  }
+
+  Card _buildStartCard() {
+    return Card(
+      margin: EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _buildCardTitle('Start'),
+          _buildDateTimeTile(
+              schedule.startDt,
+              'Start Date',
+              Icons.calendar_today,
+              (date) => setState(() => schedule.startDt = DateTime(
+                  date.year,
+                  date.month,
+                  date.day,
+                  schedule.startDt.hour,
+                  schedule.startDt.minute,
+                  schedule.startDt.second))),
+          _buildDateTimeTile(
+              schedule.startDt,
+              'Start Time',
+              Icons.access_time,
+              (date) => setState(() => schedule.startDt = DateTime(
+                  schedule.startDt.year,
+                  schedule.startDt.month,
+                  schedule.startDt.day,
+                  date.hour,
+                  date.minute,
+                  date.second))),
+        ],
+      ),
+    );
+  }
+
+  ListTile _buildDateTimeTile(
+      DateTime date, String title, IconData icon, Function func) {
+    return ListTile(
+        leading: Icon(
+          icon,
+          color: Colors.blue,
+        ),
+        title: Text(title),
+        trailing: Text(icon == Icons.access_time
+            ? '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}'
+            : '${Month[date.month]} ${date.day}, ${date.year}'),
+        onTap: () => icon == Icons.access_time
+            ? DatePicker.showTimePicker(context,
+                currentTime: date, onConfirm: func)
+            : DatePicker.showDatePicker(context,
+                currentTime: date, onConfirm: func));
+  }
+
+  Padding _buildCardTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 18.0, top: 8.0),
+      child: Text(
+        title,
+        style: TextStyle(
+            color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 20),
       ),
     );
   }
