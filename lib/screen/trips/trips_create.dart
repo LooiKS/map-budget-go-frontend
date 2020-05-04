@@ -1,6 +1,8 @@
 import 'package:budgetgo/constant/currency.dart';
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/trips_class.dart';
+import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/trips/trips_users_edit.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -14,8 +16,41 @@ class TripsCreatePage extends StatefulWidget {
 class _TripsCreateState extends State<TripsCreatePage> {
   String _inputCurrency;
   String holder;
+  List<User> memberList = [];
+  List<User> currentUsers = [];
+  List<User> tempUsers = [];
+
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  void _navigateEditFriend() async {
+    List<User> userList = userMockData;
+    for (User u in userList) {
+      if (currentUsers.contains(u)) {
+        u.isChecked = true;
+      } else {
+        u.isChecked = false;
+      }
+    }
+    List<User> returnData = await Navigator.push(
+      context,
+      //Trips.copy(widget.tripsData[index])
+      MaterialPageRoute(
+          builder: (context) => EditUserList(userList, mockOwnUser)),
+    );
+    if (returnData != null) {
+      tempUsers.clear();
+      for (int c = 0; c < returnData.length; c++) {
+        if (returnData[c].isChecked == true) {
+          tempUsers.add(returnData[c]);
+        }
+      }
+
+      setState(() => currentUsers = tempUsers);
+      memberList.clear();
+      memberList.add(mockOwnUser);
+      memberList.addAll(currentUsers);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +71,8 @@ class _TripsCreateState extends State<TripsCreatePage> {
             // tripMemberList(
             //     widget._tripData.memberUser, widget._tripData.ownerUser),
             SizedBox(height: 10.0),
+            buildCategoryTitle("Members"),
+            tripMemberList(currentUsers, mockOwnUser),
             buildCategoryTitle("Trip Information"),
             buildTripForm(),
           ],
@@ -55,6 +92,69 @@ class _TripsCreateState extends State<TripsCreatePage> {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
           ]),
+    );
+  }
+
+  Widget tripMemberList(List<User> userList, User user) {
+    return Container(
+      height: 70.0,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        scrollDirection: Axis.horizontal,
+        itemCount: userList.length + 2,
+        itemBuilder: (context, index) {
+          return buildMemberAvatar(index, userList, user, context);
+        },
+        separatorBuilder: (context, index) => SizedBox(
+          width: 10.0,
+        ),
+      ),
+    );
+  }
+
+  GestureDetector buildMemberAvatar(
+      int index, List<User> userList, User user, BuildContext context) {
+    if (memberList.isEmpty == true) {
+      memberList.add(user);
+      memberList.addAll(userList);
+    }
+    return GestureDetector(
+      onTap: () {},
+      child: Column(
+        children: <Widget>[
+          index != memberList.length
+              ? ClipOval(
+                  child: FadeInImage.assetNetwork(
+                    placeholder: "assets/images/loading.gif",
+                    image: memberList[index].profilePic,
+                    fit: BoxFit.contain,
+                    width: 30.0,
+                    height: 30.0,
+                  ),
+                )
+              : GestureDetector(
+                  onTap: () {
+                    _navigateEditFriend();
+                  },
+                  child: CircleAvatar(
+                    radius: 15.0,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.edit,
+                      size: 30.0,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+          const SizedBox(height: 5.0),
+          Text(
+            index != memberList.length ? memberList[index].firstName : "Edit",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -200,8 +300,8 @@ class _TripsCreateState extends State<TripsCreatePage> {
                             Trips _newTrip = new Trips(
                                 _tripTitle.text,
                                 _tripDetail.text,
-                                mockUser1,
-                                [],
+                                mockOwnUser,
+                                currentUsers,
                                 _dateStart,
                                 _dateEnd,
                                 [],
