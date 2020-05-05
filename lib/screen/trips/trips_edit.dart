@@ -30,7 +30,8 @@ class _TripsEditState extends State<TripsEdit> {
   void _navigateEditFriend() async {
     final returnData = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddMember(widget._tripData)),
+      MaterialPageRoute(
+          builder: (context) => AddMember(Trips.copy(widget._tripData))),
     );
 
     if (returnData != null) {
@@ -39,21 +40,6 @@ class _TripsEditState extends State<TripsEdit> {
         memberList.clear();
       });
     }
-
-    // print(returnData.owner);
-    // if (returnData != null) {
-    //   tempUsers.clear();
-    //   for (int c = 0; c < returnData.length; c++) {
-    //     if (returnData[c].isChecked == true) {
-    //       tempUsers.add(returnData[c]);
-    //     }
-    //   }
-
-    //   setState(() => widget._tripData.members = tempUsers);
-    //   memberList.clear();
-    //   memberList.add(widget._tripData.owner);
-    //   memberList.addAll(widget._tripData.members);
-    // }
   }
 
   @override
@@ -64,17 +50,6 @@ class _TripsEditState extends State<TripsEdit> {
           "Edit Trip",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {},
-                child: Icon(
-                  Icons.search,
-                  size: 26.0,
-                ),
-              )),
-        ],
         elevation: 0,
         shape: CustomShapeBorder(),
       ),

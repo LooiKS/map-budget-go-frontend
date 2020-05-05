@@ -20,7 +20,7 @@ class _TripsDetailState extends State<TripsDetail> {
   List<Trips> dummyTrip = <Trips>[];
   List<TripExpenses> dummyExpenses = <TripExpenses>[];
   List<String> tripsDetailSetting = ['Trip Info', 'Report', 'Exit Group'];
-  List<String> operation = ["Edit", "Delete"];
+
   void _navigateEditTrips() async {
     Trips returnData = await Navigator.push(
       context,
@@ -85,44 +85,45 @@ class _TripsDetailState extends State<TripsDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             buildCategoryTitle("Members"),
-            Container(
-              height: 80.0,
-              child: ListView.builder(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                scrollDirection: Axis.horizontal,
-                itemCount: widget.tripsData.members.length,
-                itemBuilder: (context, index) => Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {},
-                      child: Column(
-                        children: <Widget>[
-                          ClipOval(
-                            child: FadeInImage.assetNetwork(
-                              placeholder: "assets/images/loading.gif",
-                              image: widget.tripsData.members[index].profilePic,
-                              fit: BoxFit.contain,
-                              width: 45.0,
-                              height: 45.0,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 40,
-                            child: Text(
-                              widget.tripsData.members[index].lastName,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            buildTripMemberList(context, widget.tripsData.owner,
+                widget.tripsData.members), // Container(
+            //   height: 80.0,
+            //   child: ListView.builder(
+            //     padding:
+            //         const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            //     scrollDirection: Axis.horizontal,
+            //     itemCount: widget.tripsData.members.length,
+            //     itemBuilder: (context, index) => Row(
+            //       mainAxisAlignment: MainAxisAlignment.start,
+            //       children: <Widget>[
+            //         GestureDetector(
+            //           onTap: () {},
+            //           child: Column(
+            //             children: <Widget>[
+            //               ClipOval(
+            //                 child: FadeInImage.assetNetwork(
+            //                   placeholder: "assets/images/loading.gif",
+            //                   image: widget.tripsData.members[index].profilePic,
+            //                   fit: BoxFit.contain,
+            //                   width: 45.0,
+            //                   height: 45.0,
+            //                 ),
+            //               ),
+            //               SizedBox(
+            //                 width: 40,
+            //                 child: Text(
+            //                   widget.tripsData.members[index].lastName,
+            //                   overflow: TextOverflow.ellipsis,
+            //                   textAlign: TextAlign.center,
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             buildCategoryTitle("Schedule"),
             buildSchedules(),
             buildCategoryTitle("Expenses"),
@@ -238,7 +239,7 @@ class _TripsDetailState extends State<TripsDetail> {
     );
   }
 
-  Widget buildTripMemberList(
+  Container buildTripMemberList(
       BuildContext context, User user, List<User> friendUser) {
     List<User> memberList = [];
     memberList.clear();
@@ -275,10 +276,15 @@ class _TripsDetailState extends State<TripsDetail> {
             ),
           ),
           const SizedBox(height: 5.0),
-          Text(
-            memberList[index].firstName,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
+          SizedBox(
+            width: 40.0,
+            child: Text(
+              memberList[index].firstName,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
           ),
         ],

@@ -12,11 +12,12 @@ class AddMember extends StatefulWidget {
 
 class _AddMemberState extends State<AddMember> {
   List<User> _friendList = [];
+  List<User> _selectedMember = [];
   bool _isVisible = true;
   int _isSelected = 0;
   @override
   void initState() {
-    _friendList.addAll(widget.tripData.owner.friend);
+    _selectedMember.addAll(widget.tripData.members);
     for (User friend in widget.tripData.owner.friend) {
       if (widget.tripData.members.contains(friend)) {
         setState(() {
@@ -186,7 +187,7 @@ class _AddMemberState extends State<AddMember> {
                     Padding(
                       padding: const EdgeInsets.all(1.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           ButtonTheme(
                             minWidth: 10.0,
@@ -207,7 +208,9 @@ class _AddMemberState extends State<AddMember> {
                             minWidth: 10.0,
                             height: 28.0,
                             child: RaisedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pop(null);
+                              },
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
                               child: Text("Cancel"),
@@ -238,24 +241,38 @@ class _AddMemberState extends State<AddMember> {
                                         .tripData.owner.friend[index].username),
                                   ],
                                 ),
-                                trailing: Checkbox(
-                                  value: widget
-                                      .tripData.owner.friend[index].isChecked,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      widget.tripData.owner.friend[index]
-                                          .isChecked = value;
-                                      if (value == true) {
-                                        widget.tripData.members.add(widget
-                                            .tripData.owner.friend[index]);
-                                      } else {
-                                        widget.tripData.members.remove(widget
-                                            .tripData.owner.friend[index]);
-                                      }
-                                      _isSelected++;
-                                    });
-                                  },
-                                ),
+                                trailing: widget
+                                        .tripData.owner.friend[index].isChecked
+                                    ? Checkbox(
+                                        onChanged: null,
+                                        value: widget.tripData.owner
+                                            .friend[index].isChecked,
+                                      )
+                                    : Checkbox(
+                                        value: widget.tripData.owner
+                                            .friend[index].isChecked,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            widget.tripData.owner.friend[index]
+                                                .isChecked = value;
+                                            if (value == true) {
+                                              _selectedMember.add(widget
+                                                  .tripData
+                                                  .owner
+                                                  .friend[index]);
+                                              // widget.tripData.members.add(widget
+                                              //     .tripData.owner.friend[index]);
+                                            } else {
+                                              _selectedMember.remove(widget
+                                                  .tripData
+                                                  .owner
+                                                  .friend[index]);
+                                              // widget.tripData.members.remove(widget
+                                              //     .tripData.owner.friend[index]);
+                                            }
+                                          });
+                                        },
+                                      ),
                               ),
                           itemCount: widget.tripData.owner.friend.length),
                     ),
