@@ -47,7 +47,7 @@ class _TripsEditState extends State<TripsEdit> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Edit Trip",
+          "Trip Info",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         elevation: 0,
@@ -61,6 +61,30 @@ class _TripsEditState extends State<TripsEdit> {
             tripMemberList(widget._tripData.members, widget._tripData.owner),
             buildCategoryTitle("Trip Information"),
             buildTripForm(),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: RaisedButton(
+                color: Colors.redAccent,
+                elevation: 5.0,
+                onPressed: () {},
+                child:
+                    //Check is owner or not
+                    widget._tripData.owner.id == "01"
+                        ? Text(
+                            "EXIT AND DELETE TRIP",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          )
+                        : Text(
+                            "EXIT TRIP",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+              ),
+            )
           ],
         ),
       ),
@@ -119,22 +143,29 @@ class _TripsEditState extends State<TripsEdit> {
                   onTap: () {
                     _navigateEditFriend();
                   },
-                  child: CircleAvatar(
-                    radius: 15.0,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      index == memberList.length ? Icons.edit : Icons.remove,
-                      size: 30.0,
-                      color: Colors.green,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 1.0,
+                          style: BorderStyle.solid,
+                          color: Colors.grey),
+                    ),
+                    child: CircleAvatar(
+                      radius: 15.0,
+                      backgroundColor: Colors.transparent,
+                      child: Icon(
+                          index == memberList.length ? Icons.add : Icons.remove,
+                          size: 30.0,
+                          color: Colors.grey),
                     ),
                   ),
                 ),
           const SizedBox(height: 5.0),
           if (index < memberList.length)
             Text(
-              index < memberList.length ? memberList[index].lastName : "Edit",
+              memberList[index].lastName,
               style: TextStyle(
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
               ),
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
@@ -142,6 +173,11 @@ class _TripsEditState extends State<TripsEdit> {
           else
             Text(
               index == memberList.length ? "Add" : "Delete",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
         ],
       ),
@@ -408,4 +444,36 @@ class _TripsEditState extends State<TripsEdit> {
       },
     );
   }
+
+  // Future _deleteConfirmationAlert(BuildContext context) {
+  //   return showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Delete Trip Confirmation'),
+  //         content: const Text(
+  //             'This will delete all the trip information from this application.'),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             child: const Text('Cancel'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //           FlatButton(
+  //             child: const Text('Confirm'),
+  //             onPressed: () {
+  //               setState(() {
+  //                 widget.tripsData.tripDetail = "cancel";
+  //                 Navigator.of(context).pop();
+  //               });
+  //               Navigator.pop(context, widget.tripsData);
+  //             },
+  //           )
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }
