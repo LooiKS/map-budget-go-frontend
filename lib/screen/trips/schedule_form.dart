@@ -1,5 +1,6 @@
 import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/utils/calendar.dart';
+import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
@@ -29,53 +30,22 @@ class _ScheduleFormState extends State<ScheduleForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Schedule'),
-        leading: IconButton(
-            onPressed: () {
-              if (!widget.schedule.equalTo(schedule))
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: Text('Message'),
-                          content: Text(
-                              'Are you sure you want to quit without saving?'),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text('Yes'),
-                              onPressed: () {},
-                            ),
-                            FlatButton(
-                              child: Text('No'),
-                              onPressed: () => Navigator.pop(context),
-                            )
-                          ],
-                        ));
-              else
-                Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back)),
+        title: Text(
+          schedule.activityTitle.isEmpty ? 'New Schedule' : 'Edit Schedule',
+          style: TextStyle(color: Colors.white),
+        ),
+        shape: CustomShapeBorder(),
+        leading: IconButton(onPressed: _onSave, icon: Icon(Icons.arrow_back)),
         actions: <Widget>[
-          FlatButton(
-              onPressed: () {
-                if (schedule.startDt.isAfter(schedule.endDt))
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            title: Text('Message'),
-                            content: Text(
-                                'Activity must not ends before start time. Please change the date or time.'),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('OK'),
-                              )
-                            ],
-                          ));
-                else {
-                  Navigator.pop(context, schedule);
-                }
-              },
-              child: Text('Save'))
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: FlatButton(
+                onPressed: _onSave,
+                child: Text(
+                  'Save',
+                  style: TextStyle(color: Colors.white),
+                )),
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -251,5 +221,59 @@ class _ScheduleFormState extends State<ScheduleForm> {
             color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 20),
       ),
     );
+  }
+
+  void _onSave() {
+    String errorMsg = '';
+    schedule.activityTitle = schedule.activityTitle.trim();
+    schedule.activityDesc = schedule.activityDesc.trim();
+    if (schedule.activityTitle.isEmpty || schedule.activityDesc.isEmpty)
+      errorMsg = "Activity title and activity description cannot be empty";
+    else if (schedule.startDt.add(Duration(seconds: 1)).isAfter(schedule.endDt))
+      errorMsg =
+          'Activity must end after start time. Please change the date or time.';
+    if (errorMsg.isNotEmpty)
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Message'),
+                content: Text(errorMsg),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('OK'),
+                  )
+                ],
+              ));
+    else {
+      widget.schedule.activityTitle = schedule.activityTitle;
+      widget.schedule.activityDesc = schedule.activityDesc;
+      widget.schedule.startDt = schedule.startDt;
+      widget.schedule.endDt = schedule.endDt;
+
+      Navigator.pop(context, schedule);
+    }
+  }
+
+  void _onBack() {
+    if (!widget.schedule.equalTo(schedule))
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Message'),
+                content: Text('Are you sure you want to quit without saving?'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Yes'),
+                    onPressed: () {},
+                  ),
+                  FlatButton(
+                    child: Text('No'),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                ],
+              ));
+    else
+      Navigator.pop(context);
   }
 }

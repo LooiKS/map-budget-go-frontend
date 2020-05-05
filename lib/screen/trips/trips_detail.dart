@@ -1,9 +1,10 @@
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
-import 'package:budgetgo/screen/trips/schedule_screen.dart';
+import 'package:budgetgo/screen/trips/schedule_detail_screen.dart';
 import 'package:budgetgo/screen/expenses/expenses_details.dart';
 import 'package:budgetgo/screen/expenses/expenses_screen.dart';
 import 'package:budgetgo/screen/trips/add_members.dart';
+import 'package:budgetgo/screen/trips/schedule_screen.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import '../../main.dart';
@@ -146,7 +147,11 @@ class _TripsDetailState extends State<TripsDetail> {
                             );
                           }
                         : () {
-                            Navigator.push(context, null);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ScheduleScreen(widget.trip.schedules)));
                           })
                 // ? Text("View All",
                 //     style: TextStyle(
@@ -213,8 +218,11 @@ class _TripsDetailState extends State<TripsDetail> {
                       ? Colors.white
                       : Colors.black54),
             ),
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ScheduleScreen(index))),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ScheduleDetailScreen(widget.trip.schedules[index]))),
           ),
         ),
         itemCount: widget.trip.schedules.length,

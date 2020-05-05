@@ -1,14 +1,14 @@
 const Month = {
-  1: 'JANUARY',
-  2: 'FEBRUARY',
-  3: 'MARCH',
-  4: 'APRIL',
+  1: 'JAN',
+  2: 'FEB',
+  3: 'MAC',
+  4: 'APR',
   5: 'MAY',
   6: 'JUNE',
   7: 'JULY',
-  8: 'AUGUST',
-  9: 'SEPTEMBER',
-  10: 'OCTOBER',
-  11: 'NOVERMBER',
-  12: 'DECEMEBR'
+  8: 'AUG',
+  9: 'SEPT',
+  10: 'OCT',
+  11: 'NOV',
+  12: 'DEC'
 };
