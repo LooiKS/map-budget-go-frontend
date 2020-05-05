@@ -15,6 +15,7 @@ final User mockOwnUser = User(
     "obama123",
     "123",
     false, [
+  mockUser1,
   mockUser2,
   mockUser3,
   mockUser4,

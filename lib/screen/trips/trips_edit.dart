@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import '../../widget/custom_shape.dart';
 
 class TripsEdit extends StatefulWidget {
-  final Trips _tripData;
+  Trips _tripData;
 
   TripsEdit(this._tripData);
   @override
@@ -28,27 +28,32 @@ class _TripsEditState extends State<TripsEdit> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _navigateEditFriend() async {
-    List<User> returnData = await Navigator.push(
+    final returnData = await Navigator.push(
       context,
-      //Trips.copy(widget.tripsData[index])
-      MaterialPageRoute(
-          builder: (context) =>
-              // AddMember(widget._tripData.members, widget._tripData.owner)),
-              AddMember(Trips.copy(widget._tripData))),
+      MaterialPageRoute(builder: (context) => AddMember(widget._tripData)),
     );
-    if (returnData != null) {
-      tempUsers.clear();
-      for (int c = 0; c < returnData.length; c++) {
-        if (returnData[c].isChecked == true) {
-          tempUsers.add(returnData[c]);
-        }
-      }
 
-      setState(() => widget._tripData.members = tempUsers);
-      memberList.clear();
-      memberList.add(widget._tripData.owner);
-      memberList.addAll(widget._tripData.members);
+    if (returnData != null) {
+      setState(() {
+        widget._tripData = returnData;
+        memberList.clear();
+      });
     }
+
+    // print(returnData.owner);
+    // if (returnData != null) {
+    //   tempUsers.clear();
+    //   for (int c = 0; c < returnData.length; c++) {
+    //     if (returnData[c].isChecked == true) {
+    //       tempUsers.add(returnData[c]);
+    //     }
+    //   }
+
+    //   setState(() => widget._tripData.members = tempUsers);
+    //   memberList.clear();
+    //   memberList.add(widget._tripData.owner);
+    //   memberList.addAll(widget._tripData.members);
+    // }
   }
 
   @override
@@ -151,9 +156,7 @@ class _TripsEditState extends State<TripsEdit> {
                 ),
           const SizedBox(height: 5.0),
           Text(
-            index != memberList.length
-                ? memberList[index].lastName
-                : "Edit",
+            index != memberList.length ? memberList[index].lastName : "Edit",
             style: TextStyle(
               fontWeight: FontWeight.w500,
             ),
