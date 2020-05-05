@@ -94,7 +94,7 @@ class _TripsEditState extends State<TripsEdit> {
         ),
         itemBuilder: (context, index) =>
             buildMemberAvatar(index, userList, user, context),
-        itemCount: memberList.length + 1,
+        itemCount: memberList.length + 2,
       ),
     );
   }
@@ -105,7 +105,7 @@ class _TripsEditState extends State<TripsEdit> {
       onTap: () {},
       child: Column(
         children: <Widget>[
-          index != memberList.length
+          index < memberList.length
               ? ClipOval(
                   child: FadeInImage.assetNetwork(
                     placeholder: "assets/images/loading.gif",
@@ -123,21 +123,26 @@ class _TripsEditState extends State<TripsEdit> {
                     radius: 15.0,
                     backgroundColor: Colors.white,
                     child: Icon(
-                      Icons.edit,
+                      index == memberList.length ? Icons.edit : Icons.remove,
                       size: 30.0,
                       color: Colors.green,
                     ),
                   ),
                 ),
           const SizedBox(height: 5.0),
-          Text(
-            index != memberList.length ? memberList[index].lastName : "Edit",
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
+          if (index < memberList.length)
+            Text(
+              index < memberList.length ? memberList[index].lastName : "Edit",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            )
+          else
+            Text(
+              index == memberList.length ? "Add" : "Delete",
             ),
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-          ),
         ],
       ),
     );
