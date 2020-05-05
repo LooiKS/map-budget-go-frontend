@@ -189,15 +189,22 @@ class _AddMemberState extends State<AddMember> {
               Container(
                 child: Column(
                   children: <Widget>[
-                    Padding(
+                    Container(
                       padding: const EdgeInsets.only(
                           top: 6.0, left: 7, right: 7, bottom: 0),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 7.5 / 100,
                       child: TextField(
                         onChanged: (value) => filterSearchResults(value),
                         decoration: InputDecoration(
                           labelText: "Search",
                           hintText: "Search",
-                          prefixIcon: Icon(Icons.search),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            size: 22.0,
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 2.0),
                           border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15.0))),

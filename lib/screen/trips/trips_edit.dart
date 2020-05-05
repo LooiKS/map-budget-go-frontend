@@ -8,6 +8,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../widget/custom_shape.dart';
+import 'delete_members.dart';
 
 class TripsEdit extends StatefulWidget {
   Trips _tripData;
@@ -27,11 +28,26 @@ class _TripsEditState extends State<TripsEdit> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _navigateEditFriend() async {
+  void _navigateAddFriend() async {
     final returnData = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => AddMember(Trips.copy(widget._tripData))),
+    );
+
+    if (returnData != null) {
+      setState(() {
+        widget._tripData = returnData;
+        memberList.clear();
+      });
+    }
+  }
+
+  void _navigateDelFriend() async {
+    final returnData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => DelMembers(Trips.copy(widget._tripData))),
     );
 
     if (returnData != null) {
@@ -101,6 +117,7 @@ class _TripsEditState extends State<TripsEdit> {
               title,
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
+            title == "Trip Information" ? Icon(Icons.edit) : Text("")
           ]),
     );
   }
@@ -141,7 +158,9 @@ class _TripsEditState extends State<TripsEdit> {
                 )
               : GestureDetector(
                   onTap: () {
-                    _navigateEditFriend();
+                    index == memberList.length
+                        ? _navigateAddFriend()
+                        : _navigateDelFriend();
                   },
                   child: Container(
                     decoration: BoxDecoration(
