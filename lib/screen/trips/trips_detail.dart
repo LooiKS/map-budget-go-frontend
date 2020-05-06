@@ -19,7 +19,7 @@ class TripsDetail extends StatefulWidget {
 class _TripsDetailState extends State<TripsDetail> {
   List<Trips> dummyTrip = <Trips>[];
   List<TripExpenses> dummyExpenses = <TripExpenses>[];
-  List<String> tripsDetailSetting = ['Trip Info', 'Report', 'Exit Group'];
+  // List<String> tripsDetailSetting = ['Trip Info', ';
 
   void _navigateEditTrips() async {
     Trips returnData = await Navigator.push(
@@ -31,30 +31,17 @@ class _TripsDetailState extends State<TripsDetail> {
     if (returnData != null) {
       setState(() {
         widget.tripsData = returnData;
-        _tripEdittedAlert(context);
       });
     }
-  }
-
-  void _selected(String route) {
-    setState(() {
-      if (route == tripsDetailSetting[0]) {
-        if (widget.tripsData.status == "past") {
-          _tripEditError(context);
-        } else {
-          _navigateEditTrips();
-        }
-      } else if (route == "Delete") {
-        _deleteConfirmationAlert(context);
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: key.currentState.brightness == Brightness.dark
+          ? Colors.transparent
+          : Color.fromRGBO(244, 244, 244, 5),
       appBar: AppBar(
-        automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context, widget.tripsData),
@@ -64,18 +51,19 @@ class _TripsDetailState extends State<TripsDetail> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: _selected,
-            itemBuilder: (BuildContext context) {
-              return tripsDetailSetting.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                  height: 65.0,
-                );
-              }).toList();
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              if (widget.tripsData.status == "past") {
+                _tripEditError(context);
+              } else {
+                _navigateEditTrips();
+              }
             },
-          ),
+          )
         ],
         elevation: 0,
         shape: CustomShapeBorder(),
@@ -111,7 +99,8 @@ class _TripsDetailState extends State<TripsDetail> {
                 ? FlatButton(
                     child: Text(
                       'View All',
-                      // style: TextStyle(color: Colors.orange),
+                      style: TextStyle(
+                          color: Colors.orange, fontWeight: FontWeight.bold),
                     ),
                     onPressed: title != "Schedule"
                         ? () {
@@ -129,12 +118,6 @@ class _TripsDetailState extends State<TripsDetail> {
                         : () {
                             Navigator.push(context, null);
                           })
-                // ? Text("View All",
-                //     style: TextStyle(
-                //       fontSize: 15.0,
-                //       fontWeight: FontWeight.w400,
-                //       color: Colors.orange,
-                //     ))
                 : Text(""),
           ]),
     );
@@ -348,26 +331,6 @@ class _TripsDetailState extends State<TripsDetail> {
                 Navigator.pop(context, widget.tripsData);
               },
             )
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _tripEdittedAlert(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Trip Message'),
-          content: const Text('The trip is editted successfully.'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
           ],
         );
       },

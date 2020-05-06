@@ -87,7 +87,6 @@ class _TripsEditState extends State<TripsEdit> {
       _formKey.currentState.save();
       if (_dateStart.isBefore(_dateEnd) == true) {
         setState(() {
-          _formKey.currentState.save();
           widget._tripData.tripTitle = _tripTitle.text;
           widget._tripData.tripDetail = _tripDetail.text;
           widget._tripData.startDt = _dateStart;
@@ -98,7 +97,6 @@ class _TripsEditState extends State<TripsEdit> {
         _tripEdittedAlert(context);
       } else if (widget._tripData.status == "progress") {
         setState(() {
-          _formKey.currentState.save();
           widget._tripData.tripTitle = _tripTitle.text;
           widget._tripData.tripDetail = _tripDetail.text;
           widget._tripData.startDt = _dateStart;
