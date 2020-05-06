@@ -298,6 +298,7 @@ class _TripsCreateState extends State<TripsCreatePage> {
                           setState(() {
                             _formKey.currentState.save();
                             Trips _newTrip = new Trips(
+                                mockdata.length + 1,
                                 _tripTitle.text,
                                 _tripDetail.text,
                                 mockOwnUser,

@@ -100,6 +100,7 @@ class _DelMembersState extends State<DelMembers> {
         },
       );
     }
+    return null;
   }
 
   Future _requestPopMessage(BuildContext context) {

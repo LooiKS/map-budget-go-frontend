@@ -33,7 +33,7 @@ class _TripsDetailState extends State<TripsDetail> {
         widget.tripsData = returnData;
         _tripEdittedAlert(context);
       });
-    } else {}
+    }
   }
 
   void _selected(String route) {
@@ -85,45 +85,8 @@ class _TripsDetailState extends State<TripsDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             buildCategoryTitle("Members"),
-            buildTripMemberList(context, widget.tripsData.owner,
-                widget.tripsData.members), // Container(
-            //   height: 80.0,
-            //   child: ListView.builder(
-            //     padding:
-            //         const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            //     scrollDirection: Axis.horizontal,
-            //     itemCount: widget.tripsData.members.length,
-            //     itemBuilder: (context, index) => Row(
-            //       mainAxisAlignment: MainAxisAlignment.start,
-            //       children: <Widget>[
-            //         GestureDetector(
-            //           onTap: () {},
-            //           child: Column(
-            //             children: <Widget>[
-            //               ClipOval(
-            //                 child: FadeInImage.assetNetwork(
-            //                   placeholder: "assets/images/loading.gif",
-            //                   image: widget.tripsData.members[index].profilePic,
-            //                   fit: BoxFit.contain,
-            //                   width: 45.0,
-            //                   height: 45.0,
-            //                 ),
-            //               ),
-            //               SizedBox(
-            //                 width: 40,
-            //                 child: Text(
-            //                   widget.tripsData.members[index].lastName,
-            //                   overflow: TextOverflow.ellipsis,
-            //                   textAlign: TextAlign.center,
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
+            buildTripMemberList(
+                context, widget.tripsData.owner, widget.tripsData.members),
             buildCategoryTitle("Schedule"),
             buildSchedules(),
             buildCategoryTitle("Expenses"),

@@ -4,9 +4,11 @@ import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/trips/add_members.dart';
+import 'package:budgetgo/screen/trips/trips_main_page.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../main.dart';
 import '../../widget/custom_shape.dart';
 import 'delete_members.dart';
 
@@ -19,14 +21,29 @@ class TripsEdit extends StatefulWidget {
 }
 
 class _TripsEditState extends State<TripsEdit> {
+  final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   List<User> memberList = [];
   List<User> tempUsers = [];
   List<Trips> dummyTrip = <Trips>[];
   List<TripExpenses> dummyExpenses = <TripExpenses>[];
+  bool _enabledEdit = false;
+  DateTime _dateStart;
+  DateTime _dateEnd;
+  TextEditingController _tripTitle;
+  TextEditingController _tripDetail;
   String _inputCurrency;
 
-  final _formKey = GlobalKey<FormState>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    _dateStart = widget._tripData.startDt;
+    _dateEnd = widget._tripData.endDt;
+    _tripTitle = TextEditingController(text: widget._tripData.tripTitle);
+    _tripDetail = TextEditingController(text: widget._tripData.tripDetail);
+    _inputCurrency = widget._tripData.currency;
+    super.initState();
+  }
 
   void _navigateAddFriend() async {
     final returnData = await Navigator.push(
@@ -58,50 +75,197 @@ class _TripsEditState extends State<TripsEdit> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Trip Info",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        elevation: 0,
-        shape: CustomShapeBorder(),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            buildCategoryTitle("Members"),
-            tripMemberList(widget._tripData.members, widget._tripData.owner),
-            buildCategoryTitle("Trip Information"),
-            buildTripForm(),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: RaisedButton(
-                color: Colors.redAccent,
-                elevation: 5.0,
-                onPressed: () {},
-                child:
-                    //Check is owner or not
-                    widget._tripData.owner.id == "01"
-                        ? Text(
-                            "EXIT AND DELETE TRIP",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )
-                        : Text(
-                            "EXIT TRIP",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-              ),
+  void _saveEdit(
+      context,
+      DateTime _dateStart,
+      DateTime _dateEnd,
+      TextEditingController _tripTitle,
+      TextEditingController _tripDetail,
+      String _inputCurrency) {
+    print(_inputCurrency);
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      if (_dateStart.isBefore(_dateEnd) == true) {
+        setState(() {
+          _formKey.currentState.save();
+          widget._tripData.tripTitle = _tripTitle.text;
+          widget._tripData.tripDetail = _tripDetail.text;
+          widget._tripData.startDt = _dateStart;
+          widget._tripData.endDt = _dateEnd;
+          widget._tripData.currency = _inputCurrency;
+          _enabledEdit = false;
+        });
+        _tripEdittedAlert(context);
+      } else if (widget._tripData.status == "progress") {
+        setState(() {
+          _formKey.currentState.save();
+          widget._tripData.tripTitle = _tripTitle.text;
+          widget._tripData.tripDetail = _tripDetail.text;
+          widget._tripData.startDt = _dateStart;
+          widget._tripData.endDt = _dateEnd;
+          widget._tripData.currency = _inputCurrency;
+          _enabledEdit = false;
+        });
+        _tripEdittedAlert(context);
+      } else {
+        _dateErrorAlert(context);
+      }
+    }
+  }
+
+  void _cancelEdit() {
+    setState(() {
+      _enabledEdit = false;
+      _tripTitle.text = widget._tripData.tripTitle;
+      _tripDetail.text = widget._tripData.tripDetail;
+      _dateStart = widget._tripData.startDt;
+      _dateEnd = widget._tripData.endDt;
+      _inputCurrency = widget._tripData.currency;
+    });
+  }
+
+  Future _deleteConfirmationAlert(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Trip Confirmation'),
+          content: const Text(
+              'This will delete all the trip information from this application.'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                setState(() {
+                  for (int i = 0; i < mockdata.length; i++) {
+                    if (mockdata[i].tripID == widget._tripData.tripID &&
+                        mockdata[i].owner == widget._tripData.owner) {
+                      mockdata.remove(mockdata[i]);
+                    }
+                  }
+                  // Navigator.of(context).popUntil(MaterialPageRoute(
+                  //   builder: (context) => TripsMainPage(mockdata),
+                  // ));
+                });
+              },
             )
           ],
+        );
+      },
+    );
+  }
+
+  Future _requestPopMessage(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Discard your changes?'),
+          content:
+              const Text('If you go back now, your change will be discarded.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'KEEP',
+                style: TextStyle(
+                    color: key.currentState.brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.grey,
+                    fontSize: 15.0),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text(
+                'DISCARD',
+                style: TextStyle(color: Colors.blue, fontSize: 15.0),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(null);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        if (_enabledEdit == true) {
+          _requestPopMessage(context);
+        } else {
+          Navigator.of(context).pop(widget._tripData);
+        }
+        return new Future(() => false);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Trip Info",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              if (_enabledEdit == true) {
+                _requestPopMessage(context);
+              } else {
+                Navigator.of(context).pop(widget._tripData);
+              }
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
+          elevation: 0,
+          shape: CustomShapeBorder(),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              buildCategoryTitle("Members"),
+              tripMemberList(widget._tripData.members, widget._tripData.owner),
+              buildCategoryTitle("Trip Information"),
+              buildTripForm(_dateStart, _dateEnd, _tripTitle, _tripDetail,
+                  _inputCurrency),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: RaisedButton(
+                  color: Colors.redAccent,
+                  elevation: 5.0,
+                  onPressed: () => _deleteConfirmationAlert(context),
+                  child:
+                      //Check is owner or not
+                      widget._tripData.owner.id == "01"
+                          ? Text(
+                              "EXIT AND DELETE TRIP",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : Text(
+                              "EXIT TRIP",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -117,7 +281,33 @@ class _TripsEditState extends State<TripsEdit> {
               title,
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
-            title == "Trip Information" ? Icon(Icons.edit) : Text("")
+            if (title == "Trip Information")
+              title == "Trip Information" && _enabledEdit == false
+                  ? IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        setState(() {
+                          _enabledEdit = !_enabledEdit;
+                        });
+                      },
+                    )
+                  : Row(children: <Widget>[
+                      IconButton(
+                        color: Colors.red,
+                        icon: Icon(Icons.clear),
+                        onPressed: () => _cancelEdit(),
+                      ),
+                      IconButton(
+                        color: Colors.green,
+                        icon: Icon(Icons.done),
+                        onPressed: () {
+                          _saveEdit(context, _dateStart, _dateEnd, _tripTitle,
+                              _tripDetail, _inputCurrency);
+                        },
+                      ),
+                    ])
+            else
+              Text("")
           ]),
     );
   }
@@ -203,17 +393,16 @@ class _TripsEditState extends State<TripsEdit> {
     );
   }
 
-  Container buildTripForm() {
-    DateTime _dateStart = widget._tripData.startDt;
-    DateTime _dateEnd = widget._tripData.endDt;
-    TextEditingController _tripTitle =
-        TextEditingController(text: widget._tripData.tripTitle);
-    TextEditingController _tripDetail =
-        TextEditingController(text: widget._tripData.tripDetail);
+  Container buildTripForm(
+      DateTime _dateStart,
+      DateTime _dateEnd,
+      TextEditingController _tripTitle,
+      TextEditingController _tripDetail,
+      String _inputCurrency) {
     final dateInputFormat = DateFormat("dd-MM-yyyy");
-    _inputCurrency = widget._tripData.currency;
+    String c = _inputCurrency;
     return Container(
-        padding: const EdgeInsets.only(left: 16.0, top: 10.0, right: 16.0),
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -221,6 +410,7 @@ class _TripsEditState extends State<TripsEdit> {
             children: <Widget>[
               TextFormField(
                 controller: _tripTitle,
+                enabled: _enabledEdit,
                 decoration: InputDecoration(labelText: "Trip Title "),
                 validator: (value) {
                   if (value.isEmpty) {
@@ -230,12 +420,18 @@ class _TripsEditState extends State<TripsEdit> {
                   }
                 },
                 onSaved: (value) {
+                  setState(() {
+                    _tripTitle.text = value;
+                  });
                   _tripTitle.text = value;
                 },
               ),
               TextFormField(
+                enabled: _enabledEdit,
                 controller: _tripDetail,
-                decoration: InputDecoration(labelText: "Trip Detail "),
+                decoration: InputDecoration(
+                  labelText: "Trip Detail ",
+                ),
                 validator: (value) {
                   if (value.isEmpty) {
                     return "This input field shouldn't be empty.";
@@ -252,7 +448,9 @@ class _TripsEditState extends State<TripsEdit> {
                       format: dateInputFormat,
                       initialValue: _dateStart,
                       decoration: InputDecoration(
-                          labelText: 'Start Date', hintText: ('dd-mm-yyyy')),
+                          labelText: 'Start Date',
+                          hintText: ('dd-mm-yyyy'),
+                          enabled: _enabledEdit),
                       onShowPicker: (context, _dateStart) {
                         return showDatePicker(
                           context: context,
@@ -272,10 +470,13 @@ class _TripsEditState extends State<TripsEdit> {
                       },
                     )
                   : DateTimeField(
+                      enabled: _enabledEdit,
                       format: dateInputFormat,
                       initialValue: _dateStart,
                       decoration: InputDecoration(
-                          labelText: 'Start Date', hintText: ('dd-mm-yyyy')),
+                          labelText: 'Start Date',
+                          hintText: ('dd-mm-yyyy'),
+                          enabled: _enabledEdit),
                       onShowPicker: (context, _dateStart) {
                         return showDatePicker(
                           context: context,
@@ -326,10 +527,13 @@ class _TripsEditState extends State<TripsEdit> {
                       },
                     )
                   : DateTimeField(
+                      enabled: _enabledEdit,
                       format: dateInputFormat,
                       initialValue: _dateEnd,
                       decoration: InputDecoration(
-                          labelText: 'End Date', hintText: ('dd-mm-yyyy')),
+                          labelText: 'End Date',
+                          hintText: ('dd-mm-yyyy'),
+                          enabled: _enabledEdit),
                       onShowPicker: (context, _dateEnd) {
                         return showDatePicker(
                           context: context,
@@ -356,10 +560,16 @@ class _TripsEditState extends State<TripsEdit> {
                       },
                     ),
               DropdownButtonFormField<String>(
+                items: currency.map((String cur) {
+                  return DropdownMenuItem<String>(
+                    value: cur,
+                    child: Text(cur),
+                  );
+                }).toList(),
                 value: _inputCurrency,
+                hint: Text(_inputCurrency),
                 decoration: InputDecoration(
                     labelText: 'Currency',
-                    hintText: ('Currency'),
                     contentPadding: const EdgeInsets.fromLTRB(0, 13, 0, 0)),
                 elevation: 16,
                 validator: (value) {
@@ -369,74 +579,15 @@ class _TripsEditState extends State<TripsEdit> {
                     return null;
                   }
                 },
-                onChanged: (String value) {
-                  setState(() {
-                    widget._tripData.currency = value;
-                    _inputCurrency = value;
-                  });
-                },
-                items: currency.map((String cur) {
-                  return DropdownMenuItem<String>(
-                    value: cur,
-                    child: Text(cur),
-                  );
-                }).toList(),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    textColor: Theme.of(context).primaryColor,
-                    child: Text('Cancel'),
-                  ),
-                  FlatButton(
-                    onPressed: () {
-                      if (_formKey.currentState.validate()) {
-                        _formKey.currentState.save();
-                        if (_dateStart.isBefore(_dateEnd) == true) {
-                          setState(() {
-                            _formKey.currentState.save();
-                            Trips _editTrip = new Trips(
-                                _tripTitle.text,
-                                _tripDetail.text,
-                                mockOwnUser,
-                                widget._tripData.members,
-                                _dateStart,
-                                _dateEnd,
-                                [],
-                                [],
-                                DateTime.now(),
-                                _inputCurrency,
-                                widget._tripData.status);
-                            Navigator.pop(context, _editTrip);
-                          });
-                        } else if (widget._tripData.status == "progress") {
-                          print("safaaf");
-                          Trips _editTrip = new Trips(
-                              _tripTitle.text,
-                              _tripDetail.text,
-                              mockOwnUser,
-                              widget._tripData.members,
-                              _dateStart,
-                              _dateEnd,
-                              [],
-                              [],
-                              DateTime.now(),
-                              _inputCurrency,
-                              widget._tripData.status);
-                          Navigator.pop(context, _editTrip);
-                        } else {
-                          _dateErrorAlert(context);
-                        }
+                onChanged: _enabledEdit
+                    ? (value) {
+                        print(value);
+                        setState(() {
+                          _inputCurrency = value;
+                        });
+                        print(_inputCurrency);
                       }
-                    },
-                    textColor: Theme.of(context).primaryColor,
-                    child: Text('Save'),
-                  ),
-                ],
+                    : null,
               ),
             ],
           ),
@@ -464,35 +615,23 @@ class _TripsEditState extends State<TripsEdit> {
     );
   }
 
-  // Future _deleteConfirmationAlert(BuildContext context) {
-  //   return showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Delete Trip Confirmation'),
-  //         content: const Text(
-  //             'This will delete all the trip information from this application.'),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             child: const Text('Cancel'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //           FlatButton(
-  //             child: const Text('Confirm'),
-  //             onPressed: () {
-  //               setState(() {
-  //                 widget.tripsData.tripDetail = "cancel";
-  //                 Navigator.of(context).pop();
-  //               });
-  //               Navigator.pop(context, widget.tripsData);
-  //             },
-  //           )
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  Future<void> _tripEdittedAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Trip Message'),
+          content: const Text('The trip is editted successfully.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

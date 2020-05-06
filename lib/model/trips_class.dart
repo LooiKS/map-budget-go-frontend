@@ -3,6 +3,7 @@ import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/user.dart';
 
 class Trips {
+  int _tripID;
   String _tripTitle;
   String _tripDetail;
   User _owner;
@@ -16,6 +17,7 @@ class Trips {
   String _status;
 
   Trips(
+    this._tripID,
     this._tripTitle,
     this._tripDetail,
     this._owner,
@@ -31,6 +33,7 @@ class Trips {
 
   Trips.copy(Trips from)
       : this(
+          from._tripID,
           from._tripTitle,
           from._tripDetail,
           from._owner,
@@ -44,6 +47,7 @@ class Trips {
           from._status,
         );
 
+  int get tripID => this._tripID;
   String get tripTitle => this._tripTitle;
   String get tripDetail => this._tripDetail;
   User get owner => this._owner;
@@ -56,6 +60,7 @@ class Trips {
   String get currency => this._currency;
   String get status => this._status;
 
+  set tripID(int newValue) => this._tripID = newValue;
   set tripTitle(String newValue) => this._tripTitle = newValue;
   set tripDetail(String newValue) => this._tripDetail = newValue;
   set owner(User newValue) => this._owner = newValue;

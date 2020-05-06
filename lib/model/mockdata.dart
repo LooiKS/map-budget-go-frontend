@@ -160,6 +160,7 @@ List<User> loginData = [
 final mockdata = [
   //Trip #1
   Trips(
+      1,
       "Japan",
       "Honey Moon",
       mockOwnUser,
@@ -227,6 +228,7 @@ final mockdata = [
 
   //Trip #2
   Trips(
+      2,
       "Canada",
       "See polar bear",
       mockOwnUser,
@@ -292,6 +294,7 @@ final mockdata = [
       "USD",
       "upcoming"),
   Trips(
+      3,
       "Russia",
       "Eat Polar BEar",
       mockOwnUser,
@@ -358,6 +361,7 @@ final mockdata = [
       "progress"),
   //trips 4
   Trips(
+      4,
       "Singapore",
       "marina bayy",
       mockOwnUser,
@@ -423,6 +427,7 @@ final mockdata = [
       "USD",
       "upcoming"),
   Trips(
+      5,
       "USA",
       "NBA",
       mockOwnUser,
