@@ -79,8 +79,9 @@ class _DelMembersState extends State<DelMembers> {
                 onPressed: _selectedMember.length > 0
                     ? () {
                         setState(() {
-                          widget.tripData.members.clear();
-                          widget.tripData.members.addAll(_selectedMember);
+                          for (User member in _selectedMember) {
+                            widget.tripData.members.remove(member);
+                          }
                         });
                         Navigator.of(context).pop(widget.tripData);
                       }
