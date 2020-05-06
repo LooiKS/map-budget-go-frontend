@@ -72,29 +72,13 @@ class _DelMembersState extends State<DelMembers> {
             content:
                 const Text('Are you confirm to remove the selected members?'),
             actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  'CANCEL',
-                  style: TextStyle(
-                      color: key.currentState.brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.grey,
-                      fontSize: 15.0),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: const Text(
-                  'DELETE',
-                  style: TextStyle(color: Colors.red, fontSize: 15.0),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _delButton();
-                },
-              )
+              cancelDeleteBtn(
+                  context,
+                  "CANCEL",
+                  key.currentState.brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.grey),
+              cancelDeleteBtn(context, "DELETE", Colors.red)
             ],
           );
         },
@@ -103,66 +87,79 @@ class _DelMembersState extends State<DelMembers> {
     return null;
   }
 
-  Future _requestPopMessage(BuildContext context) {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Discard your changes?'),
-          content:
-              const Text('If you go back now, your change will be discarded.'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                'KEEP',
-                style: TextStyle(
-                    color: key.currentState.brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.grey,
-                    fontSize: 15.0),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: const Text(
-                'DISCARD',
-                style: TextStyle(color: Colors.blue, fontSize: 15.0),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(null);
-              },
-            )
-          ],
-        );
+  FlatButton cancelDeleteBtn(BuildContext context, String title, Color color) {
+    return FlatButton(
+      child: Text(
+        title,
+        style: TextStyle(color: color, fontSize: 15.0),
+      ),
+      onPressed: () {
+        if (title == "DELETE") {
+          Navigator.of(context).pop();
+          _delButton();
+        } else {
+          Navigator.of(context).pop();
+        }
       },
     );
+  }
+
+  void _requestPopMessage(BuildContext context) async {
+    if (_selectedMember.length > 0) {
+      return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Discard your changes?'),
+            content: const Text(
+                'If you go back now, your change will be discarded.'),
+            actions: <Widget>[
+              keepOrDiscardBtn(
+                context,
+                "KEEP",
+                key.currentState.brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.grey,
+              ),
+              keepOrDiscardBtn(context, "DISCARD", Colors.blue)
+            ],
+          );
+        },
+      );
+    } else {
+      Navigator.pop(context, null);
+    }
+  }
+
+  FlatButton keepOrDiscardBtn(BuildContext context, String title, Color color) {
+    return FlatButton(
+        child: Text(
+          title,
+          style: TextStyle(color: color, fontSize: 15.0),
+        ),
+        onPressed: title == "DISCARD"
+            ? () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(null);
+              }
+            : () {
+                Navigator.of(context).pop();
+              });
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (_selectedMember.length > 0) {
-          _requestPopMessage(context);
-        } else {
-          Navigator.pop(context, null);
-        }
+        _requestPopMessage(context);
         return new Future(() => false);
       },
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
-              if (_selectedMember.length > 0) {
-                _requestPopMessage(context);
-              } else {
-                Navigator.pop(context, null);
-              }
-              return new Future(() => false);
+              _requestPopMessage(context);
             },
             icon: Icon(Icons.arrow_back),
           ),
@@ -170,128 +167,137 @@ class _DelMembersState extends State<DelMembers> {
             "Remove Members",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          actions: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width * 23 / 100,
-              padding:
-                  const EdgeInsets.only(right: 8.0, top: 13.0, bottom: 13.0),
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                disabledColor: key.currentState.brightness == Brightness.dark
-                    ? Colors.grey
-                    : Colors.orangeAccent,
-                color: Colors.red,
-                onPressed: _selectedMember.length > 0
-                    ? () => _confirmDeleteMesssage(context)
-                    : null,
-                child: Text(
-                  "Delete",
-                  style: TextStyle(
-                    fontWeight: _selectedMember.length > 0
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                    color: _selectedMember.length > 0
-                        ? Colors.white
-                        : Colors.grey.shade700,
-                  ),
-                ),
-                elevation: 7.0,
-              ),
-            )
-          ],
+          actions: <Widget>[buildDeleteBtn(context)],
         ),
         body: Container(
           child: Column(
             children: <Widget>[
-              Container(
-                padding: const EdgeInsets.only(
-                    top: 6.0, left: 7, right: 7, bottom: 0),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 7.5 / 100,
-                child: TextField(
-                  onChanged: (value) => filterSearchResults(value),
-                  decoration: InputDecoration(
-                    labelText: "Search",
-                    hintText: "Search",
-                    prefixIcon: Icon(
-                      Icons.search,
-                      size: 22.0,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 2.0),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0))),
-                  ),
-                ),
-              ),
-              _selectedMember.length > 0
-                  ? Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Text(
-                              "Selected: ${_selectedMember.length}",
-                              style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Padding(
-                      padding: EdgeInsets.all(0.0),
-                    ),
-              Expanded(
-                flex: 1,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => ListTile(
-                        leading: ClipOval(
-                          child: FadeInImage.assetNetwork(
-                            fadeInCurve: Curves.bounceIn,
-                            placeholder: "assets/images/loading.gif",
-                            image: _memberList[index].profilePic,
-                            fit: BoxFit.contain,
-                            width: 40.0,
-                            height: 40.0,
-                          ),
-                        ),
-                        title: Row(
-                          children: <Widget>[
-                            Text(_memberList[index].username),
-                          ],
-                        ),
-                        trailing: Checkbox(
-                          value: _memberList[index].isChecked,
-                          activeColor: Colors.green,
-                          onChanged: (value) {
-                            setState(() {
-                              _memberList[index].isChecked = value;
-                              if (value == true) {
-                                _selectedMember.add(_memberList[index]);
-                              } else {
-                                _selectedMember.remove(_memberList[index]);
-                              }
-                            });
-                          },
-                        )),
-                    itemCount: _memberList.length),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 2.0),
-                child: Text(
-                  "Total Members: ${_memberList.length}",
-                  style: TextStyle(color: Colors.green),
-                ),
-              )
+              buildSearchBar(context),
+              if (_selectedMember.length > 0) buildSelectedMemberNo(),
+              buildFriendList(),
+              buildTotalMemberNo()
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Container buildDeleteBtn(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 23 / 100,
+      padding: const EdgeInsets.only(right: 8.0, top: 13.0, bottom: 13.0),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        disabledColor: key.currentState.brightness == Brightness.dark
+            ? Colors.grey
+            : Colors.orangeAccent,
+        color: Colors.red,
+        onPressed: _selectedMember.length > 0
+            ? () => _confirmDeleteMesssage(context)
+            : null,
+        child: Text(
+          "Delete",
+          style: _selectedMember.length > 0
+              ? TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
+              : TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.grey.shade700,
+                ),
+        ),
+        elevation: 7.0,
+      ),
+    );
+  }
+
+  Container buildSearchBar(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 6.0, left: 7, right: 7, bottom: 0),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 7.5 / 100,
+      child: TextField(
+        onChanged: (value) => filterSearchResults(value),
+        decoration: InputDecoration(
+          labelText: "Search",
+          hintText: "Search",
+          prefixIcon: Icon(
+            Icons.search,
+            size: 22.0,
+          ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 2.0),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15.0))),
+        ),
+      ),
+    );
+  }
+
+  Padding buildSelectedMemberNo() {
+    return Padding(
+      padding: const EdgeInsets.all(0.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Text(
+              "Selected: ${_selectedMember.length}",
+              style:
+                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Expanded buildFriendList() {
+    return Expanded(
+      flex: 1,
+      child: ListView.builder(
+          shrinkWrap: true,
+          itemBuilder: (context, index) => ListTile(
+              leading: ClipOval(
+                child: FadeInImage.assetNetwork(
+                  fadeInCurve: Curves.bounceIn,
+                  placeholder: "assets/images/loading.gif",
+                  image: _memberList[index].profilePic,
+                  fit: BoxFit.contain,
+                  width: 40.0,
+                  height: 40.0,
+                ),
+              ),
+              title: Row(
+                children: <Widget>[
+                  Text(_memberList[index].username),
+                ],
+              ),
+              trailing: Checkbox(
+                value: _memberList[index].isChecked,
+                activeColor: Colors.green,
+                onChanged: (value) {
+                  setState(() {
+                    _memberList[index].isChecked = value;
+                    if (value == true) {
+                      _selectedMember.add(_memberList[index]);
+                    } else {
+                      _selectedMember.remove(_memberList[index]);
+                    }
+                  });
+                },
+              )),
+          itemCount: _memberList.length),
+    );
+  }
+
+  Padding buildTotalMemberNo() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 2.0),
+      child: Text(
+        "Total Members: ${_memberList.length}",
+        style: TextStyle(color: Colors.green),
       ),
     );
   }

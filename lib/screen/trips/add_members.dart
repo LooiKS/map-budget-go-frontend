@@ -80,7 +80,7 @@ class _AddMemberState extends State<AddMember> {
                   ? Colors.white
                   : Colors.grey,
             ),
-            keepOrDiscardBtn(context, "DIDSCARD", Colors.blue)
+            keepOrDiscardBtn(context, "DISCARD", Colors.blue)
           ],
         );
       },
