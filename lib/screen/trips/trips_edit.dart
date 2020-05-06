@@ -4,7 +4,6 @@ import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/trips/add_members.dart';
-import 'package:budgetgo/screen/trips/trips_main_page.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -85,24 +84,19 @@ class _TripsEditState extends State<TripsEdit> {
     print(_inputCurrency);
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      setState(() {
+        _enabledEdit = false;
+        widget._tripData.tripTitle = _tripTitle.text;
+        widget._tripData.tripDetail = _tripDetail.text;
+        widget._tripData.currency = _inputCurrency;
+        widget._tripData.currency = _inputCurrency;
+      });
       if (_dateStart.isBefore(_dateEnd) == true) {
+        print(_dateStart);
+        print(_dateStart.isBefore(_dateEnd));
         setState(() {
-          widget._tripData.tripTitle = _tripTitle.text;
-          widget._tripData.tripDetail = _tripDetail.text;
           widget._tripData.startDt = _dateStart;
           widget._tripData.endDt = _dateEnd;
-          widget._tripData.currency = _inputCurrency;
-          _enabledEdit = false;
-        });
-        _tripEdittedAlert(context);
-      } else if (widget._tripData.status == "progress") {
-        setState(() {
-          widget._tripData.tripTitle = _tripTitle.text;
-          widget._tripData.tripDetail = _tripDetail.text;
-          widget._tripData.startDt = _dateStart;
-          widget._tripData.endDt = _dateEnd;
-          widget._tripData.currency = _inputCurrency;
-          _enabledEdit = false;
         });
         _tripEdittedAlert(context);
       } else {
@@ -154,6 +148,47 @@ class _TripsEditState extends State<TripsEdit> {
                 });
               },
             )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _dateErrorAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Date Error'),
+          content: const Text(
+              'The Start Date should not be earlier than End Date. Please make the changes.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _tripEdittedAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Trip Message'),
+          content: const Text('The trip is editted successfully.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
           ],
         );
       },
@@ -590,46 +625,5 @@ class _TripsEditState extends State<TripsEdit> {
             ],
           ),
         ));
-  }
-
-  Future<void> _dateErrorAlert(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Date Error'),
-          content: const Text(
-              'The Start Date should not be earlier than End Date. Please make the changes.'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _tripEdittedAlert(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Trip Message'),
-          content: const Text('The trip is editted successfully.'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }
