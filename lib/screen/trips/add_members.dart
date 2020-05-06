@@ -55,7 +55,7 @@ class _AddMemberState extends State<AddMember> {
     }
   }
 
-  void saveButton() {
+  void _saveButton() {
     if (_selectedMember.length > 0) {
       setState(() {
         widget.tripData.members.addAll(_selectedMember);
@@ -64,10 +64,56 @@ class _AddMemberState extends State<AddMember> {
     Navigator.of(context).pop(widget.tripData);
   }
 
+  Future _requestPopMessage(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Discard your changes?'),
+          content:
+              const Text('If you go back now, your change will be discarded.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'KEEP',
+                style: TextStyle(
+                    color: key.currentState.brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.grey,
+                    fontSize: 15.0),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text(
+                'DISCARD',
+                style: TextStyle(color: Colors.blue, fontSize: 15.0),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(null);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => Future.value(false),
+      onWillPop: () {
+        if (_selectedMember.length > 0) {
+          _requestPopMessage(context);
+        } else {
+          Navigator.pop(context, null);
+        }
+        return new Future(() => false);
+      },
       child: DefaultTabController(
         length: 3,
         initialIndex: 0,
@@ -75,7 +121,11 @@ class _AddMemberState extends State<AddMember> {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
-                Navigator.of(context).pop(null);
+                if (_selectedMember.length > 0) {
+                  _requestPopMessage(context);
+                } else {
+                  Navigator.pop(context, null);
+                }
               },
               icon: Icon(Icons.arrow_back),
             ),
@@ -232,7 +282,7 @@ class _AddMemberState extends State<AddMember> {
                                       minWidth: 10.0,
                                       height: 28.0,
                                       child: RaisedButton(
-                                        onPressed: () => saveButton(),
+                                        onPressed: () => _saveButton(),
                                         elevation: 5.0,
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -250,7 +300,13 @@ class _AddMemberState extends State<AddMember> {
                                       height: 28.0,
                                       child: RaisedButton(
                                         onPressed: () {
-                                          Navigator.of(context).pop(null);
+                                          setState(() {
+                                            for (User member
+                                                in _selectedMember) {
+                                              member.isChecked = false;
+                                            }
+                                            _selectedMember.clear();
+                                          });
                                         },
                                         elevation: 5.0,
                                         shape: RoundedRectangleBorder(

@@ -1,6 +1,7 @@
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:flutter/material.dart';
 import '../../model/user.dart';
+import '../../main.dart';
 
 class DelMembers extends StatefulWidget {
   final Trips tripData;
@@ -49,15 +50,118 @@ class _DelMembersState extends State<DelMembers> {
     }
   }
 
+  void _delButton() {
+    if (_selectedMember.length > 0) {
+      setState(() {
+        for (User member in _selectedMember) {
+          widget.tripData.members.remove(member);
+        }
+      });
+      Navigator.of(context).pop(widget.tripData);
+    }
+  }
+
+  Future _confirmDeleteMesssage(BuildContext context) {
+    if (_selectedMember.length > 0) {
+      return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Remove Members?'),
+            content:
+                const Text('Are you confirm to remove the selected members?'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'CANCEL',
+                  style: TextStyle(
+                      color: key.currentState.brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.grey,
+                      fontSize: 15.0),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: const Text(
+                  'DELETE',
+                  style: TextStyle(color: Colors.red, fontSize: 15.0),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _delButton();
+                },
+              )
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  Future _requestPopMessage(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Discard your changes?'),
+          content:
+              const Text('If you go back now, your change will be discarded.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'KEEP',
+                style: TextStyle(
+                    color: key.currentState.brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.grey,
+                    fontSize: 15.0),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text(
+                'DISCARD',
+                style: TextStyle(color: Colors.blue, fontSize: 15.0),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(null);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => Future.value(true),
+      onWillPop: () {
+        if (_selectedMember.length > 0) {
+          _requestPopMessage(context);
+        } else {
+          Navigator.pop(context, null);
+        }
+        return new Future(() => false);
+      },
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).pop(null);
+              if (_selectedMember.length > 0) {
+                _requestPopMessage(context);
+              } else {
+                Navigator.pop(context, null);
+              }
+              return new Future(() => false);
             },
             icon: Icon(Icons.arrow_back),
           ),
@@ -74,17 +178,12 @@ class _DelMembersState extends State<DelMembers> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                disabledColor: Colors.orangeAccent,
+                disabledColor: key.currentState.brightness == Brightness.dark
+                    ? Colors.grey
+                    : Colors.orangeAccent,
                 color: Colors.red,
                 onPressed: _selectedMember.length > 0
-                    ? () {
-                        setState(() {
-                          for (User member in _selectedMember) {
-                            widget.tripData.members.remove(member);
-                          }
-                        });
-                        Navigator.of(context).pop(widget.tripData);
-                      }
+                    ? () => _confirmDeleteMesssage(context)
                     : null,
                 child: Text(
                   "Delete",
@@ -92,8 +191,9 @@ class _DelMembersState extends State<DelMembers> {
                     fontWeight: _selectedMember.length > 0
                         ? FontWeight.bold
                         : FontWeight.normal,
-                    color:
-                        _selectedMember.length > 0 ? Colors.white : Colors.grey,
+                    color: _selectedMember.length > 0
+                        ? Colors.white
+                        : Colors.grey.shade700,
                   ),
                 ),
                 elevation: 7.0,
