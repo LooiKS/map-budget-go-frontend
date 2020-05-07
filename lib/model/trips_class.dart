@@ -3,6 +3,7 @@ import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/user.dart';
 
 class Trips {
+  int _tripID;
   String _tripTitle;
   String _tripDetail;
   User _owner;
@@ -13,8 +14,10 @@ class Trips {
   List<TripExpenses> _expenses;
   DateTime _createdDt;
   String _currency;
+  String _status;
 
   Trips(
+    this._tripID,
     this._tripTitle,
     this._tripDetail,
     this._owner,
@@ -25,7 +28,26 @@ class Trips {
     this._expenses,
     this._createdDt,
     this._currency,
+    this._status,
   );
+
+  Trips.copy(Trips from)
+      : this(
+          from._tripID,
+          from._tripTitle,
+          from._tripDetail,
+          from._owner,
+          [...from.members],
+          from._startDt,
+          from._endDt,
+          from._schedules,
+          from._expenses,
+          from._createdDt,
+          from._currency,
+          from._status,
+        );
+
+  int get tripID => this._tripID;
   String get tripTitle => this._tripTitle;
   String get tripDetail => this._tripDetail;
   User get owner => this._owner;
@@ -36,7 +58,9 @@ class Trips {
   List<TripExpenses> get expenses => this._expenses;
   DateTime get createdDt => this._createdDt;
   String get currency => this._currency;
+  String get status => this._status;
 
+  set tripID(int newValue) => this._tripID = newValue;
   set tripTitle(String newValue) => this._tripTitle = newValue;
   set tripDetail(String newValue) => this._tripDetail = newValue;
   set owner(User newValue) => this._owner = newValue;
@@ -47,4 +71,5 @@ class Trips {
   set expenses(List<TripExpenses> newValue) => this._expenses = newValue;
   set createdDt(DateTime newValue) => this._createdDt = newValue;
   set currency(String newValue) => this._currency = newValue;
+  set status(String newValue) => this._status = newValue;
 }

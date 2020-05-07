@@ -1,3 +1,5 @@
+import 'package:budgetgo/model/mockdata.dart';
+import 'package:budgetgo/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
@@ -22,12 +24,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _validate = false;
-  final _text = TextEditingController();
+  bool _validateUsername = false;
+  bool _validatePassword = false;
+  final _username = TextEditingController();
+  final _password = TextEditingController();
 
   @override
   void dispose() {
-    _text.dispose();
+    _username.dispose();
+    _password.dispose();
     super.dispose();
   }
 
@@ -45,13 +50,14 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
-              controller: _text,
+              controller: _password,
               style:
                   new TextStyle(color: Colors.black, height: 1.0, fontSize: 18),
               obscureText: true,
               decoration: InputDecoration(
-                  errorText:
-                      _validate ? 'The password field cannot be empty' : null,
+                  errorText: _validatePassword
+                      ? 'The password field cannot be empty'
+                      : null,
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
                   filled: true,
@@ -75,11 +81,13 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
+              controller: _username,
               style:
                   new TextStyle(color: Colors.black, height: 1.0, fontSize: 18),
               decoration: InputDecoration(
-                  errorText:
-                      _validate ? 'The username field cannot be empty' : null,
+                  errorText: _validateUsername
+                      ? 'The username field cannot be empty'
+                      : null,
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
                   filled: true,
@@ -93,21 +101,37 @@ class _LoginPageState extends State<LoginPage> {
     return InkWell(
       onTap: () {
         setState(() {
-          _text.text.isEmpty ? _validate = true : _validate = false;
+          _password.text.isEmpty
+              ? _validatePassword = true
+              : _validatePassword = false;
+          _username.text.isEmpty
+              ? _validateUsername = true
+              : _validateUsername = false;
         });
-        if (_validate == false) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      MyHomePage(toggleBrightness: widget.toggleBrightness)),
-              (_) => false);
+        bool _validateMatched = false;
+        List<User> check = [];
+        if (_validatePassword == false && _validateUsername == false) {
+          check.addAll(loginData.where((a) => a.username == _username.text));
+          print(check.length.toString() + "username");
+          if (check.length == 1) {
+            if (check[0].password == _password.text) {
+              _validateMatched = true;
+            }
+          }
+
+          if (_validateMatched == true) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        MyHomePage(toggleBrightness: widget.toggleBrightness)),
+                (_) => false);
+          } else {
+            check.clear();
+            _loginErrorAlert(context);
+          }
         }
       },
-      // onTap: () {
-      //    Navigator.push(
-      //        context, MaterialPageRoute(builder: (context) => LoginPage()));
-      // },
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(vertical: 13),
@@ -255,6 +279,27 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _loginErrorAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Login Error'),
+          content: const Text(
+              'The username and password are not matched. Please try again'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

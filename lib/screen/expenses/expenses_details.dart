@@ -33,8 +33,14 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+          ),
+          onPressed: () => Navigator.of(context).pop(widget.expense),
+        ),
         title: Text(
-          "Add Expense",
+          "Expense Details",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -107,6 +113,7 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
                                           widget.expense.title = title;
                                         }
                                         titleStatus = false;
+                                        buildSaveDialog(context);
                                       });
                                     },
                                   ),
@@ -173,6 +180,7 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
                                           widget.expense.desc = description;
                                         }
                                         descStatus = false;
+                                        buildSaveDialog(context);
                                       });
                                     },
                                   ),
@@ -276,6 +284,7 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
                                           widget.expense.category = _categoty;
                                         }
                                         categoryStatus = false;
+                                        buildSaveDialog(context);
                                       });
                                     },
                                   ),
@@ -342,6 +351,7 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
                                           widget.expense.amount = total;
                                         }
                                         totalStatus = false;
+                                        buildSaveDialog(context);
                                       });
                                     },
                                   ),
@@ -383,57 +393,60 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
                           style: TextStyle(
                               fontSize: 15.0, fontWeight: FontWeight.bold),
                         ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemBuilder: (BuildContext context, int index) =>
-                              Card(
-                            margin: EdgeInsets.only(top: 5),
-                            child: ListTile(
-                              selected: true,
-                              leading: Icon(Icons.people),
-                              title: Text(
-                                widget.expense.sharedBy[index].firstName,
-                                style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: key.currentState.brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black87),
+                        Container(
+                          height: 300,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) =>
+                                Card(
+                              margin: EdgeInsets.only(top: 5),
+                              child: ListTile(
+                                selected: true,
+                                leading: Icon(Icons.people),
+                                title: Text(
+                                  widget.expense.sharedBy[index].firstName,
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: key.currentState.brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black87),
+                                ),
+                                onLongPress: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: Text("Delete User"),
+                                      content: Text(
+                                          "Are you sure want to delete ${widget.expense.sharedBy[index].firstName}?"),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              widget.expense.sharedBy
+                                                  .removeAt(index);
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Yes"),
+                                        ),
+                                        FlatButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("No"),
+                                        ),
+                                      ],
+                                    ),
+                                    barrierDismissible: false,
+                                  );
+                                },
                               ),
-                              onLongPress: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (_) => AlertDialog(
-                                    title: Text("Delete User"),
-                                    content: Text(
-                                        "Are you sure want to delete ${widget.expense.sharedBy[index].firstName}?"),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            widget.expense.sharedBy
-                                                .removeAt(index);
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Yes"),
-                                      ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("No"),
-                                      ),
-                                    ],
-                                  ),
-                                  barrierDismissible: false,
-                                );
-                              },
                             ),
+                            itemCount: widget.expense.sharedBy.length,
                           ),
-                          itemCount: widget.expense.sharedBy.length,
-                        ),
+                        )
                       ],
                     ))
               ],
@@ -442,6 +455,36 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
         ),
       ),
     );
+  }
+
+  Future buildSaveDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          Future.delayed(Duration(milliseconds: 400), () {
+            Navigator.of(context).pop(true);
+          });
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 50.0,
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Saved!",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
 

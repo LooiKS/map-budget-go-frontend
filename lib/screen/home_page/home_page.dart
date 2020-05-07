@@ -1,3 +1,5 @@
+
+import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
@@ -26,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
     currentPage = 0;
     super.initState();
   }
+
 
   void onDrawerRowTapped(String choice) {
     switch (choice) {
@@ -67,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
       case 1:
-        return TripsMainPage();
+        return TripsMainPage(mockdata);
 
       case 2:
         return Center(
@@ -202,6 +205,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   GestureDetector buildDrawerRow(IconData icon, String title,
       {bool showBadge = false}) {
+    int count =
+        mockdata.where((c) => c.status == "progress").toList().length;
+    print(count.toString()+"count");
     return GestureDetector(
       onTap: () {
         onDrawerRowTapped(title);
