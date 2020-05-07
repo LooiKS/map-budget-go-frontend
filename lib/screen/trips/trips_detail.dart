@@ -33,6 +33,38 @@ class _TripsDetailState extends State<TripsDetail> {
     }
   }
 
+  void _navigateExpenses() async {
+    Trips returnData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExpensesScreen(
+          widget.tripsData,
+        ),
+      ),
+    );
+    if (returnData != null) {
+      setState(() {
+        widget.tripsData = returnData;
+      });
+    }
+  }
+
+  void _navigateExpenseDetails(int index) async {
+    TripExpenses returnData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExpenseDetailsScreen(
+          widget.tripsData.expenses[index],
+        ),
+      ),
+    );
+    if (returnData != null) {
+      setState(() {
+        widget.tripsData.expenses[index] = returnData;
+      });
+    }
+  }
+
   Future<void> _tripEditError(BuildContext context) {
     return showDialog<void>(
       context: context,
@@ -123,16 +155,7 @@ class _TripsDetailState extends State<TripsDetail> {
                     ),
                     onPressed: title != "Schedule"
                         ? () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ExpensesScreen(
-                                  widget.tripsData.expenses,
-                                  widget.tripsData.members,
-                                  widget.tripsData.owner,
-                                ),
-                              ),
-                            );
+                            _navigateExpenses();
                           }
                         : () {
                             Navigator.push(context, null);
@@ -261,11 +284,7 @@ class _TripsDetailState extends State<TripsDetail> {
                       size: 30.0,
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ExpenseDetailsScreen(
-                                  widget.tripsData.expenses[index])));
+                      _navigateExpenseDetails(index);
                     },
                   ),
                   title: buildItemTitle(widget.tripsData.expenses[index].title),
@@ -307,26 +326,41 @@ class _TripsDetailState extends State<TripsDetail> {
     );
   }
 
-  Icon buildExpensesIcon(String title) {
-    switch (title) {
-      case "Hotel":
-        return expensesLeadingIcon(Icons.hotel);
+  Icon buildExpensesIcon(String category) {
+    switch (category) {
+      case "Accommodation":
+        return Icon(
+          Icons.hotel,
+          size: 38.0,
+        );
         break;
 
       case "Transport":
-        return expensesLeadingIcon(Icons.airport_shuttle);
+        return Icon(
+          Icons.airport_shuttle,
+          size: 38.0,
+        );
         break;
 
       case "Food & Beverage":
-        return expensesLeadingIcon(Icons.fastfood);
+        return Icon(
+          Icons.fastfood,
+          size: 38.0,
+        );
         break;
 
       case "Entertainment":
-        return expensesLeadingIcon(Icons.casino);
+        return Icon(
+          Icons.local_play,
+          size: 38.0,
+        );
         break;
 
       default:
-        return expensesLeadingIcon(Icons.attach_money);
+        return Icon(
+          Icons.attach_money,
+          size: 38.0,
+        );
         break;
     }
   }

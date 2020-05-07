@@ -195,12 +195,12 @@ class AddExpenseScreenState extends State<AddExpenseScreen> {
                                   widget.owner,
                                   widget.member,
                                 );
-                                setState(() {
-                                  widget.tripExpenses.add(
-                                    _expenses,
-                                  );
-                                });
-                                Navigator.pop(context, null);
+                                // setState(() {
+                                //   widget.tripExpenses.add(
+                                //     _expenses,
+                                //   );
+                                // });
+                                Navigator.pop(context, _expenses);
                               }
                             },
                             shape: new RoundedRectangleBorder(

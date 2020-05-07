@@ -1,6 +1,6 @@
 import 'package:budgetgo/main.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
-import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/screen/expenses/expenses_details.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
@@ -8,21 +8,59 @@ import 'package:flutter/material.dart';
 import 'add_expense.dart';
 
 class ExpensesScreen extends StatefulWidget {
-  final List<TripExpenses> tripExpenses;
-  final List<User> member;
-  final User owner;
+  final Trips trips;
 
-  ExpensesScreen(this.tripExpenses, this.member, this.owner);
+  ExpensesScreen(this.trips);
   @override
   ExpensesScreenState createState() => ExpensesScreenState();
 }
 
 class ExpensesScreenState extends State<ExpensesScreen> {
+  void _navigateAddExpenses() async {
+    TripExpenses returnData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddExpenseScreen(
+          widget.trips.expenses,
+          widget.trips.members,
+          widget.trips.owner,
+        ),
+      ),
+    );
+    if (returnData != null) {
+      setState(() {
+        widget.trips.expenses.add(returnData);
+      });
+    }
+  }
+
+  void _navigateExpenseDetails(int index) async {
+    TripExpenses returnData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExpenseDetailsScreen(
+          widget.trips.expenses[index],
+        ),
+      ),
+    );
+    if (returnData != null) {
+      setState(() {
+        widget.trips.expenses[index] = returnData;
+      });
+    }
+  }
+
   double total = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+          ),
+          onPressed: () => Navigator.of(context).pop(widget.trips),
+        ),
         title: Text(
           "Trip Expenses",
           style: TextStyle(
@@ -48,21 +86,14 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                     style:
                         TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddExpenseScreen(
-                            widget.tripExpenses,
-                            widget.member,
-                            widget.owner,
-                          ),
-                        ),
-                      );
-                    },
-                  )
+                  widget.trips.status != "past"
+                      ? IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            _navigateAddExpenses();
+                          },
+                        )
+                      : new Container(),
                 ],
               ),
             ),
@@ -77,7 +108,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                     leading: Container(
                       width: 48.0,
                       child: buildExpensesIcon(
-                          widget.tripExpenses[index].category),
+                          widget.trips.expenses[index].category),
                     ),
                     trailing: IconButton(
                       icon: Icon(
@@ -85,18 +116,11 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                         size: 30.0,
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ExpenseDetailsScreen(
-                              widget.tripExpenses[index],
-                            ),
-                          ),
-                        );
+                        _navigateExpenseDetails(index);
                       },
                     ),
                     title: Text(
-                      widget.tripExpenses[index].title,
+                      widget.trips.expenses[index].title,
                       style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
@@ -108,7 +132,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Paid by ${widget.tripExpenses[index].payBy.firstName}",
+                            "Paid by ${widget.trips.expenses[index].payBy.firstName}",
                             style: TextStyle(
                                 color: key.currentState.brightness ==
                                         Brightness.dark
@@ -116,7 +140,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                                     : Colors.black54),
                           ),
                           Text(
-                            widget.tripExpenses[index].createdDt.toString(),
+                            widget.trips.expenses[index].createdDt.toString(),
                             style: TextStyle(
                                 color: key.currentState.brightness ==
                                         Brightness.dark
@@ -124,7 +148,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                                     : Colors.black54),
                           ),
                           Text(
-                            widget.tripExpenses[index].amount.toString(),
+                            widget.trips.expenses[index].amount.toString(),
                             style: TextStyle(
                                 color: key.currentState.brightness ==
                                         Brightness.dark
@@ -138,12 +162,12 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                         builder: (_) => AlertDialog(
                           title: Text("Delete Expense"),
                           content: Text(
-                              "Are you sure want to delete ${widget.tripExpenses[index].title}?"),
+                              "Are you sure want to delete ${widget.trips.expenses[index].title}?"),
                           actions: <Widget>[
                             FlatButton(
                               onPressed: () {
                                 setState(() {
-                                  widget.tripExpenses.removeAt(index);
+                                  widget.trips.expenses.removeAt(index);
                                 });
                                 Navigator.pop(context);
                               },
@@ -162,7 +186,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                     },
                   ),
                 ),
-                itemCount: widget.tripExpenses.length,
+                itemCount: widget.trips.expenses.length,
               ),
             ),
             Padding(
@@ -171,7 +195,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    "Total Expenses: ${calculateTotal(widget.tripExpenses)}",
+                    "Total Expenses: ${calculateTotal(widget.trips.expenses)}",
                     style:
                         TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
