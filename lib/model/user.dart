@@ -43,13 +43,10 @@ class User {
   String get profilePic => this._profilePic;
   String get username => this._username;
   List<User> get friend => this._friend;
-<<<<<<< HEAD
-=======
   String get password => this._password;
   bool get isChecked => this._isChecked;
 
   set id(String newValue) => this._id = newValue;
->>>>>>> 0b02de587b07aeaf64da9bc875bbb4eccb17e863
   set firstName(String newValue) => this._firstName = newValue;
   set phoneNum(String newValue) => this._phoneNum = newValue;
   set email(String newValue) => this._email = newValue;

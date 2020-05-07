@@ -26,14 +26,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: FlareActor(
-        "assets/rive_flr/SplashScreen.flr",
-        alignment: Alignment.center,
-        fit: BoxFit.contain,
-        animation: "latest",
-      ),
+    return FlareActor(
+      "assets/rive_flr/SplashScreen.flr",
+      alignment: Alignment.center,
+      fit: BoxFit.contain,
+      animation: "latest",
     );
   }
 }

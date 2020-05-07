@@ -35,7 +35,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
           style: TextStyle(color: Colors.white),
         ),
         shape: CustomShapeBorder(),
-        leading: IconButton(onPressed: _onSave, icon: Icon(Icons.arrow_back)),
+        leading: IconButton(onPressed: _onBack, icon: Icon(Icons.arrow_back)),
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
@@ -265,7 +265,10 @@ class _ScheduleFormState extends State<ScheduleForm> {
                 actions: <Widget>[
                   FlatButton(
                     child: Text('Yes'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.popUntil(
+                          context, ModalRoute.withName('/scheduledetails'));
+                    },
                   ),
                   FlatButton(
                     child: Text('No'),

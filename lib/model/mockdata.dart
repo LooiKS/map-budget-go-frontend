@@ -55,7 +55,7 @@ final User mockUser3 = User(
     "Nam",
     "0123210121",
     "puinam@example.com",
-    "https://scontent-sin6-1.cdninstagram.com/v/t51.2885-19/s320x320/52268850_827504630935196_3492057558405873664_n.jpg?_nc_ht=scontent-sin6-1.cdninstagram.com&_nc_ohc=9Vw429d0VuIAX-GbUs4&oh=4809307f73461b51334eb949860d2884&oe=5EB3D031",
+    "https://weilamanner.com/wp-content/uploads/2014/03/IMG_4905-e1552467791516.jpg",
     "puinam1010",
     "123",
     false, []);

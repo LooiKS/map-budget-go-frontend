@@ -1,5 +1,7 @@
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/trips/schedule_detail_screen.dart';
+import 'package:budgetgo/screen/trips/schedule_screen.dart';
 import 'package:budgetgo/screen/trips/trips_edit.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/screen/expenses/expenses_details.dart';
@@ -161,8 +163,8 @@ class _TripsDetailState extends State<TripsDetail> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        ScheduleScreen(widget.trip.schedules)));
+                                    builder: (context) => ScheduleScreen(
+                                        widget.tripsData.schedules)));
                           })
                 : Text(""),
           ]),
@@ -260,11 +262,10 @@ class _TripsDetailState extends State<TripsDetail> {
             subtitle: buildItemSubTitle(
               widget.tripsData.schedules[index].activityDesc,
             ),
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ScheduleDetailScreen(widget.trip.schedules[index]))),
+            onTap: () => Navigator.pushNamed(context, '/scheduledetails',
+                // MaterialPageRoute(
+                // builder: (context) => ScheduleDetailScreen(
+                arguments: widget.tripsData.schedules[index]),
           ),
         ),
         itemCount: widget.tripsData.schedules.length,
