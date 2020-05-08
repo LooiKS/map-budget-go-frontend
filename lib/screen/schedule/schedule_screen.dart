@@ -2,6 +2,7 @@ import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
 import 'package:budgetgo/screen/schedule/schedule_form.dart';
+// import 'package:budgetgo/screen/trips/schedule_form.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
@@ -102,6 +103,24 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 // setState(() => widget.schedules[index] = updatedSchedule);
                 // }
                 ),
+            onLongPress: () => showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      title: Text('Delete'),
+                      content: Text(
+                          'Are you sure to delete the schedule ${widget.schedules[index].activityTitle}?'),
+                      actions: <Widget>[
+                        FlatButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('No')),
+                        FlatButton(
+                            onPressed: () {
+                              setState(() => widget.schedules.removeAt(index));
+                              Navigator.pop(context);
+                            },
+                            child: Text('Yes'))
+                      ],
+                    )),
           ),
         ),
         itemCount: widget.schedules.length,
