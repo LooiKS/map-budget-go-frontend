@@ -434,9 +434,9 @@ class _TripsEditState extends State<TripsEdit> {
       DateTime _dateEnd,
       TextEditingController _tripTitle,
       TextEditingController _tripDetail,
-      String _inputCurrency) {
+      String inputCurrency) {
     final dateInputFormat = DateFormat("dd-MM-yyyy");
-    String c = _inputCurrency;
+    String c = inputCurrency;
     return Container(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: Form(
@@ -602,8 +602,8 @@ class _TripsEditState extends State<TripsEdit> {
                     child: Text(cur),
                   );
                 }).toList(),
-                value: _inputCurrency,
-                hint: Text(_inputCurrency),
+                value: inputCurrency,
+                hint: Text(inputCurrency),
                 decoration: InputDecoration(
                     labelText: 'Currency',
                     contentPadding: const EdgeInsets.fromLTRB(0, 13, 0, 0)),
