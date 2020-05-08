@@ -1,4 +1,3 @@
-
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,7 @@ import '../notification/notification_page.dart';
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
 
-  MyHomePage({Key key, @required this.toggleBrightness}) : super(key: key);
+  MyHomePage({Key key, this.toggleBrightness}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -28,7 +27,6 @@ class _MyHomePageState extends State<MyHomePage> {
     currentPage = 0;
     super.initState();
   }
-
 
   void onDrawerRowTapped(String choice) {
     switch (choice) {
@@ -205,9 +203,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   GestureDetector buildDrawerRow(IconData icon, String title,
       {bool showBadge = false}) {
-    int count =
-        mockdata.where((c) => c.status == "progress").toList().length;
-    print(count.toString()+"count");
+    int count = mockdata.where((c) => c.status == "progress").toList().length;
+    print(count.toString() + "count");
     return GestureDetector(
       onTap: () {
         onDrawerRowTapped(title);

@@ -3,6 +3,7 @@ import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/home_page/home_page.dart';
 import 'package:budgetgo/screen/trips/add_members.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
@@ -142,9 +143,11 @@ class _TripsEditState extends State<TripsEdit> {
                       mockdata.remove(mockdata[i]);
                     }
                   }
-                  // Navigator.of(context).popUntil(MaterialPageRoute(
-                  //   builder: (context) => TripsMainPage(mockdata),
-                  // ));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => MyHomePage(),
+                      ),
+                      (_) => true);
                 });
               },
             )
