@@ -1,11 +1,11 @@
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
-import 'package:budgetgo/screen/trips/schedule_detail_screen.dart';
-import 'package:budgetgo/screen/trips/schedule_screen.dart';
+import 'package:budgetgo/screen/schedule/schedule_screen.dart';
 import 'package:budgetgo/screen/trips/trips_edit.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/screen/expenses/expenses_details.dart';
 import 'package:budgetgo/screen/expenses/expenses_screen.dart';
+import 'package:budgetgo/utils/calendar.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import '../../main.dart';
@@ -228,39 +228,36 @@ class _TripsDetailState extends State<TripsDetail> {
       height: 200.0,
       child: ListView.builder(
         shrinkWrap: true,
-        itemBuilder: (BuildContext ctxt, int index) => Card(
+        itemBuilder: (context, index) => Card(
           margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+          elevation: 1,
           child: ListTile(
-            selected: true,
-            leading: Container(
-              width: 48.0,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Icon(
-                      Icons.calendar_today,
-                      size: 28.0,
-                    ),
-                    Text(
-                      "Day ${index + 1}",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 15.0, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
+            title: Text(
+              widget.tripsData.schedules[index].activityTitle,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
+            leading: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.event,
+                  color: Colors.orange,
+                ),
+                Text(
+                    '${Month[widget.tripsData.schedules[index].startDt.month]}, ${widget.tripsData.schedules[index].startDt.day}')
+              ],
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text('${Month[widget.tripsData.schedules[index].startDt.month]}, ${widget.tripsData.schedules[index].startDt.day} ${widget.tripsData.schedules[index].startDt.year} ' +
+                  '${widget.tripsData.schedules[index].startDt.hour.toString().padLeft(2, '0')}:${widget.tripsData.schedules[index].startDt.minute.toString().padLeft(2, '0')}\n' +
+                  '${Month[widget.tripsData.schedules[index].endDt.month]}, ${widget.tripsData.schedules[index].endDt.day} ${widget.tripsData.schedules[index].endDt.year} ' +
+                  '${widget.tripsData.schedules[index].endDt.hour.toString().padLeft(2, '0')}:${widget.tripsData.schedules[index].endDt.minute.toString().padLeft(2, '0')}'),
+            ),
+            contentPadding: EdgeInsets.all(8.0),
             trailing: Icon(
               Icons.keyboard_arrow_right,
               size: 30.0,
-            ),
-            title:
-                buildItemTitle(widget.tripsData.schedules[index].activityTitle),
-            subtitle: buildItemSubTitle(
-              widget.tripsData.schedules[index].activityDesc,
             ),
             onTap: () => Navigator.pushNamed(context, '/scheduledetails',
                 // MaterialPageRoute(

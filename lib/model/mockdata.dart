@@ -168,12 +168,27 @@ final mockdata = [
       DateTime(2020, 10, 10),
       DateTime(2020, 10, 15),
       [
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now())
+        Schedule(
+            DateTime(2020, 10, 10, 8),
+            DateTime(2020, 10, 10, 11),
+            "Eat Breakfast",
+            "Search for nice food",
+            mockUser2,
+            DateTime(2020, 5, 8, 8)),
+        Schedule(
+            DateTime(2020, 10, 10, 11),
+            DateTime(2020, 10, 10, 20),
+            "Visit Mountain Fuji",
+            "Climbing Mount Fuji is popular during summer with people ascending via four different trails.",
+            mockUser3,
+            DateTime(2020, 5, 9, 8)),
+        Schedule(
+            DateTime(2020, 10, 11, 8),
+            DateTime(2020, 10, 11, 11),
+            "View Cherry Blossoms at Tokyo",
+            "The cherry blossom (桜, sakura) is Japan's unofficial national flower. It has been celebrated for many centuries and holds a very prominent position in Japanese culture.",
+            mockUser1,
+            DateTime(2020, 5, 11, 12))
       ],
       [
         TripExpenses(
@@ -236,12 +251,27 @@ final mockdata = [
       DateTime(2020, 4, 10),
       DateTime(2020, 5, 20),
       [
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now())
+        Schedule(
+            DateTime(2020, 4, 10, 8),
+            DateTime(2020, 4, 10, 11),
+            "Rocky Mountains Summer Explorer",
+            "Mountain at Vancouver",
+            mockUser2,
+            DateTime(2020, 3, 8, 8)),
+        Schedule(
+            DateTime(2020, 4, 11, 11),
+            DateTime(2020, 4, 11, 20),
+            "Discover Vancouver Island",
+            "The special island in Canada",
+            mockUser3,
+            DateTime(2020, 3, 9, 8)),
+        Schedule(
+            DateTime(2020, 4, 12, 8),
+            DateTime(2020, 4, 12, 23),
+            "Banff National Park",
+            "Chance to explore Banff at your own pace, as there are no formal activities planned. Established in 1885, Banff is the oldest national park in the country, and contains over 1600 kilometres (995 miles) of hiking trails.",
+            mockUser1,
+            DateTime(2020, 3, 11, 12))
       ],
       [
         TripExpenses(
@@ -302,12 +332,27 @@ final mockdata = [
       DateTime(2020, 7, 10),
       DateTime(2020, 10, 15),
       [
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now())
+        Schedule(
+            DateTime(2020, 4, 10, 8),
+            DateTime(2020, 4, 10, 11),
+            "Rocky Mountains Summer Explorer",
+            "Mountain at Vancouver",
+            mockUser2,
+            DateTime(2020, 3, 8, 8)),
+        Schedule(
+            DateTime(2020, 4, 11, 11),
+            DateTime(2020, 4, 11, 20),
+            "Discover Vancouver Island",
+            "The special island in Canada",
+            mockUser3,
+            DateTime(2020, 3, 9, 8)),
+        Schedule(
+            DateTime(2020, 4, 12, 8),
+            DateTime(2020, 4, 12, 23),
+            "Banff National Park",
+            "Chance to explore Banff at your own pace, as there are no formal activities planned. Established in 1885, Banff is the oldest national park in the country, and contains over 1600 kilometres (995 miles) of hiking trails.",
+            mockUser1,
+            DateTime(2020, 3, 11, 12))
       ],
       [
         TripExpenses(
@@ -369,12 +414,27 @@ final mockdata = [
       DateTime(2020, 2, 10),
       DateTime(2020, 2, 20),
       [
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now())
+        Schedule(
+            DateTime(2020, 4, 10, 8),
+            DateTime(2020, 4, 10, 11),
+            "Rocky Mountains Summer Explorer",
+            "Mountain at Vancouver",
+            mockUser2,
+            DateTime(2020, 3, 8, 8)),
+        Schedule(
+            DateTime(2020, 4, 11, 11),
+            DateTime(2020, 4, 11, 20),
+            "Discover Vancouver Island",
+            "The special island in Canada",
+            mockUser3,
+            DateTime(2020, 3, 9, 8)),
+        Schedule(
+            DateTime(2020, 4, 12, 8),
+            DateTime(2020, 4, 12, 23),
+            "Banff National Park",
+            "Chance to explore Banff at your own pace, as there are no formal activities planned. Established in 1885, Banff is the oldest national park in the country, and contains over 1600 kilometres (995 miles) of hiking trails.",
+            mockUser1,
+            DateTime(2020, 3, 11, 12))
       ],
       [
         TripExpenses(
@@ -435,12 +495,27 @@ final mockdata = [
       DateTime(2020, 10, 10),
       DateTime(2020, 10, 15),
       [
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now()),
-        Schedule(DateTime(2020, 10, 10, 8), DateTime(2020, 10, 10, 11),
-            "Eat Breakfast", "Search for nice food", mockUser2, DateTime.now())
+        Schedule(
+            DateTime(2020, 4, 10, 8),
+            DateTime(2020, 4, 10, 11),
+            "Rocky Mountains Summer Explorer",
+            "Mountain at Vancouver",
+            mockUser2,
+            DateTime(2020, 3, 8, 8)),
+        Schedule(
+            DateTime(2020, 4, 11, 11),
+            DateTime(2020, 4, 11, 20),
+            "Discover Vancouver Island",
+            "The special island in Canada",
+            mockUser3,
+            DateTime(2020, 3, 9, 8)),
+        Schedule(
+            DateTime(2020, 4, 12, 8),
+            DateTime(2020, 4, 12, 23),
+            "Banff National Park",
+            "Chance to explore Banff at your own pace, as there are no formal activities planned. Established in 1885, Banff is the oldest national park in the country, and contains over 1600 kilometres (995 miles) of hiking trails.",
+            mockUser1,
+            DateTime(2020, 3, 11, 12))
       ],
       [
         TripExpenses(

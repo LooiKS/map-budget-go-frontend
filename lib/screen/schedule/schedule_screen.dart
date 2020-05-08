@@ -1,7 +1,7 @@
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/schedule.dart';
-import 'package:budgetgo/screen/trips/schedule_detail_screen.dart';
-import 'package:budgetgo/screen/trips/schedule_form.dart';
+import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
+import 'package:budgetgo/screen/schedule/schedule_form.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Schedules'),
+        title: Text(
+          'Schedules',
+          style: TextStyle(color: Colors.white),
+        ),
         shape: CustomShapeBorder(),
       ),
       body: Padding(

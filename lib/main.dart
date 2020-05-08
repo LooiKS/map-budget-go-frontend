@@ -1,6 +1,6 @@
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/screen/home_page/home_page.dart';
-import 'package:budgetgo/screen/trips/schedule_detail_screen.dart';
+import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,7 +62,7 @@ class MainAppState extends State<MainApp> {
               return MaterialPageRoute(
                   settings: RouteSettings(name: settings.name),
                   builder: (context) =>
-                      ScheduleDetailScreen(mockdata[0].schedules[0]));
+                      ScheduleDetailScreen(settings.arguments));
             default:
               return null;
           }
