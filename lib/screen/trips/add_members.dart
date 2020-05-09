@@ -117,74 +117,82 @@ class _AddMemberState extends State<AddMember> {
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            bottom: PreferredSize(
-              preferredSize: Size(10.0, 55.0),
-              child: TabBar(indicatorColor: Colors.purple, tabs: [
-                buildTabBarItem(
-                    ExactAssetImage('assets/images/contact_book.png'),
-                    "Friend List"),
-                buildTabBarItem(
-                    ExactAssetImage('assets/images/qrcode.png'), "QR Code"),
-                buildTabBarItem(
-                    ExactAssetImage('assets/images/search_icon.png'),
-                    "ID/Phone No.")
-              ]),
-            ),
+            bottom: buildTab(),
           ),
-          body: TabBarView(
-            children: <Widget>[
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    buildSearchBar(context),
-                    if (_selectedMember.length > 0)
-                      Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15.0),
-                              child: Text(
-                                "Selected: ${_selectedMember.length}",
-                                style: TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            ButtonBar(
-                              children: <Widget>[
-                                buildSaveCancelBtn("Save"),
-                                buildSaveCancelBtn("Cancel"),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    buildFriendList(),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 2.0),
-                      child: Text(
-                        "Total Friend: ${_friendList.length}",
-                        style: TextStyle(color: Colors.green),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                color: Colors.pink,
-                child: Center(child: Text("Call Tab")),
-              ),
-              Container(
-                color: Colors.blue,
-                child: Center(child: Text("Call Tab")),
-              ),
-            ],
-          ),
+          body: buildTabBarView(context),
         ),
       ),
     );
+  }
+
+  TabBarView buildTabBarView(BuildContext context) {
+    return TabBarView(
+          children: <Widget>[
+            Container(
+              child: Column(
+                children: <Widget>[
+                  buildSearchBar(context),
+                  if (_selectedMember.length > 0)
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: Text(
+                              "Selected: ${_selectedMember.length}",
+                              style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          ButtonBar(
+                            children: <Widget>[
+                              buildSaveCancelBtn("Save"),
+                              buildSaveCancelBtn("Cancel"),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  buildFriendList(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 2.0),
+                    child: Text(
+                      "Total Friend: ${_friendList.length}",
+                      style: TextStyle(color: Colors.green),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              color: Colors.pink,
+              child: Center(child: Text("Call Tab")),
+            ),
+            Container(
+              color: Colors.blue,
+              child: Center(child: Text("Call Tab")),
+            ),
+          ],
+        );
+  }
+
+  PreferredSize buildTab() {
+    return PreferredSize(
+            preferredSize: Size(10.0, 55.0),
+            child: TabBar(indicatorColor: Colors.purple, tabs: [
+              buildTabBarItem(
+                  ExactAssetImage('assets/images/contact_book.png'),
+                  "Friend List"),
+              buildTabBarItem(
+                  ExactAssetImage('assets/images/qrcode.png'), "QR Code"),
+              buildTabBarItem(
+                  ExactAssetImage('assets/images/search_icon.png'),
+                  "ID/Phone No.")
+            ]),
+          );
   }
 
   Container buildTabBarItem(ExactAssetImage image, String title) {

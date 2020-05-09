@@ -1,6 +1,7 @@
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/screen/home_page/home_page.dart';
 import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
+import 'package:budgetgo/screen/splash_screen/splash_screen.dart';
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,26 +56,23 @@ class MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'BudgetGo',
-        onGenerateRoute: (RouteSettings settings) {
-          switch (settings.name) {
-            case '/scheduledetails':
-              return MaterialPageRoute(
-                  settings: RouteSettings(name: settings.name),
-                  builder: (context) =>
-                      ScheduleDetailScreen(settings.arguments));
-            default:
-              return null;
-          }
-        },
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          brightness: brightness,
-          primarySwatch: Colors.orange,
-        ),
-        home: MyHomePage(toggleBrightness: toggleBrightness)
-        // TripsDetail(
-        // mockdata[0]) //SplashScreen(toggleBrightness: toggleBrightness),
-        );
+      title: 'BudgetGo',
+      onGenerateRoute: (RouteSettings settings) {
+        switch (settings.name) {
+          case '/scheduledetails':
+            return MaterialPageRoute(
+                settings: RouteSettings(name: settings.name),
+                builder: (context) => ScheduleDetailScreen(settings.arguments));
+          default:
+            return null;
+        }
+      },
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: brightness,
+        primarySwatch: Colors.orange,
+      ),
+      home: SplashScreen(toggleBrightness: toggleBrightness),
+    );
   }
 }

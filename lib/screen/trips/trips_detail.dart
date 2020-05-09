@@ -24,73 +24,6 @@ class _TripsDetailState extends State<TripsDetail> {
   List<Trips> dummyTrip = <Trips>[];
   List<TripExpenses> dummyExpenses = <TripExpenses>[];
 
-  void _navigateEditTrips() async {
-    Trips returnData = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TripsEdit(widget.tripsData),
-      ),
-    );
-    if (returnData != null) {
-      setState(() {
-        widget.tripsData = returnData;
-      });
-    }
-  }
-
-  void _navigateExpenses() async {
-    Trips returnData = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ExpensesScreen(
-          widget.tripsData,
-        ),
-      ),
-    );
-    if (returnData != null) {
-      setState(() {
-        widget.tripsData = returnData;
-      });
-    }
-  }
-
-  void _navigateExpenseDetails(int index) async {
-    TripExpenses returnData = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ExpenseDetailsScreen(
-          widget.tripsData.expenses[index],
-        ),
-      ),
-    );
-    if (returnData != null) {
-      setState(() {
-        widget.tripsData.expenses[index] = returnData;
-      });
-    }
-  }
-
-  Future<void> _tripEditError(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Trip Message'),
-          content: const Text(
-              'The trip is already over. You cannot edit this trip anymore.'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -243,90 +176,106 @@ class _TripsDetailState extends State<TripsDetail> {
   }
 
   Container buildSchedules() {
-    return Container(
-      height: 200.0,
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemBuilder: (context, index) => Card(
-          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
-          elevation: 1,
-          child: ListTile(
-            title: Text(
-              widget.tripsData.schedules[index].activityTitle,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            leading: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.event,
-                  color: Colors.orange,
+    return widget.tripsData.schedules.length == 0
+        ? buildNoResultContainer()
+        : Container(
+            height: 200.0,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemBuilder: (context, index) => Card(
+                margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+                elevation: 1,
+                child: ListTile(
+                  title: Text(
+                    widget.tripsData.schedules[index].activityTitle,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.event,
+                        color: Colors.orange,
+                      ),
+                      Text(
+                          '${Month[widget.tripsData.schedules[index].startDt.month]}, ${widget.tripsData.schedules[index].startDt.day}')
+                    ],
+                  ),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text('${Month[widget.tripsData.schedules[index].startDt.month]}, ${widget.tripsData.schedules[index].startDt.day} ${widget.tripsData.schedules[index].startDt.year} ' +
+                        '${widget.tripsData.schedules[index].startDt.hour.toString().padLeft(2, '0')}:${widget.tripsData.schedules[index].startDt.minute.toString().padLeft(2, '0')}\n' +
+                        '${Month[widget.tripsData.schedules[index].endDt.month]}, ${widget.tripsData.schedules[index].endDt.day} ${widget.tripsData.schedules[index].endDt.year} ' +
+                        '${widget.tripsData.schedules[index].endDt.hour.toString().padLeft(2, '0')}:${widget.tripsData.schedules[index].endDt.minute.toString().padLeft(2, '0')}'),
+                  ),
+                  contentPadding: EdgeInsets.all(8.0),
+                  trailing: Icon(
+                    Icons.keyboard_arrow_right,
+                    size: 30.0,
+                  ),
+                  onTap: () => Navigator.pushNamed(context, '/scheduledetails',
+                      arguments: widget.tripsData.schedules[index]),
                 ),
-                Text(
-                    '${Month[widget.tripsData.schedules[index].startDt.month]}, ${widget.tripsData.schedules[index].startDt.day}')
-              ],
+              ),
+              itemCount: widget.tripsData.schedules.length,
             ),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text('${Month[widget.tripsData.schedules[index].startDt.month]}, ${widget.tripsData.schedules[index].startDt.day} ${widget.tripsData.schedules[index].startDt.year} ' +
-                  '${widget.tripsData.schedules[index].startDt.hour.toString().padLeft(2, '0')}:${widget.tripsData.schedules[index].startDt.minute.toString().padLeft(2, '0')}\n' +
-                  '${Month[widget.tripsData.schedules[index].endDt.month]}, ${widget.tripsData.schedules[index].endDt.day} ${widget.tripsData.schedules[index].endDt.year} ' +
-                  '${widget.tripsData.schedules[index].endDt.hour.toString().padLeft(2, '0')}:${widget.tripsData.schedules[index].endDt.minute.toString().padLeft(2, '0')}'),
-            ),
-            contentPadding: EdgeInsets.all(8.0),
-            trailing: Icon(
-              Icons.keyboard_arrow_right,
-              size: 30.0,
-            ),
-            onTap: () => Navigator.pushNamed(context, '/scheduledetails',
-                // MaterialPageRoute(
-                // builder: (context) => ScheduleDetailScreen(
-                arguments: widget.tripsData.schedules[index]),
-          ),
+          );
+  }
+
+  Container buildNoResultContainer() {
+    return Container(
+      child: Center(
+        child: Text(
+          "No schedule yet. Please create one.",
+          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300),
         ),
-        itemCount: widget.tripsData.schedules.length,
       ),
     );
   }
 
   Container buildExpenses() {
-    return Container(
-      height: 200.0,
-      child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: widget.tripsData.expenses.length,
-          itemBuilder: (BuildContext ctxt, int index) => Card(
-                margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
-                child: ListTile(
-                  selected: true,
-                  leading: Container(
-                      width: 48.0,
-                      child: buildExpensesIcon(
-                          widget.tripsData.expenses[index].category)),
-                  trailing: IconButton(
-                    icon: Icon(
-                      Icons.keyboard_arrow_right,
-                      size: 30.0,
-                    ),
-                    onPressed: () {
-                      _navigateExpenseDetails(index);
-                    },
-                  ),
-                  title: buildItemTitle(widget.tripsData.expenses[index].title),
-                  subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        buildItemSubTitle(
-                            "Paid by ${widget.tripsData.expenses[index].payBy.firstName}"),
-                        buildItemSubTitle(widget
-                            .tripsData.expenses[index].createdDt
-                            .toString()),
-                        buildItemSubTitle(
-                            widget.tripsData.expenses[index].amount.toString()),
-                      ]),
-                ),
-              )),
-    );
+    return widget.tripsData.expenses.length == 0
+        ? buildNoResultContainer()
+        : Container(
+            height: 200.0,
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: widget.tripsData.expenses.length,
+                itemBuilder: (BuildContext ctxt, int index) => Card(
+                      margin:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+                      child: ListTile(
+                        selected: true,
+                        leading: Container(
+                            width: 48.0,
+                            child: buildExpensesIcon(
+                                widget.tripsData.expenses[index].category)),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.keyboard_arrow_right,
+                            size: 30.0,
+                          ),
+                          onPressed: () {
+                            _navigateExpenseDetails(index);
+                          },
+                        ),
+                        title: buildItemTitle(
+                            widget.tripsData.expenses[index].title),
+                        subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              buildItemSubTitle(
+                                  "Paid by ${widget.tripsData.expenses[index].payBy.firstName}"),
+                              buildItemSubTitle(widget
+                                  .tripsData.expenses[index].createdDt
+                                  .toString()),
+                              buildItemSubTitle(widget
+                                  .tripsData.expenses[index].amount
+                                  .toString()),
+                            ]),
+                      ),
+                    )),
+          );
   }
 
   Text buildItemTitle(String title) {
@@ -394,6 +343,73 @@ class _TripsDetailState extends State<TripsDetail> {
     return Icon(
       icon,
       size: 38.0,
+    );
+  }
+
+  void _navigateEditTrips() async {
+    Trips returnData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TripsEdit(widget.tripsData),
+      ),
+    );
+    if (returnData != null) {
+      setState(() {
+        widget.tripsData = returnData;
+      });
+    }
+  }
+
+  void _navigateExpenses() async {
+    Trips returnData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExpensesScreen(
+          widget.tripsData,
+        ),
+      ),
+    );
+    if (returnData != null) {
+      setState(() {
+        widget.tripsData = returnData;
+      });
+    }
+  }
+
+  void _navigateExpenseDetails(int index) async {
+    TripExpenses returnData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExpenseDetailsScreen(
+          widget.tripsData.expenses[index],
+        ),
+      ),
+    );
+    if (returnData != null) {
+      setState(() {
+        widget.tripsData.expenses[index] = returnData;
+      });
+    }
+  }
+
+  Future<void> _tripEditError(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Trip Message'),
+          content: const Text(
+              'The trip is already over. You cannot edit this trip anymore.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
