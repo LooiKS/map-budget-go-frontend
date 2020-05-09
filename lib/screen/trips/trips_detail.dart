@@ -1,5 +1,8 @@
+import 'package:budgetgo/model/mockdata.dart';
+import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/schedule/schedule_form.dart';
 import 'package:budgetgo/screen/schedule/schedule_screen.dart';
 import 'package:budgetgo/screen/trips/trips_edit.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
@@ -151,7 +154,13 @@ class _TripsDetailState extends State<TripsDetail> {
             title != "Members"
                 ? FlatButton(
                     child: Text(
-                      'View All',
+                      title != 'Schedule'
+                          ? widget.tripsData.expenses.isEmpty
+                              ? 'Add New'
+                              : 'View All'
+                          : widget.tripsData.schedules.isEmpty
+                              ? 'Add New'
+                              : 'View All',
                       style: TextStyle(
                           color: Colors.orange, fontWeight: FontWeight.bold),
                     ),
@@ -160,11 +169,21 @@ class _TripsDetailState extends State<TripsDetail> {
                             _navigateExpenses();
                           }
                         : () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ScheduleScreen(
-                                        widget.tripsData.schedules)));
+                            widget.tripsData.schedules.isEmpty
+                                ? Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ScheduleForm(Schedule.empty(mockOwnUser))))
+                                    .then((newSchedule) => newSchedule != null
+                                        ? widget.tripsData.schedules
+                                            .add(newSchedule)
+                                        : null)
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ScheduleScreen(widget.tripsData.schedules)));
                           })
                 : Text(""),
           ]),

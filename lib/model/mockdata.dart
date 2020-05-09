@@ -167,29 +167,7 @@ final mockdata = [
       memberMockData,
       DateTime(2020, 10, 10),
       DateTime(2020, 10, 15),
-      [
-        Schedule(
-            DateTime(2020, 10, 10, 8),
-            DateTime(2020, 10, 10, 11),
-            "Eat Breakfast",
-            "Search for nice food",
-            mockUser2,
-            DateTime(2020, 5, 8, 8)),
-        Schedule(
-            DateTime(2020, 10, 10, 11),
-            DateTime(2020, 10, 10, 20),
-            "Visit Mountain Fuji",
-            "Climbing Mount Fuji is popular during summer with people ascending via four different trails.",
-            mockUser3,
-            DateTime(2020, 5, 9, 8)),
-        Schedule(
-            DateTime(2020, 10, 11, 8),
-            DateTime(2020, 10, 11, 11),
-            "View Cherry Blossoms at Tokyo",
-            "The cherry blossom (桜, sakura) is Japan's unofficial national flower. It has been celebrated for many centuries and holds a very prominent position in Japanese culture.",
-            mockUser1,
-            DateTime(2020, 5, 11, 12))
-      ],
+      [],
       [
         TripExpenses(
             "Train ticket",

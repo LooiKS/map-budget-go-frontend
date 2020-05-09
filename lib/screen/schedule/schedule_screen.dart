@@ -51,7 +51,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ScheduleForm(Schedule.empty(mockUser2))))
+                          ScheduleForm(Schedule.empty(mockOwnUser))))
               .then((newSchedule) {
             if (newSchedule != null)
               setState(() => widget.schedules.add(newSchedule));
