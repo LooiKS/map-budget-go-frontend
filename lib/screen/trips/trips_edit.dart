@@ -23,22 +23,24 @@ class TripsEdit extends StatefulWidget {
 class _TripsEditState extends State<TripsEdit> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  final dateInputFormat = DateFormat("dd-MM-yyyy");
   List<User> memberList = [];
   List<User> tempUsers = [];
   List<Trips> dummyTrip = <Trips>[];
   List<TripExpenses> dummyExpenses = <TripExpenses>[];
   bool _enabledEdit = false;
-  DateTime _dateStart;
-  DateTime _dateEnd;
   TextEditingController _tripTitle;
   TextEditingController _tripDetail;
+  TextEditingController _startDate;
+  TextEditingController _endDate;
   String _inputCurrency;
 
   @override
   void initState() {
-    _dateStart = widget._tripData.startDt;
-    _dateEnd = widget._tripData.endDt;
+    _startDate = TextEditingController(
+        text: widget._tripData.startDt.toString().substring(0, 10));
+    _endDate = TextEditingController(
+        text: widget._tripData.endDt.toString().substring(0, 10));
     _tripTitle = TextEditingController(text: widget._tripData.tripTitle);
     _tripDetail = TextEditingController(text: widget._tripData.tripDetail);
     _inputCurrency = widget._tripData.currency;
@@ -75,14 +77,7 @@ class _TripsEditState extends State<TripsEdit> {
     }
   }
 
-  void _saveEdit(
-      context,
-      DateTime _dateStart,
-      DateTime _dateEnd,
-      TextEditingController _tripTitle,
-      TextEditingController _tripDetail,
-      String _inputCurrency) {
-    print(_inputCurrency);
+  void _saveEdit() {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       setState(() {
@@ -90,14 +85,15 @@ class _TripsEditState extends State<TripsEdit> {
         widget._tripData.tripTitle = _tripTitle.text;
         widget._tripData.tripDetail = _tripDetail.text;
         widget._tripData.currency = _inputCurrency;
-        widget._tripData.currency = _inputCurrency;
       });
-      if (_dateStart.isBefore(_dateEnd) == true) {
-        print(_dateStart);
-        print(_dateStart.isBefore(_dateEnd));
+      if (DateTime.parse(_startDate.text.substring(0, 10))
+              .isBefore(DateTime.parse(_endDate.text.substring(0, 10))) ==
+          true) {
         setState(() {
-          widget._tripData.startDt = _dateStart;
-          widget._tripData.endDt = _dateEnd;
+          widget._tripData.startDt =
+              DateTime.parse(_startDate.text.substring(0, 10));
+          widget._tripData.endDt =
+              DateTime.parse(_endDate.text.substring(0, 10));
         });
         _tripEdittedAlert(context);
       } else {
@@ -111,8 +107,8 @@ class _TripsEditState extends State<TripsEdit> {
       _enabledEdit = false;
       _tripTitle.text = widget._tripData.tripTitle;
       _tripDetail.text = widget._tripData.tripDetail;
-      _dateStart = widget._tripData.startDt;
-      _dateEnd = widget._tripData.endDt;
+      _startDate.text = widget._tripData.startDt.toString().substring(0, 10);
+      _endDate.text = widget._tripData.endDt.toString().substring(0, 10);
       _inputCurrency = widget._tripData.currency;
     });
   }
@@ -274,35 +270,36 @@ class _TripsEditState extends State<TripsEdit> {
               buildCategoryTitle("Members"),
               tripMemberList(widget._tripData.members, widget._tripData.owner),
               buildCategoryTitle("Trip Information"),
-              buildTripForm(_dateStart, _dateEnd, _tripTitle, _tripDetail,
-                  _inputCurrency),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: RaisedButton(
-                  color: Colors.redAccent,
-                  elevation: 5.0,
-                  onPressed: () => _deleteConfirmationAlert(context),
-                  child:
-                      //Check is owner or not
-                      widget._tripData.owner.id == "01"
-                          ? Text(
-                              "EXIT AND DELETE TRIP",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          : Text(
-                              "EXIT TRIP",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                ),
-              )
+              buildTripForm(),
+              buildDeleteButton(context)
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Container buildDeleteButton(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: RaisedButton(
+        color: Colors.redAccent,
+        elevation: 5.0,
+        onPressed: () => _deleteConfirmationAlert(context),
+        child:
+            //Check is owner or not
+            widget._tripData.owner.id == "01"
+                ? Text(
+                    "EXIT AND DELETE TRIP",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )
+                : Text(
+                    "EXIT TRIP",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
       ),
     );
   }
@@ -337,8 +334,7 @@ class _TripsEditState extends State<TripsEdit> {
                         color: Colors.green,
                         icon: Icon(Icons.done),
                         onPressed: () {
-                          _saveEdit(context, _dateStart, _dateEnd, _tripTitle,
-                              _tripDetail, _inputCurrency);
+                          _saveEdit();
                         },
                       ),
                     ])
@@ -429,14 +425,7 @@ class _TripsEditState extends State<TripsEdit> {
     );
   }
 
-  Container buildTripForm(
-      DateTime _dateStart,
-      DateTime _dateEnd,
-      TextEditingController _tripTitle,
-      TextEditingController _tripDetail,
-      String inputCurrency) {
-    final dateInputFormat = DateFormat("dd-MM-yyyy");
-    String c = inputCurrency;
+  Container buildTripForm() {
     return Container(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: Form(
@@ -482,7 +471,7 @@ class _TripsEditState extends State<TripsEdit> {
               widget._tripData.status == "progress"
                   ? DateTimeField(
                       format: dateInputFormat,
-                      initialValue: _dateStart,
+                      initialValue: DateTime.parse(_startDate.text),
                       decoration: InputDecoration(
                           labelText: 'Start Date',
                           hintText: ('dd-mm-yyyy'),
@@ -490,33 +479,27 @@ class _TripsEditState extends State<TripsEdit> {
                       onShowPicker: (context, _dateStart) {
                         return showDatePicker(
                           context: context,
-                          initialDate: _dateStart ?? DateTime.now(),
+                          initialDate: DateTime.parse(_startDate.text),
                           firstDate: DateTime(1900),
                           lastDate: DateTime(2100),
                         );
                       },
                       readOnly: true,
                       enabled: false,
-                      onSaved: (value) {
-                        setState(() {
-                          if (value != null) {
-                            _dateStart = value;
-                          }
-                        });
-                      },
                     )
                   : DateTimeField(
                       enabled: _enabledEdit,
                       format: dateInputFormat,
-                      initialValue: _dateStart,
+                      initialValue: DateTime.parse(_startDate.text),
                       decoration: InputDecoration(
                           labelText: 'Start Date',
-                          hintText: ('dd-mm-yyyy'),
+                          hintText: ('yyyy-mm-dd'),
                           enabled: _enabledEdit),
-                      onShowPicker: (context, _dateStart) {
+                      onShowPicker: (context, pickedDate) {
                         return showDatePicker(
                           context: context,
-                          initialDate: _dateStart ?? DateTime.now(),
+                          initialDate:
+                              DateTime.parse(_startDate.text) ?? DateTime.now(),
                           firstDate: DateTime(1900),
                           lastDate: DateTime(2100),
                         );
@@ -530,10 +513,11 @@ class _TripsEditState extends State<TripsEdit> {
                           return null;
                         }
                       },
+                      controller: _startDate,
                       onSaved: (value) {
                         setState(() {
                           if (value != null) {
-                            _dateStart = value;
+                            _startDate.text = value.toString().substring(0, 10);
                           }
                         });
                       },
@@ -541,31 +525,24 @@ class _TripsEditState extends State<TripsEdit> {
               widget._tripData.status == "progress"
                   ? DateTimeField(
                       format: dateInputFormat,
-                      initialValue: _dateEnd,
+                      initialValue: DateTime.parse(_endDate.text),
                       decoration: InputDecoration(
                           labelText: 'End Date', hintText: ('dd-mm-yyyy')),
                       onShowPicker: (context, _dateEnd) {
                         return showDatePicker(
                           context: context,
-                          initialDate: _dateEnd ?? DateTime.now(),
+                          initialDate: DateTime.parse(_endDate.text),
                           firstDate: DateTime(1900),
                           lastDate: DateTime(2100),
                         );
                       },
                       readOnly: true,
                       enabled: false,
-                      onSaved: (value) {
-                        setState(() {
-                          if (value != null) {
-                            _dateEnd = value;
-                          }
-                        });
-                      },
                     )
                   : DateTimeField(
                       enabled: _enabledEdit,
                       format: dateInputFormat,
-                      initialValue: _dateEnd,
+                      initialValue: DateTime.parse(_endDate.text),
                       decoration: InputDecoration(
                           labelText: 'End Date',
                           hintText: ('dd-mm-yyyy'),
@@ -573,7 +550,7 @@ class _TripsEditState extends State<TripsEdit> {
                       onShowPicker: (context, _dateEnd) {
                         return showDatePicker(
                           context: context,
-                          initialDate: _dateEnd ?? DateTime.now(),
+                          initialDate: DateTime.parse(_endDate.text),
                           firstDate: DateTime(1900),
                           lastDate: DateTime(2100),
                         );
@@ -587,10 +564,11 @@ class _TripsEditState extends State<TripsEdit> {
                           return null;
                         }
                       },
+                      controller: _endDate,
                       onSaved: (value) {
                         setState(() {
                           if (value != null) {
-                            _dateEnd = value;
+                            _endDate.text = value.toString().substring(0, 10);
                           }
                         });
                       },
@@ -602,8 +580,8 @@ class _TripsEditState extends State<TripsEdit> {
                     child: Text(cur),
                   );
                 }).toList(),
-                value: inputCurrency,
-                hint: Text(inputCurrency),
+                value: _inputCurrency,
+                hint: Text(_inputCurrency),
                 decoration: InputDecoration(
                     labelText: 'Currency',
                     contentPadding: const EdgeInsets.fromLTRB(0, 13, 0, 0)),
@@ -617,11 +595,9 @@ class _TripsEditState extends State<TripsEdit> {
                 },
                 onChanged: _enabledEdit
                     ? (value) {
-                        print(value);
                         setState(() {
                           _inputCurrency = value;
                         });
-                        print(_inputCurrency);
                       }
                     : null,
               ),
