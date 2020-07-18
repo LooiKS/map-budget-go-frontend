@@ -38,4 +38,13 @@ class Schedule {
   set activityDesc(String newValue) => this._activityDesc = newValue;
   set createdBy(User newValue) => this._createdBy = newValue;
   set createdDt(DateTime newValue) => this._createdDt = newValue;
+
+  toJson() => {
+        "startDt": startDt.toString(),
+        "endDt": endDt.toString(),
+        "activityTitle": activityTitle,
+        "activityDesc": activityDesc,
+        "createdBy": createdBy.toJson(),
+        "createdDt": createdDt.toString(),
+      };
 }

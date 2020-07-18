@@ -55,4 +55,17 @@ class User {
   set friend(List<User> newValue) => this._friend = newValue;
   set password(String newValue) => this._password = newValue;
   set isChecked(bool newValue) => this._isChecked = newValue;
+
+  toJson() => {
+        "id": id,
+        "firstName": firstName,
+        "lastName": lastName,
+        "phoneNum": phoneNum,
+        "email": email,
+        "profilePic": profilePic,
+        "username": username,
+        "friend": friend.map((f) => f.toJson()).toList(),
+        "password": password,
+        "isChecked": isChecked,
+      };
 }

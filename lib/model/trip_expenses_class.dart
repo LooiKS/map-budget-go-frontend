@@ -38,4 +38,15 @@ class TripExpenses {
   set payBy(User newValue) => this._payBy = newValue;
   set createdBy(User newValue) => this._createdBy = newValue;
   set sharedBy(List<User> newValue) => this._sharedBy = newValue;
+
+  toJson() => {
+        "title": title,
+        "desc": desc,
+        "category": category,
+        "createdDt": createdDt.toString(),
+        "amount": amount,
+        "payBy": payBy.toJson(),
+        "createdBy": createdBy.toJson(),
+        "sharedBy": sharedBy.map((f) => f.toJson()).toList(),
+      };
 }

@@ -47,6 +47,21 @@ class Trips {
           from._status,
         );
 
+  toJson() => {
+        "tripID": tripID,
+        "tripTitle": tripTitle,
+        "tripDetail": tripDetail,
+        "members": members.map((f) => f.toJson()).toList(),
+        "owner": owner.toJson(),
+        "startDt": startDt.toString(),
+        "endDt": endDt.toString(),
+        "schedules": schedules.map((f) => f.toJson()).toList(),
+        "expenses": expenses.map((f) => f.toJson()).toList(),
+        "createdDt": createdDt.toString(),
+        "currency": currency,
+        "status": status,
+      };
+
   int get tripID => this._tripID;
   String get tripTitle => this._tripTitle;
   String get tripDetail => this._tripDetail;
