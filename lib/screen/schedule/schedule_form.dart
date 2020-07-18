@@ -1,4 +1,5 @@
 import 'package:budgetgo/model/schedule.dart';
+import 'package:budgetgo/services/schedule_data_service.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
 
   @override
   Widget build(BuildContext context) {
+    print(schedule.id);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -250,7 +252,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
       widget.schedule.activityDesc = schedule.activityDesc;
       widget.schedule.startDt = schedule.startDt;
       widget.schedule.endDt = schedule.endDt;
-
+      ScheduleDataService().updateSchedule(widget.schedule.id, schedule);
       Navigator.pop(context, schedule);
     }
   }
