@@ -137,10 +137,7 @@ class _ScheduleScreenState extends State<ScheduleDetailScreen> {
                                       children: <Widget>[
                                         _buildCreatedByCreatedOnColumn(
                                             'Created By:',
-                                            mockdata[0]
-                                                .schedules[0]
-                                                .createdBy
-                                                .firstName),
+                                            schedule.createdBy.firstName),
                                         _buildCreatedByCreatedOnColumn(
                                           'Created on:',
                                           '${Month[schedule.createdDt.month]} ${schedule.createdDt.day.toString()}, ${schedule.createdDt.year}',
