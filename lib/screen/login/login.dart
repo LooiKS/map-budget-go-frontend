@@ -48,7 +48,10 @@ class _LoginPageState extends State<LoginPage> {
             context,
             MaterialPageRoute(
               builder: (context) => MyHomePage(
-                  toggleBrightness: widget.toggleBrightness, auth: widget.auth),
+                toggleBrightness: widget.toggleBrightness,
+                auth: widget.auth,
+                uid: result,
+              ),
             ));
       }
     } catch (e) {
@@ -87,7 +90,9 @@ class _LoginPageState extends State<LoginPage> {
             context,
             MaterialPageRoute(
               builder: (context) => MyHomePage(
-                  toggleBrightness: widget.toggleBrightness, auth: widget.auth),
+                  toggleBrightness: widget.toggleBrightness,
+                  auth: widget.auth,
+                  uid: result.uid),
             ));
       }
     } catch (e) {

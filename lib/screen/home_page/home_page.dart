@@ -13,8 +13,10 @@ import '../notification/notification_page.dart';
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
   final BaseAuth auth;
+  final String uid;
 
-  MyHomePage({Key key, this.toggleBrightness, this.auth}) : super(key: key);
+  MyHomePage({Key key, this.toggleBrightness, this.auth, this.uid})
+      : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
