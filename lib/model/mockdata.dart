@@ -6,7 +6,7 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 
 final User mockOwnUser = User(
-    "01",
+    "BG0011",
     "Barack",
     "Obama",
     "0123123123",
@@ -519,4 +519,4 @@ final mockdata = [
 //   mockUser1.friends = [mockUser2, mockUser3, mockUser4, mockUser5];
 // }
 
-final loggedInUser = mockUser2;
+final loggedInUser = mockOwnUser;

@@ -18,6 +18,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
   DateTime startDate, startTime;
   DateTime endDate, endTime;
   Schedule schedule;
+  ScheduleDataService scheduleDataService = ScheduleDataService();
 
   @override
   void initState() {
@@ -29,7 +30,6 @@ class _ScheduleFormState extends State<ScheduleForm> {
 
   @override
   Widget build(BuildContext context) {
-    print(schedule.id);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -252,8 +252,12 @@ class _ScheduleFormState extends State<ScheduleForm> {
       widget.schedule.activityDesc = schedule.activityDesc;
       widget.schedule.startDt = schedule.startDt;
       widget.schedule.endDt = schedule.endDt;
-      ScheduleDataService().updateSchedule(widget.schedule.id, schedule);
-      Navigator.pop(context, schedule);
+      Navigator.pop(
+          context,
+          widget.schedule.id == ''
+              ? scheduleDataService.createSchedule(schedule)
+              : scheduleDataService.updateSchedule(
+                  widget.schedule.id, schedule));
     }
   }
 

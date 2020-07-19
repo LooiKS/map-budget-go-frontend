@@ -13,16 +13,15 @@ class ScheduleDataService {
   final rest = RestService();
   final endpoint = 'schedules';
 
-  Future<Schedule> createSchedule(String id, Schedule schedule) {
-    return rest.post(endpoint, data: schedule);
+  Future<Schedule> createSchedule(Schedule schedule) async {
+    return Schedule.fromJson(await rest.post(endpoint, data: schedule));
   }
 
   Future<Schedule> updateSchedule(String id, Schedule schedule) async {
-    print('$endpoint/$id'); //, data: schedule);
     return Schedule.fromJson(await rest.patch('$endpoint/$id', data: schedule));
   }
 
-  Future<Schedule> deleteSchedule(String id) {
+  Future deleteSchedule(String id) {
     return rest.delete('$endpoint/$id');
   }
 } // class Schedule

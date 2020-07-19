@@ -68,4 +68,18 @@ class User {
         "password": password,
         "isChecked": isChecked,
       };
+
+  User.fromJson(json)
+      : this(
+            json["id"],
+            json["firstName"],
+            json["lastName"],
+            json["phoneNum"],
+            json["email"],
+            json["profilePic"],
+            json["username"],
+            json["password"],
+            json["isChecked"],
+            // TODO: 暂时放[], while waiting the implementation from backend
+            []);
 }

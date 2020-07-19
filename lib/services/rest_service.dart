@@ -22,7 +22,6 @@ class RestService {
   // 'https://us-central1-jumail-backend-firebase-rest.cloudfunctions.net/api';
 
   Future get(String endpoint) async {
-    print('$baseUrl/$endpoint');
     final response = await http.get('$baseUrl/$endpoint');
 
     if (response.statusCode == 200) {
@@ -46,7 +45,6 @@ class RestService {
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(data));
 
     if (response.statusCode == 200) {
-      print(response.body);
       return jsonDecode(response.body);
     }
     throw response;
