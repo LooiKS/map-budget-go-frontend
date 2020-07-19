@@ -5,7 +5,7 @@ const database = require("../database");
 class UsersModel {
   constructor() {
     if (this.instance) return this.instance;
-    TodoModel.instance = this;
+    UsersModel.instance = this;
   }
 
   get() {
@@ -16,7 +16,7 @@ class UsersModel {
     return database.get("users", id);
   }
 
-  create(todo) {
+  create(user) {
     return database.create("users", user);
   }
 
@@ -24,7 +24,7 @@ class UsersModel {
     return database.delete("users", id);
   }
 
-  update(id, todo) {
+  update(id, user) {
     return database.set("users", id, user);
   }
 }

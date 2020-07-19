@@ -47,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
               builder: (context) => MyHomePage(
                 toggleBrightness: widget.toggleBrightness,
                 auth: widget.auth,
-                uid: result,
               ),
             ));
       }
@@ -88,9 +87,9 @@ class _LoginPageState extends State<LoginPage> {
             context,
             MaterialPageRoute(
               builder: (context) => MyHomePage(
-                  toggleBrightness: widget.toggleBrightness,
-                  auth: widget.auth,
-                  uid: result.uid),
+                toggleBrightness: widget.toggleBrightness,
+                auth: widget.auth,
+              ),
             ));
       }
     } catch (e) {
@@ -187,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
         });
 
         // if (_validatePassword == false && _validateEmail == false) {
-          signInViaEmail(_email.text, _password.text);
+        signInViaEmail(_email.text, _password.text);
         // }
       },
       child: Container(

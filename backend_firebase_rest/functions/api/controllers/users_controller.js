@@ -5,7 +5,7 @@ const router = express.Router();
 // Get all users
 router.get("/", async (req, res, next) => {
   try {
-    const result = await usersModel.get;
+    const result = await usersModel.get();
     return res.json(result);
   } catch (e) {
     return next(e);
