@@ -297,7 +297,7 @@ const trips = [
 
 async function setupDatabase(req, res, next) {
   // To delete all the collections
-  const collections = ["users", "todos"];
+  const collections = ["users", "trips", "expenses", "schedules"];
   collections.forEach(async (collection) => await deleteCollection(collection));
 
   // Add documents to the todos collection

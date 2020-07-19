@@ -16,16 +16,21 @@ class SchedulesModel {
     return database.get("schedules", id);
   }
 
-  create(schedule) {
-    return database.create("schedules", schedule);
+  async create(schedule) {
+    var schedule = await database.create("schedules", schedule);
+    schedule["createdBy"] = await database.get("users", schedule["createdBy"]);
+    return schedule;
   }
 
   delete(id) {
     return database.delete("schedules", id);
   }
 
-  update(id, schedule) {
-    return database.set("schedules", id, schedule);
+  async update(id, schedule) {
+    var schedule = await database.set("schedules", id, schedule);
+    // TODO: call users_model method instead of calling db
+    schedule["createdBy"] = await database.get("users", schedule["createdBy"]);
+    return schedule;
   }
 }
 
