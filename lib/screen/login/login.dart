@@ -1,5 +1,6 @@
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/register/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
@@ -171,8 +172,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
           InkWell(
             onTap: () {
-              //  Navigator.push(context,
-              //      MaterialPageRoute(builder: (context) => SignUpPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RegistrationPage()));
             },
             child: Text(
               'Register',
