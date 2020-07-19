@@ -1,8 +1,10 @@
+import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/login/login.dart';
 import 'package:budgetgo/services/authentication_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import '../../widget/bezier_container.dart';
 import '../home_page/home_page.dart';
@@ -20,6 +22,7 @@ class RegistrationPageState extends State<RegistrationPage> {
   final _retypePassword = TextEditingController();
   final _email = TextEditingController();
   final _formKey = new GlobalKey<FormState>();
+  BaseAuth auth = Auth();
 
   @override
   void dispose() {
@@ -281,8 +284,8 @@ class RegistrationPageState extends State<RegistrationPage> {
           Expanded(
             flex: 1,
             child: FacebookSignInButton(
-              text: 'Facebook',
-              onPressed: null,
+              text: 'Facebookk',
+              onPressed: () => signInFb(),
               textStyle: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
@@ -297,12 +300,12 @@ class RegistrationPageState extends State<RegistrationPage> {
           Expanded(
             flex: 1,
             child: GoogleSignInButton(
-              onPressed: null,
+              onPressed: () => signInGoogle(),
               text: 'Google',
               textStyle: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.blue),
             ),
           ),
           Container(
@@ -410,5 +413,78 @@ class RegistrationPageState extends State<RegistrationPage> {
         );
       },
     );
+  }
+
+  signInGoogle() async {
+    try {
+      var result = await auth.signInViaGoogle();
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                title: Text('Message'),
+                content: Text(
+                    'Account registered successfully. You will be redirected to home page now.'),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => MyHomePage()),
+                          (_) => false),
+                      child: Text('OK'))
+                ],
+              ));
+    } on PlatformException catch (e) {
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                title: Text('Message'),
+                content: Text('Error occurred. ${e.message}'),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => MyHomePage()),
+                          (_) => false),
+                      child: Text('OK'))
+                ],
+              ));
+    }
+  }
+
+  signInFb() async {
+    try {
+      var result = await auth.signInViaFacebook();
+      if (result != null)
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                  title: Text('Message'),
+                  content: Text(
+                      'Account registered successfully. You will be redirected to home page now.'),
+                  actions: <Widget>[
+                    FlatButton(
+                        onPressed: () => Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (_) => MyHomePage()),
+                            (_) => false),
+                        child: Text('OK'))
+                  ],
+                ));
+    } on PlatformException catch (e) {
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                title: Text('Message'),
+                content: Text('Error occurred. ${e.message}'),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => MyHomePage()),
+                          (_) => false),
+                      child: Text('OK'))
+                ],
+              ));
+    }
   }
 }

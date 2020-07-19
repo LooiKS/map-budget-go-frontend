@@ -9,4 +9,5 @@ abstract class BaseAuth {
   Future<void> signOut();
   Future<bool> isEmailVerified();
   Future<FirebaseUser> signInViaGoogle();
+  Future<FirebaseUser> signInViaFacebook();
 }
