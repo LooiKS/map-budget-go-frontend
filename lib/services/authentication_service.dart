@@ -15,7 +15,8 @@ class Auth implements BaseAuth {
       result = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       user = result.user;
-      if (user.isEmailVerified) return user.uid;
+      return user.uid;
+      // if (user.isEmailVerified) return user.uid;
     } catch (error) {
       switch (error.code) {
         case "ERROR_INVALID_EMAIL":
@@ -57,6 +58,7 @@ class Auth implements BaseAuth {
   }
 
   Future<void> signOut() async {
+    await _googleSignIn.signOut();
     return _firebaseAuth.signOut();
   }
 
