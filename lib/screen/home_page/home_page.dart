@@ -1,5 +1,6 @@
 import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/mockdata.dart';
+import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
@@ -9,6 +10,7 @@ import './animatedBottomNav.dart';
 import '../signout/signout.dart';
 import '../trips/trips_main_page.dart';
 import '../notification/notification_page.dart';
+import '../../services/users_date_service.dart';
 
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
@@ -24,10 +26,32 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentPage;
   String appBarTitle = "Home";
 
+  User _user;
+  String uid = "";
+
+  Future getUID() async {
+    final user = await widget.auth.getCurrentUser();
+    print("Current id ${user.uid}");
+    if (user.uid == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => LogoutPage(
+                    toggleBrightness: widget.toggleBrightness,
+                    auth: widget.auth,
+                  )),
+          (_) => false);
+    }
+    setState(() {
+      uid = user.uid;
+    });
+  }
+
   @override
   void initState() {
     currentPage = 0;
+
     super.initState();
+    getUID();
   }
 
   void onDrawerRowTapped(String choice) async {
@@ -113,6 +137,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<User>(
+        future: userDataService.getUser(id: uid),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            print("data");
+            print(snapshot.data);
+            _user = snapshot.data;
+            print(_user.id.toString());
+            return buildScaffold();
+          }
+          return Center(child: CircularProgressIndicator());
+        });
+  }
+
+  Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(
         title: Text(appBarTitle),
@@ -144,12 +183,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       icon: Icon(
                         Icons.power_settings_new,
                       ),
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
+                      onPressed: () async {
+                        await widget.auth.signOut();
+                        Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => LogoutPage(
-                                    toggleBrightness: widget.toggleBrightness)),
+                                      toggleBrightness: widget.toggleBrightness,
+                                      auth: widget.auth,
+                                    )),
                             (_) => false);
                       },
                     ),
@@ -164,13 +205,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: 5,
                         ),
                         image: DecorationImage(
-                          image: ExactAssetImage('assets/images/as.png'),
+                          image: NetworkImage('${_user.profilePic}'),
                           fit: BoxFit.cover,
                         ),
                       )),
                   SizedBox(height: 5.0),
                   Text(
-                    "Maria Chin",
+                    "${_user.firstName} ${_user.lastName}",
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
                   ),
@@ -209,7 +250,6 @@ class _MyHomePageState extends State<MyHomePage> {
   GestureDetector buildDrawerRow(IconData icon, String title,
       {bool showBadge = false}) {
     int count = mockdata.where((c) => c.status == "progress").toList().length;
-    print(count.toString() + "count");
     return GestureDetector(
       onTap: () {
         onDrawerRowTapped(title);

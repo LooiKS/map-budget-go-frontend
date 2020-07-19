@@ -9,15 +9,13 @@ import '../home_page/home_page.dart';
 class LoginPage extends StatefulWidget {
   final toggleBrightness;
   final BaseAuth auth;
-
+  final String title;
   LoginPage(
       {Key key,
       this.title = 'User Settings',
       @required this.toggleBrightness,
       this.auth})
       : super(key: key);
-
-  final String title;
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -37,19 +35,19 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<String> signInViaEmail(email, password) async {
+  void signInViaEmail(email, password) async {
     try {
       final result = await widget.auth.signIn(email, password);
 
       if (result != null) {
-        setState(() {
-          _isLoading = false;
-        });
+        print("user loging");
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => MyHomePage(
-                  toggleBrightness: widget.toggleBrightness, auth: widget.auth),
+                toggleBrightness: widget.toggleBrightness,
+                auth: widget.auth,
+              ),
             ));
       }
     } catch (e) {
@@ -75,11 +73,12 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<String> signInViaGoogle() async {
+  void signInViaGoogle() async {
     print("google");
     try {
       final result = await widget.auth.signInViaGoogle();
 
+      print(result.uid);
       if (result != null) {
         setState(() {
           _isLoading = false;
@@ -88,7 +87,9 @@ class _LoginPageState extends State<LoginPage> {
             context,
             MaterialPageRoute(
               builder: (context) => MyHomePage(
-                  toggleBrightness: widget.toggleBrightness, auth: widget.auth),
+                toggleBrightness: widget.toggleBrightness,
+                auth: widget.auth,
+              ),
             ));
       }
     } catch (e) {
@@ -184,12 +185,9 @@ class _LoginPageState extends State<LoginPage> {
           _email.text.isEmpty ? _validateEmail = true : _validateEmail = false;
         });
 
-        if (_validatePassword == false && _validateEmail == false) {
-          setState(() {
-            _isLoading = true;
-          });
-          signInViaEmail(_email.text, _password.text);
-        }
+        // if (_validatePassword == false && _validateEmail == false) {
+        signInViaEmail(_email.text, _password.text);
+        // }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,

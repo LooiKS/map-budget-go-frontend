@@ -3,10 +3,12 @@ const express = require("express");
 const app = express();
 const todosRouter = require("./api/controllers/todos_controller");
 const schedulesRouter = require("./api/controllers/schedules_controller");
+const usersRouter = require("./api/controllers/users_controller");
 
 app.use(express.json());
 app.use("/todos", todosRouter);
 app.use("/schedules", schedulesRouter);
+app.use("/users", usersRouter);
 
 // exports.register = functions.onCallauth.user().onCreate((user, context) => {
 //   admin.database().ref("/users").push({ id: "randomid" });

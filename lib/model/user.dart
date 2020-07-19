@@ -35,6 +35,33 @@ class User {
             from._isChecked,
             [...from._friend]);
 
+  toJson() => {
+        "id": id,
+        "firstName": firstName,
+        "lastName": lastName,
+        "phoneNum": phoneNum,
+        "email": email,
+        "profilePic": profilePic,
+        "username": username,
+        "friend": friend.map((f) => f.toJson()).toList(),
+        "password": password,
+        "isChecked": isChecked,
+      };
+
+  User.fromJson(json)
+      : this(
+          json["id"],
+          json["firstName"],
+          json["lastName"],
+          json["phoneNum"],
+          json["email"],
+          json["profilePic"],
+          json["username"],
+          json["password"],
+          json["isChecked"] == "true" ? true : false,
+          [],
+        );
+
   String get id => this._id;
   String get firstName => this._firstName;
   String get lastName => this._lastName;
@@ -55,31 +82,4 @@ class User {
   set friend(List<User> newValue) => this._friend = newValue;
   set password(String newValue) => this._password = newValue;
   set isChecked(bool newValue) => this._isChecked = newValue;
-
-  toJson() => {
-        "id": id,
-        "firstName": firstName,
-        "lastName": lastName,
-        "phoneNum": phoneNum,
-        "email": email,
-        "profilePic": profilePic,
-        "username": username,
-        "friend": friend.map((f) => f.toJson()).toList(),
-        "password": password,
-        "isChecked": isChecked,
-      };
-
-  User.fromJson(json)
-      : this(
-            json["id"],
-            json["firstName"],
-            json["lastName"],
-            json["phoneNum"],
-            json["email"],
-            json["profilePic"],
-            json["username"],
-            json["password"],
-            json["isChecked"],
-            // TODO: 暂时放[], while waiting the implementation from backend
-            []);
 }
