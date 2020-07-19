@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "583047781070",
+    "firebase_url": "https://map-budget-go.firebaseio.com",
+    "project_id": "map-budget-go",
+    "storage_bucket": "map-budget-go.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:583047781070:android:81f586964a3175a9c38e9f",
+        "android_client_info": {
+          "package_name": "com.example.budgetgo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "583047781070-m74ek5dn57gtk9elsmdr4pn6rtflkdn8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.budgetgo",
+            "certificate_hash": "71411341056c0d7d0fe110907799884e4639ceb7"
+          }
+        },
+        {
+          "client_id": "583047781070-822cmhngen45arbtd4k1rlffj3lfok7f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2RIzxm7hFYmVzUkiKdSr9jKrFIri6Py8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "583047781070-822cmhngen45arbtd4k1rlffj3lfok7f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
