@@ -1,15 +1,18 @@
+import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/screen/login/login.dart';
 import 'package:flutter/material.dart';
 import '../../widget/bezier_container.dart';
 
 class LogoutPage extends StatefulWidget {
   final toggleBrightness;
-
-  LogoutPage(
-      {Key key, this.title = 'User Settings', @required this.toggleBrightness})
-      : super(key: key);
-
+  final BaseAuth auth;
   final String title;
+  LogoutPage(
+      {Key key,
+      this.title = 'User Settings',
+      @required this.toggleBrightness,
+      this.auth})
+      : super(key: key);
 
   @override
   _LogoutPageState createState() => _LogoutPageState();
@@ -22,14 +25,12 @@ class _LogoutPageState extends State<LogoutPage> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    LoginPage(toggleBrightness: widget.toggleBrightness)),
+                builder: (context) => LoginPage(
+                      toggleBrightness: widget.toggleBrightness,
+                      auth: widget.auth,
+                    )),
             (_) => false);
       },
-      // onTap: () {
-      //    Navigator.push(
-      //        context, MaterialPageRoute(builder: (context) => LoginPage()));
-      // },
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(vertical: 13),
