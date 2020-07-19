@@ -1,10 +1,5 @@
 import 'dart:async';
-<<<<<<< HEAD
-// import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-
-=======
 import 'package:google_sign_in/google_sign_in.dart';
->>>>>>> 5ce88b6c3b564fb7bd69eec8f0b142337fa58d62
 import '../model/base_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
