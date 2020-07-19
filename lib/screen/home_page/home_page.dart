@@ -1,3 +1,4 @@
+import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,9 @@ import '../notification/notification_page.dart';
 
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
+  final BaseAuth auth;
 
-  MyHomePage({Key key, this.toggleBrightness}) : super(key: key);
+  MyHomePage({Key key, this.toggleBrightness, this.auth}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -28,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  void onDrawerRowTapped(String choice) {
+  void onDrawerRowTapped(String choice) async {
     switch (choice) {
       case "My profile":
         Navigator.push(
@@ -49,10 +51,13 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
 
       case "Log out":
+        await widget.auth.signOut();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-                builder: (context) =>
-                    LogoutPage(toggleBrightness: widget.toggleBrightness)),
+                builder: (context) => LogoutPage(
+                      toggleBrightness: widget.toggleBrightness,
+                      auth: widget.auth,
+                    )),
             (_) => false);
         break;
     }

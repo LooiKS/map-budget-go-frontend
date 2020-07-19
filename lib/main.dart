@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/screen/home_page/home_page.dart';
+import 'package:budgetgo/screen/login/login.dart';
 import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
 import 'package:budgetgo/screen/splash_screen/splash_screen.dart';
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import './services/authentication_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,7 +76,11 @@ class MainAppState extends State<MainApp> {
         brightness: brightness,
         primarySwatch: Colors.orange,
       ),
-      home: SplashScreen(toggleBrightness: toggleBrightness),
+      home: SplashScreen(
+        toggleBrightness: toggleBrightness,
+        auth: new Auth(),
+      ),
+      // home: LoginPage(toggleBrightness: toggleBrightness, auth: new Auth()),
     );
   }
 }
