@@ -34,8 +34,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void getUID() async {
     final user = (await widget.auth.getCurrentUser()).uid;
-
-    print("Current id $user");
     if (user == null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(

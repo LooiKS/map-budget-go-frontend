@@ -67,8 +67,21 @@ const users = [
     isChecked: false,
   },
   {
-    id: "BG0009",
+    id: "BG0006",
     firstName: "Doris",
+    lastName: "Duo",
+    phoneNum: "014845554",
+    email: "doris@example.com",
+    profilePic:
+      "https://weilamanner.com/wp-content/uploads/2014/03/770807231652212499.jpg",
+    username: "doris002",
+    friend: ["BG0002", "BG0003", "BG0004"],
+    password: "123",
+    isChecked: false,
+  },
+  {
+    id: "BG0009",
+    firstName: "DDDDoris",
     lastName: "Duo",
     phoneNum: "014845554",
     email: "doris@example.com",

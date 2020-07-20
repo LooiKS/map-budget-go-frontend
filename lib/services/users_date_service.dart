@@ -22,12 +22,10 @@ class UsersDataService {
 
   Future<User> getUser({String id}) async {
     final response = await rest.get('$endpoint/$id');
-    print(response);
     return User.fromJson(response);
   }
 
   Future<User> updateUser({String id, User user}) async {
-    print(user);
     final response = await rest.patch('$endpoint/$id', data: user);
     return User.fromJson(response);
   }
@@ -40,8 +38,7 @@ class UsersDataService {
       }
       return null;
     } catch (e) {
-      print(e);
-      return e;
+      return null;
     }
   }
 } // class User

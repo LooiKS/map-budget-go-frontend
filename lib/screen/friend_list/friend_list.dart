@@ -17,6 +17,7 @@ class _FriendListState extends State<FriendList> {
 
   TextEditingController _email = TextEditingController();
   bool searched = false;
+  bool added = false;
   User searchedUser;
 
   @override
@@ -103,17 +104,22 @@ class _FriendListState extends State<FriendList> {
                       suffixIcon: IconButton(
                         icon: Icon(Icons.search),
                         onPressed: () async {
-                          bool same = false;
+                          bool _added = false;
+                          print("${_email.text}");
                           final result = await userDataService.getUserByEmail(
                               email: "${_email.text}");
-                          for (int i = 0; i < widget.user.friend.length; i++) {
-                            if (widget.user.friend[i].id == result.id) {
-                              same = true;
+                          if (result != null) {
+                            for (int i = 0;
+                                i < widget.user.friend.length;
+                                i++) {
+                              if (widget.user.friend[i].id == result.id) {
+                                _added = true;
+                              }
                             }
                           }
-
                           setState(() {
-                            searched = same;
+                            searched = true;
+                            added = _added;
                             searchedUser = result;
                           });
                         },
@@ -127,117 +133,133 @@ class _FriendListState extends State<FriendList> {
                   ),
                 ),
               ),
-              searchedUser != null
-                  ? Expanded(
-                      flex: 1,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+              if (searched == true)
+                searchedUser != null
+                    ? ListView(
+                        shrinkWrap: true,
                         children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(top: 20.0),
-                            child:
-                                Stack(fit: StackFit.loose, children: <Widget>[
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                      width: 140.0,
-                                      height: 140.0,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            width: 3, color: Colors.orange),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                              '${searchedUser.profilePic}'),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )),
-                                ],
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 20.0),
+                                child: Stack(
+                                    fit: StackFit.loose,
+                                    children: <Widget>[
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Container(
+                                              width: 140.0,
+                                              height: 140.0,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    width: 3,
+                                                    color: Colors.orange),
+                                                image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      '${searchedUser.profilePic}'),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                    ]),
                               ),
-                            ]),
-                          ),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    InfoTitle('Email: ${searchedUser.email}'),
-                                    InfoTitle('ID: ${searchedUser.id}'),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        InfoTitle(
+                                            'Email: ${searchedUser.email}'),
+                                        InfoTitle('ID: ${searchedUser.id}'),
+                                      ],
+                                    ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 20.0),
-                            child: Container(
-                              child: searched
-                                  ? FlatButton(
-                                      child: Text("Added"),
-                                      textColor: Colors.white,
-                                      color: Colors.grey,
-                                      onPressed: () => null,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0)),
-                                    )
-                                  : RaisedButton(
-                                      child: Text("Add"),
-                                      textColor: Colors.white,
-                                      color: Colors.green,
-                                      onPressed: () async {
-                                        User _owner = User.copy(widget.user);
-                                        _owner.friend.add(searchedUser);
-                                        User _friend = User.copy(searchedUser);
-                                        _friend.friend.add(_owner);
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 20.0),
+                                child: Container(
+                                  child: added
+                                      ? RaisedButton(
+                                          child: Text("Added"),
+                                          textColor: Colors.white,
+                                          color: Colors.grey,
+                                          onPressed: () => null,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0)),
+                                        )
+                                      : RaisedButton(
+                                          child: Text("Add"),
+                                          textColor: Colors.white,
+                                          color: Colors.green,
+                                          onPressed: () async {
+                                            User _owner =
+                                                User.copy(widget.user);
+                                            _owner.friend.add(searchedUser);
+                                            User _friend =
+                                                User.copy(searchedUser);
+                                            _friend.friend.add(_owner);
 
-                                        await userDataService.updateUser(
-                                            id: searchedUser.id, user: _friend);
-                                        await userDataService.updateUser(
-                                            id: widget.user.id, user: _owner);
+                                            await userDataService.updateUser(
+                                                id: searchedUser.id,
+                                                user: _friend);
+                                            await userDataService.updateUser(
+                                                id: widget.user.id,
+                                                user: _owner);
 
-                                        showDialog<void>(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text('Succcess Message'),
-                                              content: const Text(
-                                                  'Added Successfully.'),
-                                              actions: <Widget>[
-                                                FlatButton(
-                                                  child: Text('Ok'),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      searched = true;
-                                                    });
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
+                                            showDialog<void>(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title:
+                                                      Text('Succcess Message'),
+                                                  content: const Text(
+                                                      'Added Successfully.'),
+                                                  actions: <Widget>[
+                                                    FlatButton(
+                                                      child: Text('Ok'),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          added = true;
+                                                        });
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
                                             );
                                           },
-                                        );
-                                      },
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0)),
-                                    ),
-                            ),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0)),
+                                        ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
+                      )
+                    : Center(
+                        child: Text(
+                          "User does not exist",
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ),
-                    )
-                  : Center(
-                      child: Text(
-                        "User does not exist",
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
             ],
           ),
         ),
@@ -323,13 +345,76 @@ class _FriendListState extends State<FriendList> {
                   placeholder: "assets/images/loading.gif",
                   image: widget.user.friend[index].profilePic,
                   fit: BoxFit.contain,
-                  width: 40.0,
-                  height: 40.0,
+                  width: 50.0,
+                  height: 50.0,
                 ),
               ),
-              title: widget.user.friend[index].username == ""
-                  ? Text("${widget.user.friend[index].phoneNum}")
-                  : Text("${widget.user.friend[index].username}"),
+              title: FlatButton(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: widget.user.friend[index].username == ""
+                      ? Text(
+                          "${widget.user.friend[index].email}",
+                          style: TextStyle(fontSize: 16.0),
+                          textAlign: TextAlign.left,
+                        )
+                      : Text(
+                          "${widget.user.friend[index].username}",
+                          style: TextStyle(fontSize: 16.0),
+                          textAlign: TextAlign.left,
+                        ),
+                ),
+                onPressed: () {
+                  showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Friend Info'),
+                        content: Container(
+                          height: 300.0,
+                          width: 500.0,
+                          padding: EdgeInsets.all(5.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                  width: 110.0,
+                                  height: 110.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 3, color: Colors.orange),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          '${widget.user.friend[index].profilePic}'),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )),
+                              InfoTitle('ID: ${widget.user.friend[index].id}'),
+                              InfoTitle(
+                                  'Email: ${widget.user.friend[index].email}'),
+                              InfoTitle(
+                                  'Userame: ${widget.user.friend[index].username}'),
+                              InfoTitle(
+                                  'Name: ${widget.user.friend[index].firstName} ${widget.user.friend[index].lastName}'),
+                              InfoTitle(
+                                  'Phone No.: ${widget.user.friend[index].phoneNum}'),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Ok'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
               trailing: IconButton(
                 icon: Icon(Icons.delete),
                 color: Colors.red,
