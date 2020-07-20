@@ -20,6 +20,10 @@ class UsersModel {
     return database.create("users", user);
   }
 
+  createWithCustomId(user) {
+    return database.createWithID("users", user);
+  }
+
   delete(id) {
     return database.delete("users", id);
   }

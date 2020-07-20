@@ -52,6 +52,7 @@ class Auth implements BaseAuth {
       AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+      user.sendEmailVerification();
       return user.uid;
     } catch (e) {
       return null;

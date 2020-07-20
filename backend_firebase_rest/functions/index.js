@@ -4,16 +4,36 @@ const app = express();
 const todosRouter = require("./api/controllers/todos_controller");
 const schedulesRouter = require("./api/controllers/schedules_controller");
 const usersRouter = require("./api/controllers/users_controller");
+const users_model = require("./api/models/users_model");
 
 app.use(express.json());
 app.use("/todos", todosRouter);
 app.use("/schedules", schedulesRouter);
 app.use("/users", usersRouter);
 
-// exports.register = functions.onCallauth.user().onCreate((user, context) => {
-//   admin.database().ref("/users").push({ id: "randomid" });
-//   console.log("user");
-// });
+// create user when user is signing up
+exports.register = functions.auth.user().onCreate((user, context) => {
+  var firstName = "",
+    lastName = "";
+
+  var username = user.displayName ? user.displayName.split(" ") : "";
+  if (username.length > 0) firstName = username[0];
+  if (username.length > 1) lastName = username[1];
+
+  users_model.createWithCustomId({
+    id: user.uid,
+    firstName: firstName,
+    lastName: lastName,
+    phoneNum: user.phoneNumber,
+    email: user.email,
+    profilePic: user.photoURL,
+    username: user.displayName,
+    friend: [],
+    password: user.passwordHash,
+    isChecked: false,
+  });
+});
+
 exports.api = functions.https.onRequest(app);
 
 // To handle "Function Timeout" exception
