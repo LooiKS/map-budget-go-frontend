@@ -33,6 +33,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void getUID() async {
     final user = (await widget.auth.getCurrentUser()).uid;
+    print((await widget.auth.getCurrentUser()).photoUrl);
+    print((await widget.auth.getCurrentUser()).providerData);
+    print((await widget.auth.getCurrentUser()).displayName);
+    print((await widget.auth.getCurrentUser()).email);
+
     print("Current id $user");
     if (user == null) {
       Navigator.of(context).pushAndRemoveUntil(
@@ -61,8 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case "My profile":
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => ProfilePage(user: User.copy(_user))),
+          MaterialPageRoute(builder: (context) => ProfilePage(user: _user)),
         );
         break;
 

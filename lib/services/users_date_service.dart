@@ -24,8 +24,10 @@ class UsersDataService {
     return User.fromJson(response);
   }
 
-  Future<User> updateUser(String id, User user) async {
-    return User.fromJson(await rest.patch('$endpoint/$id', data: user));
+  Future<User> updateUser({String id, User user}) async {
+    print("Patch 0");
+    final response = await rest.patch('$endpoint/$id', data: user);
+    return User.fromJson(response);
   }
 } // class User
 

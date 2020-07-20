@@ -1,4 +1,5 @@
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -21,8 +22,14 @@ class MapScreenState extends State<ProfilePage>
   }
 
   @override
+  void dispose() {
+    // Clean up the controller when the Widget is disposed
+    myFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print(widget.user.firstName);
     return Scaffold(
         body: Container(
       child: ListView(
@@ -116,8 +123,8 @@ class MapScreenState extends State<ProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              FixedFieldValue('maria97'),
-                              FixedFieldValue('BG00010'),
+                              FixedFieldValue('${widget.user.username}'),
+                              FixedFieldValue('${widget.user.id}'),
                             ],
                           )),
                       InfoTitle('Name'),
@@ -129,7 +136,8 @@ class MapScreenState extends State<ProfilePage>
                               Flexible(
                                 child: TextField(
                                   controller: TextEditingController()
-                                    ..text = 'Maria Chin',
+                                    ..text =
+                                        '${widget.user.firstName} ${widget.user.lastName}',
                                   decoration: const InputDecoration(
                                     hintText: "Enter Your Name",
                                   ),
@@ -147,6 +155,8 @@ class MapScreenState extends State<ProfilePage>
                             children: <Widget>[
                               Flexible(
                                 child: TextField(
+                                  controller: TextEditingController()
+                                    ..text = '${widget.user.email}',
                                   decoration: const InputDecoration(
                                       hintText: "Enter Email Address"),
                                   enabled: !_status,
@@ -162,6 +172,8 @@ class MapScreenState extends State<ProfilePage>
                             children: <Widget>[
                               Flexible(
                                 child: TextField(
+                                  controller: TextEditingController()
+                                    ..text = '${widget.user.firstName}',
                                   decoration: const InputDecoration(
                                       hintText: "Enter Password"),
                                   enabled: !_status,
@@ -177,6 +189,8 @@ class MapScreenState extends State<ProfilePage>
                             children: <Widget>[
                               Flexible(
                                 child: TextField(
+                                  controller: TextEditingController()
+                                    ..text = '${widget.user.phoneNum}',
                                   decoration: const InputDecoration(
                                       hintText: "Enter Mobile Number"),
                                   enabled: !_status,
@@ -255,7 +269,7 @@ class MapScreenState extends State<ProfilePage>
                   shape: BoxShape.circle,
                   border: Border.all(width: 3),
                   image: DecorationImage(
-                    image: ExactAssetImage('assets/images/as.png'),
+                    image: NetworkImage('${widget.user.profilePic}'),
                     fit: BoxFit.cover,
                   ),
                 )),
@@ -280,13 +294,6 @@ class MapScreenState extends State<ProfilePage>
     );
   }
 
-  @override
-  void dispose() {
-    // Clean up the controller when the Widget is disposed
-    myFocusNode.dispose();
-    super.dispose();
-  }
-
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
@@ -302,7 +309,10 @@ class MapScreenState extends State<ProfilePage>
                 child: Text("Save"),
                 textColor: Colors.white,
                 color: Colors.green,
-                onPressed: () {
+                onPressed: () async {
+                  User user = User(username: "cb", phoneNum: "123456789");
+                  await userDataService.updateUser(
+                      id: widget.user.id, user: user);
                   setState(() {
                     _status = true;
                     FocusScope.of(context).requestFocus(FocusNode());

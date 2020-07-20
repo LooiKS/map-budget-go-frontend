@@ -41,6 +41,7 @@ class RestService {
   }
 
   Future patch(String endpoint, {dynamic data}) async {
+    print(data);
     final response = await http.patch('$baseUrl/$endpoint',
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(data));
 
