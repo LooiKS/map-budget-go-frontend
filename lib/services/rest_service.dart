@@ -18,7 +18,8 @@ class RestService {
   // TODO: change the baseUrl to your own REST API service hosted on Firebase (or heroku)
 
   static const String baseUrl =
-      'https://us-central1-map-budget-go.cloudfunctions.net/api';
+      'http://10.0.2.2:5001/map-budget-go/us-central1/api';
+  // 'https://us-central1-map-budget-go.cloudfunctions.net/api';
   // 'https://us-central1-jumail-backend-firebase-rest.cloudfunctions.net/api';
 
   Future get(String endpoint) async {
@@ -36,6 +37,21 @@ class RestService {
 
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
+    }
+    throw response;
+  }
+
+  Future postPhoto(String endpoint, {dynamic data}) async {
+    var request = http.MultipartRequest(
+      "POST",
+      Uri.parse('$baseUrl/$endpoint'),
+    );
+    request.files.add(http.MultipartFile.fromBytes('avatar', data));
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      return {"status": "ok"};
     }
     throw response;
   }

@@ -2,6 +2,7 @@ import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
+import 'package:budgetgo/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import '../user_setting/user_setting.dart';
@@ -14,11 +15,10 @@ import '../../services/users_date_service.dart';
 
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
-  final BaseAuth auth;
+  final BaseAuth auth = Auth();
   final String uid;
 
-  MyHomePage({Key key, this.toggleBrightness, this.auth, this.uid})
-      : super(key: key);
+  MyHomePage({Key key, this.toggleBrightness, this.uid}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();

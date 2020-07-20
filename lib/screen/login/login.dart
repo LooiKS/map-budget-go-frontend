@@ -3,6 +3,7 @@ import 'package:budgetgo/screen/register/register.dart';
 import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 import '../../widget/bezier_container.dart';
@@ -48,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(
               builder: (context) => MyHomePage(
                 toggleBrightness: widget.toggleBrightness,
-                auth: widget.auth,
                 uid: result,
               ),
             ));
@@ -91,7 +91,6 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(
               builder: (context) => MyHomePage(
                 toggleBrightness: widget.toggleBrightness,
-                auth: widget.auth,
                 uid: result.uid,
               ),
             ));
@@ -116,6 +115,30 @@ class _LoginPageState extends State<LoginPage> {
               ],
             );
           });
+    }
+  }
+
+  signInFb() async {
+    try {
+      var result = await widget.auth.signInViaFacebook();
+      if (result != null)
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (_) => MyHomePage()), (_) => false);
+    } on PlatformException catch (e) {
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                title: Text('Message'),
+                content: Text('Error occurred. ${e.message}'),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => MyHomePage()),
+                          (_) => false),
+                      child: Text('OK'))
+                ],
+              ));
     }
   }
 
@@ -262,7 +285,7 @@ class _LoginPageState extends State<LoginPage> {
             flex: 1,
             child: FacebookSignInButton(
               text: 'Facebook',
-              onPressed: null,
+              onPressed: () => signInFb(),
               textStyle: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,

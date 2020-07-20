@@ -1,0 +1,66 @@
+### Endpoints:
+# /quotes               (GET, POST)
+# /quotes/:id           (GET, PUT, PATCH, DELETE)
+# /quotes/:id/like      (PATCH)
+# /quotes/:id/dislike   (PATCH)
+# /like/:id             (PATCH)
+
+@baseUrl = http://localhost:5001/map-budget-go/us-central1/api
+
+### Example of endpoints for basic CRUD operations.
+#    Later in your submission, leave only the one that you actually use and remove others from this file.
+
+
+### Get the list of quotes
+GET {{baseUrl}}/quotes
+
+###  Getting a quote for a given id
+GET {{baseUrl}}/quotes/Miz8ghbGjlulbiFC0dva
+
+###  Add a new quote
+POST {{baseUrl}}/users/profile
+Content-Type: application/json
+
+{
+    "data": "This is a new quote",
+    "like" : 0,
+    "dislike" : 0
+}
+
+### Update a quote partly
+PATCH {{baseUrl}}/quotes/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+
+{
+        "like" : 10
+}
+
+###
+PATCH {{baseUrl}}/quotes/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+
+{
+        "dislike" : 2
+}
+
+### Replace an existing quote entirely
+PUT {{baseUrl}}/quotes/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+
+{
+    "data": "Programming is not everything",
+    "like" : 5,
+    "dislike" : 5
+}
+
+### Delete a quote
+DELETE {{baseUrl}}/quotes/Miz8ghbGjlulbiFC0dva
+
+### Thumb up (or Like) - Update the 'like' attribute by inreasing by 1
+PATCH {{baseUrl}}/quotes/04EaOUARuw2ei0ECbLAQ/dislike
+
+###
+PATCH {{baseUrl}}/like/04EaOUARuw2ei0ECbLAQ
+
+###
+PATCH {{baseUrl}}/quotes/04EaOUARuw2ei0ECbLAQ?vote=dislike
