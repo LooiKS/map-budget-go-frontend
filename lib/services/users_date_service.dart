@@ -12,6 +12,10 @@ class UsersDataService {
   final rest = RestService();
   final endpoint = 'users';
 
+  Future<User> getAllUser() async {
+    return User.fromJson(await rest.get(endpoint));
+  }
+
   Future<User> createUser(User user) async {
     return User.fromJson(await rest.post(endpoint, data: user));
   }
@@ -28,6 +32,18 @@ class UsersDataService {
     return User.fromJson(response);
   }
 
+  Future<User> getUserByEmail({String email}) async {
+    try {
+      final response = await rest.get('$endpoint?email=$email');
+      if (response != null) {
+        return User.fromJson(response);
+      }
+      return null;
+    } catch (e) {
+      print(e);
+      return e;
+    }
+  }
 } // class User
 
 final userDataService = UsersDataService();
