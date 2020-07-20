@@ -298,18 +298,19 @@ class _TripsCreateState extends State<TripsCreatePage> {
                           setState(() {
                             _formKey.currentState.save();
                             Trips _newTrip = new Trips(
-                                mockdata.length + 1,
-                                _tripTitle.text,
-                                _tripDetail.text,
-                                mockOwnUser,
-                                currentUsers,
-                                _dateStart,
-                                _dateEnd,
-                                [],
-                                [],
-                                DateTime.now(),
-                                _inputCurrency,
-                                "upcoming");
+                                // mockdata.length + 1,
+                                // _tripTitle.text,
+                                // _tripDetail.text,
+                                // mockOwnUser,
+                                // currentUsers,
+                                // _dateStart,
+                                // _dateEnd,
+                                // [],
+                                // [],
+                                // DateTime.now(),
+                                // _inputCurrency,
+                                // "upcoming"
+                                );
                             Navigator.pop(context, _newTrip);
                           });
                         } else {
