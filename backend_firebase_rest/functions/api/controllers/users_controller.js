@@ -24,6 +24,17 @@ router.get("/:id", async (req, res, next) => {
   try {
     const result = await usersModel.getById(req.params.id);
     if (!result) return res.sendStatus(404);
+
+    console.log(result.friend);
+
+    for (var i = 0; i < result.friend.length; i++) {
+      const friendResult = await usersModel.getById(result.friend[i]);
+      friendResult.friend = [];
+      console.log(friendResult);
+      result.friend[i] = friendResult;
+      console.log(result.friend[i]);
+    }
+
     return res.json(result);
   } catch (e) {
     return next(e);
@@ -66,6 +77,12 @@ router.patch("/:id", async (req, res, next) => {
 
     const updateResult = await usersModel.update(id, doc);
     if (!updateResult) return res.sendStatus(404);
+
+    for (var i = 0; i < doc.friend.length; i++) {
+      const friendResult = await usersModel.getById(doc.friend[i]);
+      friendResult.friend = [];
+      doc.friend[i] = friendResult;
+    }
 
     return res.json(doc);
   } catch (e) {

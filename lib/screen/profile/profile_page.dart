@@ -2,6 +2,7 @@ import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import '../../main.dart';
 
 class ProfilePage extends StatefulWidget {
   User user;
@@ -16,8 +17,17 @@ class MapScreenState extends State<ProfilePage>
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
 
+  TextEditingController _username;
+  TextEditingController _firstName;
+  TextEditingController _lastName;
+  TextEditingController _mobilePhone;
+
   @override
   void initState() {
+    _username = TextEditingController(text: ('${widget.user.username}'));
+    _firstName = TextEditingController(text: ('${widget.user.firstName}'));
+    _lastName = TextEditingController(text: ('${widget.user.lastName}'));
+    _mobilePhone = TextEditingController(text: ('${widget.user.phoneNum}'));
     super.initState();
   }
 
@@ -28,8 +38,42 @@ class MapScreenState extends State<ProfilePage>
     super.dispose();
   }
 
+  Future updateProfile() async {
+    User user = User.copy(widget.user);
+    print(user.friend[0].id);
+    user.username = _username.text;
+    user.firstName = _firstName.text;
+    user.lastName = _lastName.text;
+    user.phoneNum = _mobilePhone.text;
+    await userDataService.updateUser(id: widget.user.id, user: user);
+
+    setState(() {
+      _status = true;
+      FocusScope.of(context).requestFocus(FocusNode());
+    });
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Update Message'),
+          content: const Text('Your profile updated successfully.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    const borderSide = BorderSide(width: 4.0);
     return Scaffold(
         body: Container(
       child: ListView(
@@ -88,7 +132,7 @@ class MapScreenState extends State<ProfilePage>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              buildTitle(),
+                              buildTitle('Personal Information'),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
@@ -106,28 +150,7 @@ class MapScreenState extends State<ProfilePage>
                               )
                             ],
                           )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              ExpendedTitle('Username'),
-                              ExpendedTitle('User ID'),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              FixedFieldValue('${widget.user.username}'),
-                              FixedFieldValue('${widget.user.id}'),
-                            ],
-                          )),
-                      InfoTitle('Name'),
+                      InfoTitle('User ID'),
                       Padding(
                           padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: Row(
@@ -136,8 +159,43 @@ class MapScreenState extends State<ProfilePage>
                               Flexible(
                                 child: TextField(
                                   controller: TextEditingController()
-                                    ..text =
-                                        '${widget.user.firstName} ${widget.user.lastName}',
+                                    ..text = '${widget.user.id}',
+                                  enabled: false,
+                                ),
+                              ),
+                            ],
+                          )),
+                      InfoTitle('Username'),
+                      Padding(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Flexible(
+                                child: TextField(
+                                  controller: _username,
+                                  // TextEditingController()
+                                  //   ..text = '${widget.user.username}',
+                                  decoration: const InputDecoration(
+                                    hintText: "Enter Your Username",
+                                  ),
+                                  enabled: !_status,
+                                  autofocus: !_status,
+                                ),
+                              ),
+                            ],
+                          )),
+                      InfoTitle('First Name'),
+                      Padding(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Flexible(
+                                child: TextField(
+                                  controller: _firstName,
+                                  // TextEditingController()
+                                  //   ..text = '${widget.user.firstName}',
                                   decoration: const InputDecoration(
                                     hintText: "Enter Your Name",
                                   ),
@@ -147,7 +205,7 @@ class MapScreenState extends State<ProfilePage>
                               ),
                             ],
                           )),
-                      InfoTitle('Email Address'),
+                      InfoTitle('Last Name'),
                       Padding(
                           padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: Row(
@@ -155,28 +213,14 @@ class MapScreenState extends State<ProfilePage>
                             children: <Widget>[
                               Flexible(
                                 child: TextField(
-                                  controller: TextEditingController()
-                                    ..text = '${widget.user.email}',
+                                  controller: _lastName,
+                                  // TextEditingController()
+                                  //   ..text = '${widget.user.lastName}',
                                   decoration: const InputDecoration(
-                                      hintText: "Enter Email Address"),
+                                    hintText: "Enter Your Name",
+                                  ),
                                   enabled: !_status,
-                                ),
-                              ),
-                            ],
-                          )),
-                      InfoTitle('Password'),
-                      Padding(
-                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Flexible(
-                                child: TextField(
-                                  controller: TextEditingController()
-                                    ..text = '${widget.user.firstName}',
-                                  decoration: const InputDecoration(
-                                      hintText: "Enter Password"),
-                                  enabled: !_status,
+                                  autofocus: !_status,
                                 ),
                               ),
                             ],
@@ -189,8 +233,9 @@ class MapScreenState extends State<ProfilePage>
                             children: <Widget>[
                               Flexible(
                                 child: TextField(
-                                  controller: TextEditingController()
-                                    ..text = '${widget.user.phoneNum}',
+                                  controller: _mobilePhone,
+                                  // TextEditingController()
+                                  //   ..text = '${widget.user.phoneNum}',
                                   decoration: const InputDecoration(
                                       hintText: "Enter Mobile Number"),
                                   enabled: !_status,
@@ -212,7 +257,7 @@ class MapScreenState extends State<ProfilePage>
 
   RaisedButton buildQRButton(BuildContext context) {
     return RaisedButton(
-      child: Text("Qr Code"),
+      child: Text("Reset Password"),
       textColor: Colors.white,
       color: Colors.red,
       onPressed: () {
@@ -229,9 +274,52 @@ class MapScreenState extends State<ProfilePage>
                     padding: EdgeInsets.all(20),
                     child: Column(
                       children: <Widget>[
-                        Image(
-                          image: ExactAssetImage('assets/images/frame.png'),
-                        )
+                        buildTitle("Reset Password"),
+                        InfoTitle('Old Password'),
+                        Padding(
+                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextField(
+                                    controller: TextEditingController()
+                                      ..text = '${widget.user.id}',
+                                    enabled: false,
+                                  ),
+                                ),
+                              ],
+                            )),
+                        InfoTitle('New Password'),
+                        Padding(
+                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextField(
+                                    controller: TextEditingController()
+                                      ..text = '${widget.user.id}',
+                                    enabled: false,
+                                  ),
+                                ),
+                              ],
+                            )),
+                        InfoTitle('Confirm New Password'),
+                        Padding(
+                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextField(
+                                    controller: TextEditingController()
+                                      ..text = '${widget.user.id}',
+                                    enabled: false,
+                                  ),
+                                ),
+                              ],
+                            )),
                       ],
                     ),
                   ));
@@ -241,13 +329,13 @@ class MapScreenState extends State<ProfilePage>
     );
   }
 
-  Column buildTitle() {
+  Column buildTitle(String title) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(
-          'Personal Information',
+          '$title',
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
       ],
@@ -310,13 +398,7 @@ class MapScreenState extends State<ProfilePage>
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () async {
-                  User user = User(username: "cb", phoneNum: "123456789");
-                  await userDataService.updateUser(
-                      id: widget.user.id, user: user);
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  });
+                  await updateProfile();
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0)),
@@ -334,6 +416,10 @@ class MapScreenState extends State<ProfilePage>
                 color: Colors.red,
                 onPressed: () {
                   setState(() {
+                    _username.text = widget.user.username;
+                    _firstName.text = widget.user.firstName;
+                    _lastName.text = widget.user.lastName;
+                    _mobilePhone.text = widget.user.phoneNum;
                     _status = true;
                     FocusScope.of(context).requestFocus(FocusNode());
                   });

@@ -4,6 +4,7 @@ const app = express();
 const todosRouter = require("./api/controllers/todos_controller");
 const schedulesRouter = require("./api/controllers/schedules_controller");
 const usersRouter = require("./api/controllers/users_controller");
+const tripsRouter = require("./api/controllers/trips_controller");
 const users_model = require("./api/models/users_model");
 const db = require("./api/database");
 
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use("/todos", todosRouter);
 app.use("/schedules", schedulesRouter);
 app.use("/users", usersRouter);
+app.use("/trips", tripsRouter);
 
 // create user when user is signing up
 exports.register = functions.auth.user().onCreate((user, context) => {
@@ -74,3 +76,4 @@ exports.uploadimg = functions.https.onRequest(function () {
 
   // return db.admin.storage().bucket().upload("local-image.jpg", options);
 });
+exports.setupdb = functions.https.onRequest(require("./setup_database"));

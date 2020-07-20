@@ -184,29 +184,29 @@ List<User> loginData = [
 final mockdata = [
   //Trip #1
   Trips(
-      1,
-      "Japan",
-      "Honey Moon",
-      mockOwnUser,
-      memberMockData,
-      DateTime(2020, 10, 10),
-      DateTime(2020, 10, 15),
-      [],
-      [],
-      DateTime.now(),
-      "JPY",
-      "upcoming"),
+      tripID: 1,
+      tripTitle: "Japan",
+      tripDetail: "Honey Moon",
+      owner: mockOwnUser,
+      members:memberMockData,
+      startDt:DateTime(2020, 10, 10),
+      endDt:DateTime(2020, 10, 15),
+      schedules:[],
+      expenses:[],
+      createdDt: DateTime.now(),
+      currency:"JPY",
+      status: "upcoming"),
 
   //Trip #2
   Trips(
-      2,
-      "Canada",
-      "See polar bear",
-      mockOwnUser,
-      memberMockData,
-      DateTime(2020, 4, 10),
-      DateTime(2020, 5, 20),
-      [
+      tripID: 2,
+      tripTitle: "Canada",
+      tripDetail:"See polar bear",
+      owner: mockOwnUser,
+      members: memberMockData,
+      startDt: DateTime(2020, 4, 10),
+      endDt:DateTime(2020, 5, 20),
+      schedules: [
         Schedule(
             '1',
             DateTime(2020, 4, 10, 8),
@@ -232,7 +232,7 @@ final mockdata = [
             mockUser1,
             DateTime(2020, 3, 11, 12))
       ],
-      [
+      expenses: [
         TripExpenses(
             "Train ticket",
             "Train to Busan",
@@ -279,18 +279,18 @@ final mockdata = [
             mockUser2,
             [mockUser1, mockUser2, mockUser3]),
       ],
-      DateTime.now(),
-      "USD",
-      "upcoming"),
+      createdDt: DateTime.now(),
+      currency: "USD",
+      status: "upcoming"),
   Trips(
-      3,
-      "Russia",
-      "Eat Polar BEar",
-      mockOwnUser,
-      memberMockData,
-      DateTime(2020, 7, 10),
-      DateTime(2020, 10, 15),
-      [
+      tripID: 3,
+      tripTitle: "Russia",
+      tripDetail: "Eat Polar BEar",
+      owner: mockOwnUser,
+      members: memberMockData,
+      startDt: DateTime(2020, 7, 10),
+      endDt: DateTime(2020, 10, 15),
+      schedules: [
         Schedule(
             '1',
             DateTime(2020, 4, 10, 8),
@@ -316,7 +316,7 @@ final mockdata = [
             mockUser1,
             DateTime(2020, 3, 11, 12))
       ],
-      [
+      expenses:[
         TripExpenses(
             "Train ticket",
             "Train to Busan",
@@ -363,19 +363,19 @@ final mockdata = [
             mockUser2,
             [mockUser1, mockUser2, mockUser3]),
       ],
-      DateTime.now(),
-      "USD",
-      "progress"),
+      createdDt: DateTime.now(),
+      currency: "USD",
+      status: "progress"),
   //trips 4
   Trips(
-      4,
-      "Singapore",
-      "marina bayy",
-      mockOwnUser,
-      memberMockData,
-      DateTime(2020, 2, 10),
-      DateTime(2020, 2, 20),
-      [
+      tripID: 4,
+      tripTitle: "Singapore",
+      tripDetail: "marina bayy",
+      owner: mockOwnUser,
+      members: memberMockData,
+      startDt: DateTime(2020, 2, 10),
+      endDt: DateTime(2020, 2, 20),
+      schedules: [
         Schedule(
             '1',
             DateTime(2020, 4, 10, 8),
@@ -401,7 +401,7 @@ final mockdata = [
             mockUser1,
             DateTime(2020, 3, 11, 12))
       ],
-      [
+      expenses: [
         TripExpenses(
             "Train ticket",
             "Train to Busan",
@@ -448,18 +448,18 @@ final mockdata = [
             mockUser2,
             [mockUser1, mockUser2, mockUser3]),
       ],
-      DateTime.now(),
-      "USD",
-      "upcoming"),
+      createdDt: DateTime.now(),
+      currency:"USD",
+      status: "upcoming"),
   Trips(
-      5,
-      "USA",
-      "NBA",
-      mockOwnUser,
-      memberMockData,
-      DateTime(2020, 10, 10),
-      DateTime(2020, 10, 15),
-      [
+      tripID: 5,
+      tripTitle: "USA",
+      tripDetail: "NBA",
+      owner: mockOwnUser,
+      members: memberMockData,
+      startDt: DateTime(2020, 10, 10),
+      endDt: DateTime(2020, 10, 15),
+      schedules: [
         Schedule(
             '1',
             DateTime(2020, 4, 10, 8),
@@ -485,7 +485,7 @@ final mockdata = [
             mockUser1,
             DateTime(2020, 3, 11, 12))
       ],
-      [
+      expenses: [
         TripExpenses(
             "Train ticket",
             "Train to Busan",
@@ -532,9 +532,9 @@ final mockdata = [
             mockUser2,
             [mockUser1, mockUser2, mockUser3]),
       ],
-      DateTime.now(),
-      "USD",
-      "progress")
+      createdDt: DateTime.now(),
+      currency: "USD",
+      status: "progress")
 ];
 
 // void initMock() {

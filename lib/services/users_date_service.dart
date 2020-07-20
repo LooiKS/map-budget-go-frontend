@@ -18,17 +18,16 @@ class UsersDataService {
 
   Future<User> getUser({String id}) async {
     final response = await rest.get('$endpoint/$id');
-
-    print("manay data");
     print(response);
     return User.fromJson(response);
   }
 
   Future<User> updateUser({String id, User user}) async {
-    print("Patch 0");
+    print(user);
     final response = await rest.patch('$endpoint/$id', data: user);
     return User.fromJson(response);
   }
+
 } // class User
 
 final userDataService = UsersDataService();

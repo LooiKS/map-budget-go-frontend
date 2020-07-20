@@ -103,7 +103,7 @@ class _AddMemberState extends State<AddMember> {
         return new Future(() => false);
       },
       child: DefaultTabController(
-        length: 3,
+        length: 2,
         initialIndex: 0,
         child: Scaffold(
           appBar: AppBar(
@@ -168,10 +168,6 @@ class _AddMemberState extends State<AddMember> {
               ),
             ),
             Container(
-              color: Colors.pink,
-              child: Center(child: Text("Call Tab")),
-            ),
-            Container(
               color: Colors.blue,
               child: Center(child: Text("Call Tab")),
             ),
@@ -186,8 +182,6 @@ class _AddMemberState extends State<AddMember> {
               buildTabBarItem(
                   ExactAssetImage('assets/images/contact_book.png'),
                   "Friend List"),
-              buildTabBarItem(
-                  ExactAssetImage('assets/images/qrcode.png'), "QR Code"),
               buildTabBarItem(
                   ExactAssetImage('assets/images/search_icon.png'),
                   "ID/Phone No.")

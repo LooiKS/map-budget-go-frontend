@@ -20,7 +20,6 @@ class RestService {
   static const String baseUrl =
       'http://10.0.2.2:5001/map-budget-go/us-central1/api';
   // 'https://us-central1-map-budget-go.cloudfunctions.net/api';
-  // 'https://us-central1-jumail-backend-firebase-rest.cloudfunctions.net/api';
 
   Future get(String endpoint) async {
     final response = await http.get('$baseUrl/$endpoint');
