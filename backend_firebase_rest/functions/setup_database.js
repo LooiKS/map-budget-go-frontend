@@ -131,6 +131,19 @@ const users = [
     password: "123",
     isChecked: false,
   },
+  {
+    id: "b89Opz9EAigxf1TdUVdwzgIokQ42",
+    firstName: "asdf",
+    lastName: "Obama",
+    phoneNum: "0123123123",
+    email: "ken@gmail.com",
+    profilePic:
+      "https://i.pinimg.com/736x/cf/00/b4/cf00b49556d88fe8a85c7200e7b649b2.jpg",
+    username: "obama123",
+    friend: ["BG0002", "BG0003", "BG0004"],
+    password: "123",
+    isChecked: false,
+  },
 ];
 
 const schedules = [

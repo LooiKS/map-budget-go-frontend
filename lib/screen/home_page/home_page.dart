@@ -111,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
       case 3:
-        return FriendList();
+        return FriendList(user:_user);
     }
   }
 

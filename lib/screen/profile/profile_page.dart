@@ -40,7 +40,7 @@ class MapScreenState extends State<ProfilePage>
 
   Future updateProfile() async {
     User user = User.copy(widget.user);
-
+    print(user.friend[0].id);
     user.username = _username.text;
     user.firstName = _firstName.text;
     user.lastName = _lastName.text;

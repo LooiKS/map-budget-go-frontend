@@ -27,6 +27,7 @@ class UsersDataService {
     final response = await rest.patch('$endpoint/$id', data: user);
     return User.fromJson(response);
   }
+
 } // class User
 
 final userDataService = UsersDataService();
