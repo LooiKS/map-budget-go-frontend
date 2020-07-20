@@ -1,6 +1,7 @@
 import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/friend_list/friend_list.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
@@ -33,10 +34,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void getUID() async {
     final user = (await widget.auth.getCurrentUser()).uid;
-    print((await widget.auth.getCurrentUser()).photoUrl);
-    print((await widget.auth.getCurrentUser()).providerData);
-    print((await widget.auth.getCurrentUser()).displayName);
-    print((await widget.auth.getCurrentUser()).email);
 
     print("Current id $user");
     if (user == null) {
@@ -114,11 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
       case 3:
-        return Center(
-          child: Container(
-            child: Text("Friends"),
-          ),
-        );
+        return FriendList();
     }
   }
 
@@ -217,12 +210,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       )),
                   SizedBox(height: 5.0),
                   Text(
-                    "${_user.firstName} ${_user.lastName}",
+                    _user.firstName == "" || _user.lastName == ""
+                        ? ""
+                        : "${_user.firstName} ${_user.lastName}",
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    "@maria97",
+                    _user.username == "" ? '' : '@${_user.username}',
                     style: TextStyle(
                       fontSize: 16.0,
                     ),
