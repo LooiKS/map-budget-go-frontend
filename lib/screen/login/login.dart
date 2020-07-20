@@ -47,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
               builder: (context) => MyHomePage(
                 toggleBrightness: widget.toggleBrightness,
                 auth: widget.auth,
+                uid: result,
               ),
             ));
       }
@@ -89,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
               builder: (context) => MyHomePage(
                 toggleBrightness: widget.toggleBrightness,
                 auth: widget.auth,
+                uid: result.uid,
               ),
             ));
       }

@@ -15,8 +15,10 @@ import '../../services/users_date_service.dart';
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
   final BaseAuth auth;
+  final String uid;
 
-  MyHomePage({Key key, this.toggleBrightness, this.auth}) : super(key: key);
+  MyHomePage({Key key, this.toggleBrightness, this.auth, this.uid})
+      : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -29,29 +31,29 @@ class _MyHomePageState extends State<MyHomePage> {
   User _user;
   String uid = "";
 
-  Future getUID() async {
-    final user = await widget.auth.getCurrentUser();
-    print("Current id ${user.uid}");
-    if (user.uid == null) {
+  void getUID() async {
+    final user = (await widget.auth.getCurrentUser()).uid;
+    print("Current id $user");
+    if (user == null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (context) => LogoutPage(
-                    toggleBrightness: widget.toggleBrightness,
-                    auth: widget.auth,
-                  )),
+            builder: (context) => LogoutPage(
+              toggleBrightness: widget.toggleBrightness,
+              auth: widget.auth,
+            ),
+          ),
           (_) => false);
     }
     setState(() {
-      uid = user.uid;
+      uid = user;
     });
   }
 
   @override
   void initState() {
     currentPage = 0;
-
-    super.initState();
     getUID();
+    super.initState();
   }
 
   void onDrawerRowTapped(String choice) async {
@@ -59,7 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
       case "My profile":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(
+              builder: (context) => ProfilePage(user: User.copy(_user))),
         );
         break;
 
@@ -137,18 +140,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<User>(
-        future: userDataService.getUser(id: uid),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            print("data");
-            print(snapshot.data);
-            _user = snapshot.data;
-            print(_user.id.toString());
-            return buildScaffold();
-          }
-          return Center(child: CircularProgressIndicator());
-        });
+    return uid == ""
+        ? Center(child: CircularProgressIndicator())
+        : FutureBuilder<User>(
+            future: userDataService.getUser(id: uid),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                _user = snapshot.data;
+                return buildScaffold();
+              }
+              return Center(child: CircularProgressIndicator());
+            });
   }
 
   Scaffold buildScaffold() {
