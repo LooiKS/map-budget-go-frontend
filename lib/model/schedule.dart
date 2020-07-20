@@ -45,12 +45,29 @@ class Schedule {
         "endDt": endDt.toString(),
         "activityTitle": activityTitle,
         "activityDesc": activityDesc,
-        "createdBy": createdBy.toJson(),
+        "createdBy": createdBy.id,
         "createdDt": createdDt.toString(),
         "id": id
       };
 
   Schedule.fromJson(json)
-      : this(json['id'], json['startDt'], json['endDt'], json['activityTitle'],
-            json['activityDesc'], json['createdBy'], json['createdDt']);
+      : this(
+            json['id'],
+            convertdatetime(json['startDt']),
+            convertdatetime(json['endDt']),
+            json['activityTitle'],
+            json['activityDesc'],
+            User.fromJson(json['createdBy']),
+            convertdatetime(json['createdDt']));
+
+  static DateTime convertdatetime(String s) {
+    int year = int.parse(s.split('-')[0]);
+    int month = int.parse(s.split('-')[1]);
+    int day = int.parse(s.split('-')[2].split(' ')[0]);
+    int hour = int.parse(s.split('-')[2].split(' ')[1].split(':')[0]);
+    int min = int.parse(s.split('-')[2].split(' ')[1].split(':')[1]);
+    int sec =
+        int.parse(s.split('-')[2].split(' ')[1].split(':')[2].split('.')[0]);
+    return DateTime(year, month, day, hour, min, sec);
+  }
 }

@@ -29,7 +29,7 @@ class _ScheduleScreenState extends State<ScheduleDetailScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Schedule',
+            'Schedule ${loggedInUser.id} ${schedule.createdBy.id}',
             style: TextStyle(color: Colors.white),
           ),
           shape: CustomShapeBorder(),

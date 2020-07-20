@@ -1,39 +1,122 @@
-import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/register/register.dart';
+import 'package:budgetgo/model/base_auth.dart';
+import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-
-// import 'package:flutter_ui_splash_screen/homeScreen.dart';
-// import 'signup.dart';
-//import 'package:google_fonts/google_fonts.dart';
 
 import '../../widget/bezier_container.dart';
 import '../home_page/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   final toggleBrightness;
-
-  LoginPage(
-      {Key key, this.title = 'User Settings', @required this.toggleBrightness})
-      : super(key: key);
-
+  final BaseAuth auth;
   final String title;
+  LoginPage(
+      {Key key,
+      this.title = 'User Settings',
+      @required this.toggleBrightness,
+      this.auth})
+      : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _validateUsername = false;
+  bool _validateEmail = false;
   bool _validatePassword = false;
-  final _username = TextEditingController();
+  final _email = TextEditingController();
   final _password = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
-    _username.dispose();
+    _email.dispose();
     _password.dispose();
     super.dispose();
+  }
+
+  void signInViaEmail(email, password) async {
+    try {
+      final result = await widget.auth.signIn(email, password);
+
+      if (result != null) {
+        print("user loging");
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyHomePage(
+                toggleBrightness: widget.toggleBrightness,
+                auth: widget.auth,
+                uid: result,
+              ),
+            ));
+      }
+    } catch (e) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(e.toString()),
+              actions: [
+                FlatButton(
+                  child: Text("Close"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+                )
+              ],
+            );
+          });
+    }
+  }
+
+  void signInViaGoogle() async {
+    print("google");
+    try {
+      final result = await widget.auth.signInViaGoogle();
+
+      print(result.uid);
+      if (result != null) {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyHomePage(
+                toggleBrightness: widget.toggleBrightness,
+                auth: widget.auth,
+                uid: result.uid,
+              ),
+            ));
+      }
+    } catch (e) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(e.toString()),
+              actions: [
+                FlatButton(
+                  child: Text("Close"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+                )
+              ],
+            );
+          });
+    }
   }
 
   Widget _passwordEntryField(String title) {
@@ -67,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _usernameEntryField(String title) {
+  Widget _emailEntryField(String title) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -81,13 +164,12 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
-              controller: _username,
+              controller: _email,
               style:
                   new TextStyle(color: Colors.black, height: 1.0, fontSize: 18),
               decoration: InputDecoration(
-                  errorText: _validateUsername
-                      ? 'The username field cannot be empty'
-                      : null,
+                  errorText:
+                      _validateEmail ? 'The email field cannot be empty' : null,
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
                   filled: true,
@@ -104,33 +186,12 @@ class _LoginPageState extends State<LoginPage> {
           _password.text.isEmpty
               ? _validatePassword = true
               : _validatePassword = false;
-          _username.text.isEmpty
-              ? _validateUsername = true
-              : _validateUsername = false;
+          _email.text.isEmpty ? _validateEmail = true : _validateEmail = false;
         });
-        bool _validateMatched = false;
-        List<User> check = [];
-        if (_validatePassword == false && _validateUsername == false) {
-          check.addAll(loginData.where((a) => a.username == _username.text));
-          print(check.length.toString() + "username");
-          if (check.length == 1) {
-            if (check[0].password == _password.text) {
-              _validateMatched = true;
-            }
-          }
 
-          if (_validateMatched == true) {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        MyHomePage(toggleBrightness: widget.toggleBrightness)),
-                (_) => false);
-          } else {
-            check.clear();
-            _loginErrorAlert(context);
-          }
-        }
+        // if (_validatePassword == false && _validateEmail == false) {
+        signInViaEmail(_email.text, _password.text);
+        // }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -171,8 +232,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
           InkWell(
             onTap: () {
-              //  Navigator.push(context,
-              //      MaterialPageRoute(builder: (context) => SignUpPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RegistrationPage()));
             },
             child: Text(
               'Register',
@@ -216,12 +277,12 @@ class _LoginPageState extends State<LoginPage> {
           Expanded(
             flex: 1,
             child: GoogleSignInButton(
-              onPressed: null,
+              onPressed: () => signInViaGoogle(),
               text: 'Google',
               textStyle: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.grey),
             ),
           ),
           Container(
@@ -240,10 +301,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _usernamePasswordWidget() {
+  Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _usernameEntryField("Username"),
+        _emailEntryField("Email"),
         _passwordEntryField("Password"),
       ],
     );
@@ -289,7 +350,7 @@ class _LoginPageState extends State<LoginPage> {
         return AlertDialog(
           title: Text('Login Error'),
           content: const Text(
-              'The username and password are not matched. Please try again'),
+              'The email and password are not matched. Please try again'),
           actions: <Widget>[
             FlatButton(
               child: Text('Ok'),
@@ -326,7 +387,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 50,
                 ),
-                _usernamePasswordWidget(),
+                _emailPasswordWidget(),
                 SizedBox(
                   height: 20,
                 ),

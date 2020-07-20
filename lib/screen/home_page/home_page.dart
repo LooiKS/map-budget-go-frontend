@@ -1,4 +1,7 @@
+import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/mockdata.dart';
+import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/friend_list/friend_list.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
@@ -8,11 +11,15 @@ import './animatedBottomNav.dart';
 import '../signout/signout.dart';
 import '../trips/trips_main_page.dart';
 import '../notification/notification_page.dart';
+import '../../services/users_date_service.dart';
 
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
+  final BaseAuth auth;
+  final String uid;
 
-  MyHomePage({Key key, this.toggleBrightness}) : super(key: key);
+  MyHomePage({Key key, this.toggleBrightness, this.auth, this.uid})
+      : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -22,18 +29,41 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentPage;
   String appBarTitle = "Home";
 
+  User _user;
+  String uid = "";
+
+  void getUID() async {
+    final user = (await widget.auth.getCurrentUser()).uid;
+
+    print("Current id $user");
+    if (user == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => LogoutPage(
+              toggleBrightness: widget.toggleBrightness,
+              auth: widget.auth,
+            ),
+          ),
+          (_) => false);
+    }
+    setState(() {
+      uid = user;
+    });
+  }
+
   @override
   void initState() {
     currentPage = 0;
+    getUID();
     super.initState();
   }
 
-  void onDrawerRowTapped(String choice) {
+  void onDrawerRowTapped(String choice) async {
     switch (choice) {
       case "My profile":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => ProfilePage(user: _user)),
         );
         break;
 
@@ -49,10 +79,13 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
 
       case "Log out":
+        await widget.auth.signOut();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-                builder: (context) =>
-                    LogoutPage(toggleBrightness: widget.toggleBrightness)),
+                builder: (context) => LogoutPage(
+                      toggleBrightness: widget.toggleBrightness,
+                      auth: widget.auth,
+                    )),
             (_) => false);
         break;
     }
@@ -78,11 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
       case 3:
-        return Center(
-          child: Container(
-            child: Text("Friends"),
-          ),
-        );
+        return FriendList();
     }
   }
 
@@ -108,6 +137,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return uid == ""
+        ? Center(child: CircularProgressIndicator())
+        : FutureBuilder<User>(
+            future: userDataService.getUser(id: uid),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                _user = snapshot.data;
+                return buildScaffold();
+              }
+              return Center(child: CircularProgressIndicator());
+            });
+  }
+
+  Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(
         title: Text(appBarTitle),
@@ -139,12 +182,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       icon: Icon(
                         Icons.power_settings_new,
                       ),
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
+                      onPressed: () async {
+                        await widget.auth.signOut();
+                        Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => LogoutPage(
-                                    toggleBrightness: widget.toggleBrightness)),
+                                      toggleBrightness: widget.toggleBrightness,
+                                      auth: widget.auth,
+                                    )),
                             (_) => false);
                       },
                     ),
@@ -159,18 +204,20 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: 5,
                         ),
                         image: DecorationImage(
-                          image: ExactAssetImage('assets/images/as.png'),
+                          image: NetworkImage('${_user.profilePic}'),
                           fit: BoxFit.cover,
                         ),
                       )),
                   SizedBox(height: 5.0),
                   Text(
-                    "Maria Chin",
+                    _user.firstName == "" || _user.lastName == ""
+                        ? ""
+                        : "${_user.firstName} ${_user.lastName}",
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    "@maria97",
+                    _user.username == "" ? '' : '@${_user.username}',
                     style: TextStyle(
                       fontSize: 16.0,
                     ),
@@ -204,7 +251,6 @@ class _MyHomePageState extends State<MyHomePage> {
   GestureDetector buildDrawerRow(IconData icon, String title,
       {bool showBadge = false}) {
     int count = mockdata.where((c) => c.status == "progress").toList().length;
-    print(count.toString() + "count");
     return GestureDetector(
       onTap: () {
         onDrawerRowTapped(title);

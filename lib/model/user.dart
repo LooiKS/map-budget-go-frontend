@@ -1,62 +1,41 @@
 class User {
-  String _id;
-  String _firstName;
-  String _lastName;
-  String _phoneNum;
-  String _email;
-  String _profilePic;
-  String _username;
-  List<User> _friend;
-  String _password;
-  bool _isChecked;
+  String id;
+  String firstName;
+  String lastName;
+  String phoneNum;
+  String email;
+  String profilePic;
+  String username;
+  List<User> friend;
+  String password;
+  bool isChecked;
 
   User(
-      this._id,
-      this._firstName,
-      this._lastName,
-      this._phoneNum,
-      this._email,
-      this._profilePic,
-      this._username,
-      this._password,
-      this._isChecked,
-      this._friend);
+      {this.id,
+      this.firstName,
+      this.lastName,
+      this.phoneNum,
+      this.email,
+      this.profilePic,
+      this.username,
+      this.password,
+      this.isChecked,
+      this.friend});
 
   User.copy(User from)
       : this(
-            from._id,
-            from._firstName,
-            from._lastName,
-            from._phoneNum,
-            from._email,
-            from._profilePic,
-            from._username,
-            from._password,
-            from._isChecked,
-            [...from._friend]);
+            id: from.id,
+            firstName: from.firstName,
+            lastName: from.lastName,
+            phoneNum: from.phoneNum,
+            email: from.email,
+            profilePic: from.profilePic,
+            username: from.username,
+            password: from.password,
+            isChecked: from.isChecked,
+            friend: [...from.friend]);
 
-  String get id => this._id;
-  String get firstName => this._firstName;
-  String get lastName => this._lastName;
-  String get phoneNum => this._phoneNum;
-  String get email => this._email;
-  String get profilePic => this._profilePic;
-  String get username => this._username;
-  List<User> get friend => this._friend;
-  String get password => this._password;
-  bool get isChecked => this._isChecked;
-
-  set id(String newValue) => this._id = newValue;
-  set firstName(String newValue) => this._firstName = newValue;
-  set phoneNum(String newValue) => this._phoneNum = newValue;
-  set email(String newValue) => this._email = newValue;
-  set profilePic(String newValue) => this._profilePic = newValue;
-  set username(String newValue) => this._username = newValue;
-  set friend(List<User> newValue) => this._friend = newValue;
-  set password(String newValue) => this._password = newValue;
-  set isChecked(bool newValue) => this._isChecked = newValue;
-
-  toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "firstName": firstName,
         "lastName": lastName,
@@ -64,8 +43,44 @@ class User {
         "email": email,
         "profilePic": profilePic,
         "username": username,
-        "friend": friend.map((f) => f.toJson()).toList(),
+        "friend":
+            friend == null ? null : friend.map((f) => f.toJson()).toList(),
         "password": password,
         "isChecked": isChecked,
       };
+
+  User.fromJson(Map<String, dynamic> json)
+      : this(
+          id: json["id"],
+          firstName: json["firstName"],
+          lastName: json["lastName"],
+          phoneNum: json["phoneNum"],
+          email: json["email"],
+          profilePic: json["profilePic"],
+          username: json["username"],
+          password: json["password"],
+          isChecked: json["isChecked"] == "true" ? true : false,
+          friend: [],
+        );
+
+  String get _id => this.id;
+  String get _firstName => this.firstName;
+  String get _lastName => this.lastName;
+  String get _phoneNum => this.phoneNum;
+  String get _email => this.email;
+  String get _profilePic => this.profilePic;
+  String get _username => this.username;
+  List<User> get _friend => this.friend;
+  String get _password => this.password;
+  bool get _isChecked => this.isChecked;
+
+  set _id(String newValue) => this.id = newValue;
+  set _firstName(String newValue) => this.firstName = newValue;
+  set _phoneNum(String newValue) => this.phoneNum = newValue;
+  set _email(String newValue) => this.email = newValue;
+  set _profilePic(String newValue) => this.profilePic = newValue;
+  set _username(String newValue) => this.username = newValue;
+  set _friend(List<User> newValue) => this.friend = newValue;
+  set _password(String newValue) => this.password = newValue;
+  set _isChecked(bool newValue) => this.isChecked = newValue;
 }

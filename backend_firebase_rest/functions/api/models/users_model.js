@@ -1,22 +1,36 @@
-const database = require('../database');
+const database = require("../database");
 
 // Here, we are implementing the class with Singleton design pattern
 
-class TodoModel {
-    constructor() {
-        if (this.instance) return this.instance;
-        TodoModel.instance = this;
-    }
+class UsersModel {
+  constructor() {
+    if (this.instance) return this.instance;
+    UsersModel.instance = this;
+  }
 
-    get() { return database.getList('todos') }
+  get() {
+    return database.getList("users");
+  }
 
-    getById(id) { return database.get('todos', id) }
+  getById(id) {
+    return database.get("users", id);
+  }
 
-    create(todo) { return database.create('todos', todo) }
+  create(user) {
+    return database.create("users", user);
+  }
 
-    delete(id) { return database.delete('todos', id) }
+  createWithCustomId(user) {
+    return database.createWithID("users", user);
+  }
 
-    update(id, todo) { return database.set('todos', id, todo) }
+  delete(id) {
+    return database.delete("users", id);
+  }
+
+  update(id, user) {
+    return database.set("users", id, user);
+  }
 }
 
-module.exports = new TodoModel();
+module.exports = new UsersModel();

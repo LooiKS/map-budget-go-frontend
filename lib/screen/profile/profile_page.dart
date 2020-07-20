@@ -1,7 +1,13 @@
+import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import '../../main.dart';
 
 class ProfilePage extends StatefulWidget {
+  User user;
+  ProfilePage({this.user});
+
   @override
   MapScreenState createState() => MapScreenState();
 }
@@ -11,20 +17,70 @@ class MapScreenState extends State<ProfilePage>
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
 
+  TextEditingController _username;
+  TextEditingController _firstName;
+  TextEditingController _lastName;
+  TextEditingController _mobilePhone;
+
   @override
   void initState() {
+    _username = TextEditingController(text: ('${widget.user.username}'));
+    _firstName = TextEditingController(text: ('${widget.user.firstName}'));
+    _lastName = TextEditingController(text: ('${widget.user.lastName}'));
+    _mobilePhone = TextEditingController(text: ('${widget.user.phoneNum}'));
     super.initState();
   }
 
   @override
+  void dispose() {
+    // Clean up the controller when the Widget is disposed
+    myFocusNode.dispose();
+    super.dispose();
+  }
+
+  Future updateProfile() async {
+    User user = User.copy(widget.user);
+
+    user.username = _username.text;
+    user.firstName = _firstName.text;
+    user.lastName = _lastName.text;
+    user.phoneNum = _mobilePhone.text;
+    await userDataService.updateUser(id: widget.user.id, user: user);
+
+    setState(() {
+      _status = true;
+      FocusScope.of(context).requestFocus(FocusNode());
+    });
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Update Message'),
+          content: const Text('Your profile updated successfully.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        body: new Container(
-      child: new ListView(
+    const borderSide = BorderSide(width: 4.0);
+    return Scaffold(
+        body: Container(
+      child: ListView(
         children: <Widget>[
           Column(
             children: <Widget>[
-              new Container(
+              Container(
                 height: 250.0,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -32,14 +88,14 @@ class MapScreenState extends State<ProfilePage>
                       end: Alignment.centerRight,
                       colors: [Color(0xfffbb448), Color(0xfff7892b)]),
                 ),
-                child: new Column(
+                child: Column(
                   children: <Widget>[
                     Padding(
                         padding: EdgeInsets.only(left: 20.0, top: 20.0),
-                        child: new Row(
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            new IconButton(
+                            IconButton(
                               icon: Icon(Icons.arrow_back_ios),
                               color: Colors.black,
                               iconSize: 22.0,
@@ -49,7 +105,7 @@ class MapScreenState extends State<ProfilePage>
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 25.0, top: 12.0),
-                              child: new Text('PROFILE',
+                              child: Text('PROFILE',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20.0,
@@ -62,22 +118,22 @@ class MapScreenState extends State<ProfilePage>
                   ],
                 ),
               ),
-              new Container(
+              Container(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 25.0),
-                  child: new Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
-                          child: new Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              buildTitle(),
-                              new Column(
+                              buildTitle('Personal Information'),
+                              Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
@@ -87,46 +143,59 @@ class MapScreenState extends State<ProfilePage>
                                       Padding(
                                         padding: EdgeInsets.only(right: 15.0),
                                       ),
-                                      _status
-                                          ? _getEditIcon()
-                                          : new Container(),
+                                      _status ? _getEditIcon() : Container(),
                                     ],
                                   )
                                 ],
                               )
                             ],
                           )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              ExpendedTitle('Username'),
-                              ExpendedTitle('User ID'),
-                            ],
-                          )),
+                      InfoTitle('User ID'),
                       Padding(
                           padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              FixedFieldValue('maria97'),
-                              FixedFieldValue('BG00010'),
-                            ],
-                          )),
-                      InfoTitle('Name'),
-                      Padding(
-                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: new Row(
+                          child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              new Flexible(
-                                child: new TextField(
+                              Flexible(
+                                child: TextField(
                                   controller: TextEditingController()
-                                    ..text = 'Maria Chin',
+                                    ..text = '${widget.user.id}',
+                                  enabled: false,
+                                ),
+                              ),
+                            ],
+                          )),
+                      InfoTitle('Username'),
+                      Padding(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Flexible(
+                                child: TextField(
+                                  controller: _username,
+                                  // TextEditingController()
+                                  //   ..text = '${widget.user.username}',
+                                  decoration: const InputDecoration(
+                                    hintText: "Enter Your Username",
+                                  ),
+                                  enabled: !_status,
+                                  autofocus: !_status,
+                                ),
+                              ),
+                            ],
+                          )),
+                      InfoTitle('First Name'),
+                      Padding(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Flexible(
+                                child: TextField(
+                                  controller: _firstName,
+                                  // TextEditingController()
+                                  //   ..text = '${widget.user.firstName}',
                                   decoration: const InputDecoration(
                                     hintText: "Enter Your Name",
                                   ),
@@ -136,32 +205,22 @@ class MapScreenState extends State<ProfilePage>
                               ),
                             ],
                           )),
-                      InfoTitle('Email Address'),
+                      InfoTitle('Last Name'),
                       Padding(
                           padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: new Row(
+                          child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              new Flexible(
-                                child: new TextField(
+                              Flexible(
+                                child: TextField(
+                                  controller: _lastName,
+                                  // TextEditingController()
+                                  //   ..text = '${widget.user.lastName}',
                                   decoration: const InputDecoration(
-                                      hintText: "Enter Email Address"),
+                                    hintText: "Enter Your Name",
+                                  ),
                                   enabled: !_status,
-                                ),
-                              ),
-                            ],
-                          )),
-                      InfoTitle('Password'),
-                      Padding(
-                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Flexible(
-                                child: new TextField(
-                                  decoration: const InputDecoration(
-                                      hintText: "Enter Password"),
-                                  enabled: !_status,
+                                  autofocus: !_status,
                                 ),
                               ),
                             ],
@@ -169,11 +228,14 @@ class MapScreenState extends State<ProfilePage>
                       InfoTitle('Mobile Number'),
                       Padding(
                           padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: new Row(
+                          child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              new Flexible(
-                                child: new TextField(
+                              Flexible(
+                                child: TextField(
+                                  controller: _mobilePhone,
+                                  // TextEditingController()
+                                  //   ..text = '${widget.user.phoneNum}',
                                   decoration: const InputDecoration(
                                       hintText: "Enter Mobile Number"),
                                   enabled: !_status,
@@ -181,7 +243,7 @@ class MapScreenState extends State<ProfilePage>
                               ),
                             ],
                           )),
-                      !_status ? _getActionButtons() : new Container(),
+                      !_status ? _getActionButtons() : Container(),
                     ],
                   ),
                 ),
@@ -195,7 +257,7 @@ class MapScreenState extends State<ProfilePage>
 
   RaisedButton buildQRButton(BuildContext context) {
     return RaisedButton(
-      child: new Text("Qr Code"),
+      child: Text("Reset Password"),
       textColor: Colors.white,
       color: Colors.red,
       onPressed: () {
@@ -212,26 +274,68 @@ class MapScreenState extends State<ProfilePage>
                     padding: EdgeInsets.all(20),
                     child: Column(
                       children: <Widget>[
-                        Image(
-                          image: new ExactAssetImage('assets/images/frame.png'),
-                        )
+                        buildTitle("Reset Password"),
+                        InfoTitle('Old Password'),
+                        Padding(
+                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextField(
+                                    controller: TextEditingController()
+                                      ..text = '${widget.user.id}',
+                                    enabled: false,
+                                  ),
+                                ),
+                              ],
+                            )),
+                        InfoTitle('New Password'),
+                        Padding(
+                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextField(
+                                    controller: TextEditingController()
+                                      ..text = '${widget.user.id}',
+                                    enabled: false,
+                                  ),
+                                ),
+                              ],
+                            )),
+                        InfoTitle('Confirm New Password'),
+                        Padding(
+                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextField(
+                                    controller: TextEditingController()
+                                      ..text = '${widget.user.id}',
+                                    enabled: false,
+                                  ),
+                                ),
+                              ],
+                            )),
                       ],
                     ),
                   ));
             });
       },
-      shape: new RoundedRectangleBorder(
-          borderRadius: new BorderRadius.circular(20.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
     );
   }
 
-  Column buildTitle() {
-    return new Column(
+  Column buildTitle(String title) {
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        new Text(
-          'Personal Information',
+        Text(
+          '$title',
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
       ],
@@ -241,19 +345,19 @@ class MapScreenState extends State<ProfilePage>
   Padding buildProfileImage() {
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
-      child: new Stack(fit: StackFit.loose, children: <Widget>[
-        new Row(
+      child: Stack(fit: StackFit.loose, children: <Widget>[
+        Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Container(
+            Container(
                 width: 140.0,
                 height: 140.0,
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(width: 3),
-                  image: new DecorationImage(
-                    image: new ExactAssetImage('assets/images/as.png'),
+                  image: DecorationImage(
+                    image: NetworkImage('${widget.user.profilePic}'),
                     fit: BoxFit.cover,
                   ),
                 )),
@@ -261,13 +365,13 @@ class MapScreenState extends State<ProfilePage>
         ),
         Padding(
             padding: EdgeInsets.only(top: 90.0, right: 100.0),
-            child: new Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                new CircleAvatar(
+                CircleAvatar(
                   backgroundColor: Colors.red,
                   radius: 25.0,
-                  child: new Icon(
+                  child: Icon(
                     Icons.camera_alt,
                     color: Colors.white,
                   ),
@@ -278,17 +382,10 @@ class MapScreenState extends State<ProfilePage>
     );
   }
 
-  @override
-  void dispose() {
-    // Clean up the controller when the Widget is disposed
-    myFocusNode.dispose();
-    super.dispose();
-  }
-
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
-      child: new Row(
+      child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
@@ -296,18 +393,15 @@ class MapScreenState extends State<ProfilePage>
             child: Padding(
               padding: EdgeInsets.only(right: 10.0),
               child: Container(
-                  child: new RaisedButton(
-                child: new Text("Save"),
+                  child: RaisedButton(
+                child: Text("Save"),
                 textColor: Colors.white,
                 color: Colors.green,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                  });
+                onPressed: () async {
+                  await updateProfile();
                 },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
               )),
             ),
             flex: 2,
@@ -316,18 +410,22 @@ class MapScreenState extends State<ProfilePage>
             child: Padding(
               padding: EdgeInsets.only(left: 10.0),
               child: Container(
-                  child: new RaisedButton(
-                child: new Text("Cancel"),
+                  child: RaisedButton(
+                child: Text("Cancel"),
                 textColor: Colors.white,
                 color: Colors.red,
                 onPressed: () {
                   setState(() {
+                    _username.text = widget.user.username;
+                    _firstName.text = widget.user.firstName;
+                    _lastName.text = widget.user.lastName;
+                    _mobilePhone.text = widget.user.phoneNum;
                     _status = true;
-                    FocusScope.of(context).requestFocus(new FocusNode());
+                    FocusScope.of(context).requestFocus(FocusNode());
                   });
                 },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
               )),
             ),
             flex: 2,
@@ -338,11 +436,11 @@ class MapScreenState extends State<ProfilePage>
   }
 
   Widget _getEditIcon() {
-    return new GestureDetector(
-      child: new CircleAvatar(
+    return GestureDetector(
+      child: CircleAvatar(
         backgroundColor: Colors.red,
         radius: 14.0,
-        child: new Icon(
+        child: Icon(
           Icons.edit,
           color: Colors.white,
           size: 16.0,
@@ -366,7 +464,7 @@ class FixedFieldValue extends StatelessWidget {
     return Flexible(
       child: Padding(
         padding: EdgeInsets.only(right: 10.0),
-        child: new TextField(
+        child: TextField(
           controller: TextEditingController()..text = value,
           enabled: false,
         ),
@@ -384,7 +482,7 @@ class ExpendedTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        child: new Text(
+        child: Text(
           title,
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
         ),
@@ -402,14 +500,14 @@ class InfoTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 15.0),
-        child: new Row(
+        child: Row(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            new Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                new Text(
+                Text(
                   title,
                   style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                 ),

@@ -2,6 +2,7 @@ import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
 import 'package:budgetgo/screen/schedule/schedule_form.dart';
+import 'package:budgetgo/services/schedule_data_service.dart';
 // import 'package:budgetgo/screen/trips/schedule_form.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
@@ -16,6 +17,7 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
+  ScheduleDataService scheduleDataService = ScheduleDataService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,6 +117,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             child: Text('No')),
                         FlatButton(
                             onPressed: () {
+                              scheduleDataService
+                                  .deleteSchedule(widget.schedules[index].id);
                               setState(() => widget.schedules.removeAt(index));
                               Navigator.pop(context);
                             },
