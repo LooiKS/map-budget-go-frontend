@@ -1,4 +1,5 @@
 import 'package:budgetgo/model/trips_class.dart';
+import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import '../../model/user.dart';
 import '../../main.dart';
@@ -43,12 +44,6 @@ class _FriendListState extends State<FriendList> {
       });
     }
   }
-
-  Future<User> removeFriend() async {
-
-    // await userDataService.updateUser(id: widget.user.id, user: user);
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +190,58 @@ class _FriendListState extends State<FriendList> {
               trailing: IconButton(
                 icon: Icon(Icons.delete),
                 color: Colors.red,
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Delete Friend'),
+                        content: const Text(
+                            'This will delete the friend from your friend list.'),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: const Text('Cancel'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: const Text('Confirm'),
+                            onPressed: () async {
+                              setState(() {
+                                widget.user.friend.removeAt(index);
+                              });
+                              final result = await userDataService.updateUser(
+                                  id: widget.user.id, user: widget.user);
+                              if (result != null) {
+                                showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Update Message'),
+                                      content: const Text(
+                                          'Delete Successfully.'),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Ok'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                          )
+                        ],
+                      );
+                    },
+                  );
+                },
               )),
           itemCount: widget.user.friend.length),
     );
