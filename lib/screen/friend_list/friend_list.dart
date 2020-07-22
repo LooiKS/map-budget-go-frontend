@@ -2,10 +2,9 @@ import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import '../../model/user.dart';
-import '../../main.dart';
 
 class FriendList extends StatefulWidget {
-  User user;
+  final User user;
 
   FriendList({this.user});
   @override
@@ -29,6 +28,55 @@ class _FriendListState extends State<FriendList> {
   void dispose() {
     _email.dispose();
     super.dispose();
+  }
+
+  Future searchEmail() async {
+    bool _added = false;
+    final result =
+        await userDataService.getUserByEmail(email: "${_email.text}");
+    if (result != null) {
+      for (int i = 0; i < widget.user.friend.length; i++) {
+        if (widget.user.friend[i].id == result.id) {
+          _added = true;
+        }
+      }
+    }
+    setState(() {
+      searched = true;
+      added = _added;
+      searchedUser = result;
+    });
+  }
+
+  Future addFriend() async {
+    User _owner = User.copy(widget.user);
+    _owner.friend.add(searchedUser);
+    widget.user.friend.add(searchedUser);
+    User _friend = User.copy(searchedUser);
+    _friend.friend.add(_owner);
+
+    await userDataService.updateUser(id: searchedUser.id, user: _friend);
+    await userDataService.updateUser(id: widget.user.id, user: _owner);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Succcess Message'),
+          content: const Text('Added Successfully.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                setState(() {
+                  added = true;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void filterSearchResults(String query) {
@@ -61,9 +109,7 @@ class _FriendListState extends State<FriendList> {
       initialIndex: 0,
       child: Scaffold(
         resizeToAvoidBottomPadding: false,
-        appBar: AppBar(
-          bottom: buildTab(),
-        ),
+        appBar: buildTab(),
         body: buildTabBarView(context),
       ),
     );
@@ -72,237 +118,180 @@ class _FriendListState extends State<FriendList> {
   TabBarView buildTabBarView(BuildContext context) {
     return TabBarView(
       children: <Widget>[
-        Container(
-          child: Column(
-            children: <Widget>[
-              buildSearchBar(context),
-              buildFriendList(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 2.0),
-                child: Text(
-                  "Total Friend: ${widget.user.friend.length}",
-                  style: TextStyle(color: Colors.green),
-                ),
-              )
-            ],
-          ),
-        ),
-        Container(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.only(
-                      top: 6.0, left: 7, right: 7, bottom: 0),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 7.5 / 100,
-                  child: TextField(
-                    controller: _email,
-                    decoration: InputDecoration(
-                      hintText: "Search Email",
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () async {
-                          bool _added = false;
-                          print("${_email.text}");
-                          final result = await userDataService.getUserByEmail(
-                              email: "${_email.text}");
-                          if (result != null) {
-                            for (int i = 0;
-                                i < widget.user.friend.length;
-                                i++) {
-                              if (widget.user.friend[i].id == result.id) {
-                                _added = true;
-                              }
-                            }
-                          }
-                          setState(() {
-                            searched = true;
-                            added = _added;
-                            searchedUser = result;
-                          });
-                        },
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 2.0),
-                      border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(15.0))),
-                    ),
+        _buildFriendContainer(context),
+        _buildSearchEmail(context),
+      ],
+    );
+  }
+
+  Container _buildFriendContainer(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          buildSearchBar(context),
+          buildFriendList(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2.0),
+            child: Text(
+              "Total Friend: ${widget.user.friend.length}",
+              style: TextStyle(color: Colors.green),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Container _buildSearchEmail(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding:
+                  const EdgeInsets.only(top: 6.0, left: 7, right: 7, bottom: 0),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 7.5 / 100,
+              child: TextField(
+                controller: _email,
+                decoration: InputDecoration(
+                  hintText: "Search Email",
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () => searchEmail(),
                   ),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 2.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0))),
                 ),
               ),
-              if (searched == true)
-                searchedUser != null
-                    ? ListView(
-                        shrinkWrap: true,
-                        children: <Widget>[
-                          Column(
+            ),
+          ),
+          if (searched == true)
+            searchedUser != null
+                ? Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: Stack(fit: StackFit.loose, children: <Widget>[
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                    width: 140.0,
+                                    height: 140.0,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          width: 3, color: Colors.orange),
+                                      image: DecorationImage(
+                                        image: searchedUser.profilePic == null
+                                            ? AssetImage(
+                                                "assets/images/default_profile.png")
+                                            : NetworkImage(
+                                                '${searchedUser.profilePic}'),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )),
+                              ],
+                            ),
+                          ]),
+                        ),
+                        Container(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(top: 20.0),
-                                child: Stack(
-                                    fit: StackFit.loose,
-                                    children: <Widget>[
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                              width: 140.0,
-                                              height: 140.0,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    width: 3,
-                                                    color: Colors.orange),
-                                                image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      '${searchedUser.profilePic}'),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              )),
-                                        ],
-                                      ),
-                                    ]),
-                              ),
-                              Container(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        InfoTitle(
-                                            'Email: ${searchedUser.email}'),
-                                        InfoTitle('ID: ${searchedUser.id}'),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 20.0),
-                                child: Container(
-                                  child: added
-                                      ? RaisedButton(
-                                          child: Text("Added"),
-                                          textColor: Colors.white,
-                                          color: Colors.grey,
-                                          onPressed: () => null,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0)),
-                                        )
-                                      : RaisedButton(
-                                          child: Text("Add"),
-                                          textColor: Colors.white,
-                                          color: Colors.green,
-                                          onPressed: () async {
-                                            User _owner =
-                                                User.copy(widget.user);
-                                            _owner.friend.add(searchedUser);
-                                            User _friend =
-                                                User.copy(searchedUser);
-                                            _friend.friend.add(_owner);
-
-                                            await userDataService.updateUser(
-                                                id: searchedUser.id,
-                                                user: _friend);
-                                            await userDataService.updateUser(
-                                                id: widget.user.id,
-                                                user: _owner);
-
-                                            showDialog<void>(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title:
-                                                      Text('Succcess Message'),
-                                                  content: const Text(
-                                                      'Added Successfully.'),
-                                                  actions: <Widget>[
-                                                    FlatButton(
-                                                      child: Text('Ok'),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          added = true;
-                                                        });
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          },
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0)),
-                                        ),
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  InfoTitle('Email: ${searchedUser.email}'),
+                                  InfoTitle(searchedUser.username == null
+                                      ? 'Username: -'
+                                      : 'Username: ${searchedUser.username}'),
+                                  InfoTitle(searchedUser.gender == null
+                                      ? 'Gender: -'
+                                      : 'Gender: ${searchedUser.gender}'),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      )
-                    : Center(
-                        child: Text(
-                          "User does not exist",
-                          style: TextStyle(color: Colors.red),
                         ),
-                      ),
-            ],
-          ),
-        ),
-      ],
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 20.0, horizontal: 70.0),
+                          child: Container(
+                            child: added
+                                ? RaisedButton(
+                                    child: Text("Added"),
+                                    textColor: Colors.white,
+                                    color: Colors.grey,
+                                    onPressed: () => null,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                  )
+                                : RaisedButton(
+                                    child: Text("Add"),
+                                    textColor: Colors.white,
+                                    color: Colors.green,
+                                    onPressed: () => addFriend(),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Center(
+                    child: Text(
+                      "User does not exist",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+        ],
+      ),
     );
   }
 
   PreferredSize buildTab() {
     return PreferredSize(
-      preferredSize: Size(10.0, 5.0),
-      child: TabBar(indicatorColor: Colors.purple, tabs: [
-        buildTabBarItem(
-            ExactAssetImage('assets/images/contact_book.png'), "Friend List"),
-        buildTabBarItem(
-            ExactAssetImage('assets/images/search_icon.png'), "Email")
-      ]),
+      preferredSize: Size.fromHeight(kToolbarHeight + 30.0),
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 20.0,
+          ),
+          TabBar(
+            indicatorColor: Colors.purple,
+            tabs: [
+              buildTabBarItem(Icons.account_box, "Friend List"),
+              buildTabBarItem(Icons.search, "Email")
+            ],
+          )
+        ],
+      ),
     );
   }
 
-  Container buildTabBarItem(ExactAssetImage image, String title) {
+  Container buildTabBarItem(IconData icons, String title) {
     return Container(
       height: 58.0,
       child: Tab(
         child: Column(
           children: <Widget>[
-            Container(
-              width: 35.0,
-              height: 35.0,
-              margin: EdgeInsets.only(bottom: 5.0),
-              decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: key.currentState.brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.transparent,
-                  image: DecorationImage(
-                    image: image,
-                    fit: BoxFit.contain,
-                  )),
-            ),
+            Icon(icons, size: 35.0),
             Text(
               title,
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.orange,
               ),
             ),
           ],
@@ -342,8 +331,12 @@ class _FriendListState extends State<FriendList> {
               leading: ClipOval(
                 child: FadeInImage.assetNetwork(
                   fadeInCurve: Curves.bounceIn,
-                  placeholder: "assets/images/loading.gif",
-                  image: widget.user.friend[index].profilePic,
+                  placeholder: widget.user.friend[index].profilePic == null
+                      ? "assets/images/default_profile.png"
+                      : "assets/images/loading.gif",
+                  image: widget.user.friend[index].profilePic == null
+                      ? ""
+                      : '${widget.user.friend[index].profilePic}',
                   fit: BoxFit.contain,
                   width: 50.0,
                   height: 50.0,
@@ -385,12 +378,16 @@ class _FriendListState extends State<FriendList> {
                                     border: Border.all(
                                         width: 3, color: Colors.orange),
                                     image: DecorationImage(
-                                      image: NetworkImage(
-                                          '${widget.user.friend[index].profilePic}'),
+                                      image: widget.user.friend[index]
+                                                  .profilePic ==
+                                              null
+                                          ? AssetImage(
+                                              "assets/images/default_profile.png")
+                                          : NetworkImage(
+                                              '${widget.user.friend[index].profilePic}'),
                                       fit: BoxFit.cover,
                                     ),
                                   )),
-                              InfoTitle('ID: ${widget.user.friend[index].id}'),
                               InfoTitle(
                                   'Email: ${widget.user.friend[index].email}'),
                               InfoTitle(
@@ -399,6 +396,8 @@ class _FriendListState extends State<FriendList> {
                                   'Name: ${widget.user.friend[index].firstName} ${widget.user.friend[index].lastName}'),
                               InfoTitle(
                                   'Phone No.: ${widget.user.friend[index].phoneNum}'),
+                              InfoTitle(
+                                  'Gender: ${widget.user.friend[index].gender}'),
                             ],
                           ),
                         ),
@@ -437,11 +436,11 @@ class _FriendListState extends State<FriendList> {
                           FlatButton(
                             child: const Text('Confirm'),
                             onPressed: () async {
+                              final result = await userDataService.updateUser(
+                                  id: widget.user.id, user: widget.user);
                               setState(() {
                                 widget.user.friend.removeAt(index);
                               });
-                              final result = await userDataService.updateUser(
-                                  id: widget.user.id, user: widget.user);
                               if (result != null) {
                                 showDialog<void>(
                                   context: context,
