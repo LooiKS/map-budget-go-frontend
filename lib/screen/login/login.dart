@@ -29,7 +29,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _validatePassword = false;
   final _email = TextEditingController();
   final _password = TextEditingController();
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -40,52 +39,27 @@ class _LoginPageState extends State<LoginPage> {
 
   void signInViaEmail(email, password) async {
     try {
-      final result = await widget.auth.signIn(email, password);
-
-      if (result != null) {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MyHomePage(
-                toggleBrightness: widget.toggleBrightness,
-                auth: widget.auth,
-              ),
-            ));
-      }
+      await widget.auth.signIn(email, password);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyHomePage(
+              toggleBrightness: widget.toggleBrightness,
+              auth: widget.auth,
+            ),
+          ));
+    } catch (error) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Error"),
-              content: Text(result.toString()),
+              title: Text("Login Error"),
+              content: Text(error.toString()),
               actions: [
                 FlatButton(
                   child: Text("Close"),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  },
-                )
-              ],
-            );
-          });
-    } catch (e) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error"),
-              content: Text(e.toString()),
-              actions: [
-                FlatButton(
-                  child: Text("Close"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    setState(() {
-                      _isLoading = false;
-                    });
                   },
                 )
               ],
@@ -95,15 +69,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signInViaGoogle() async {
-    print("google");
     try {
       final result = await widget.auth.signInViaGoogle();
 
-      print(result.uid);
       if (result != null) {
-        setState(() {
-          _isLoading = false;
-        });
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -113,21 +82,18 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ));
       }
-    } catch (e) {
+    } catch (error) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text("Error"),
-              content: Text(e.toString()),
+              content: Text(error.toString()),
               actions: [
                 FlatButton(
                   child: Text("Close"),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    setState(() {
-                      _isLoading = false;
-                    });
                   },
                 )
               ],

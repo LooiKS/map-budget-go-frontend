@@ -25,6 +25,14 @@ class MapScreenState extends State<ProfilePage>
   TextEditingController _lastName;
   TextEditingController _mobilePhone;
 
+  TextEditingController _oldPassword = TextEditingController();
+  TextEditingController _newPassword = TextEditingController();
+  TextEditingController _confirmPassword = TextEditingController();
+
+  bool _validateOldPassword = false;
+  bool _validateNewPassword = false;
+  bool _validateConfirmPassword = false;
+
   @override
   void initState() {
     _username = TextEditingController(text: ('${widget.user.username}'));
@@ -76,7 +84,6 @@ class MapScreenState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    const borderSide = BorderSide(width: 4.0);
     return Scaffold(
         body: Container(
       child: ListView(
@@ -142,16 +149,7 @@ class MapScreenState extends State<ProfilePage>
                                 children: <Widget>[
                                   Row(
                                     children: <Widget>[
-                                      RaisedButton(
-                                        child: Text("Reset Password"),
-                                        textColor: Colors.white,
-                                        color: Colors.red,
-                                        onPressed: () async {
-                                          await widget.auth.resetPassword(
-                                              "${widget.user.email}");
-                                        },
-                                      ),
-                                      // buildQRButton(context),
+                                      buildResetPasswordButton(context),
                                       Padding(
                                         padding: EdgeInsets.only(right: 15.0),
                                       ),
@@ -267,11 +265,12 @@ class MapScreenState extends State<ProfilePage>
     ));
   }
 
-  RaisedButton buildQRButton(BuildContext context) {
+  RaisedButton buildResetPasswordButton(BuildContext context) {
     return RaisedButton(
       child: Text("Reset Password"),
       textColor: Colors.white,
       color: Colors.red,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       onPressed: () {
         showDialog(
             context: context,
@@ -287,57 +286,165 @@ class MapScreenState extends State<ProfilePage>
                     child: Column(
                       children: <Widget>[
                         buildTitle("Reset Password"),
-                        InfoTitle('Old Password'),
-                        Padding(
-                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Flexible(
-                                  child: TextField(
-                                    controller: TextEditingController()
-                                      ..text = '${widget.user.id}',
-                                    enabled: false,
-                                  ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Old Password",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextField(
+                                  controller: _oldPassword,
+                                  style: new TextStyle(
+                                      color: Colors.black,
+                                      height: 1.0,
+                                      fontSize: 18),
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                      errorText: _validateOldPassword
+                                          ? 'The password field cannot be empty'
+                                          : null,
+                                      border: InputBorder.none,
+                                      fillColor: Color(0xfff3f3f4),
+                                      filled: true,
+                                      contentPadding:
+                                          const EdgeInsets.all(10.0)))
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "New Password",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextField(
+                                  controller: _newPassword,
+                                  style: new TextStyle(
+                                      color: Colors.black,
+                                      height: 1.0,
+                                      fontSize: 18),
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                      errorText: _validateNewPassword
+                                          ? 'The new password field cannot be empty'
+                                          : null,
+                                      border: InputBorder.none,
+                                      fillColor: Color(0xfff3f3f4),
+                                      filled: true,
+                                      contentPadding:
+                                          const EdgeInsets.all(10.0)))
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Confirm New Password",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextField(
+                                  controller: _confirmPassword,
+                                  style: new TextStyle(
+                                      color: Colors.black,
+                                      height: 1.0,
+                                      fontSize: 18),
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                      errorText: _validateConfirmPassword
+                                          ? 'The confirm password field cannot be empty'
+                                          : null,
+                                      border: InputBorder.none,
+                                      fillColor: Color(0xfff3f3f4),
+                                      filled: true,
+                                      contentPadding:
+                                          const EdgeInsets.all(10.0)))
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Container(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 10.0),
+                                  child: Container(
+                                      child: RaisedButton(
+                                    child: Text("Cancel"),
+                                    textColor: Colors.white,
+                                    color: Colors.red,
+                                    onPressed: () {
+                                      setState(() {});
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                  )),
                                 ),
-                              ],
-                            )),
-                        InfoTitle('New Password'),
-                        Padding(
-                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Flexible(
-                                  child: TextField(
-                                    controller: TextEditingController()
-                                      ..text = '${widget.user.id}',
-                                    enabled: false,
-                                  ),
+                                flex: 2,
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 10.0),
+                                  child: Container(
+                                      child: RaisedButton(
+                                    child: Text("Save"),
+                                    textColor: Colors.white,
+                                    color: Colors.green,
+                                    onPressed: () async {
+                                      if (_oldPassword.text.isEmpty ||
+                                          _newPassword.text.isEmpty ||
+                                          _confirmPassword.text.isEmpty) {
+                                        setState(() {
+                                          _validateOldPassword = true;
+                                          _validateNewPassword = true;
+                                          _validateConfirmPassword = true;
+                                        });
+                                      }
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                  )),
                                 ),
-                              ],
-                            )),
-                        InfoTitle('Confirm New Password'),
-                        Padding(
-                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Flexible(
-                                  child: TextField(
-                                    controller: TextEditingController()
-                                      ..text = '${widget.user.id}',
-                                    enabled: false,
-                                  ),
-                                ),
-                              ],
-                            )),
+                                flex: 2,
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ));
             });
       },
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
     );
   }
 

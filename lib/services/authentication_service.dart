@@ -90,21 +90,21 @@ class Auth implements BaseAuth {
       return user;
     } catch (error) {
       switch (error.code) {
-        case "SIGN_IN_CANCELLED":
+        case "ERROR_SIGN_IN_CANCELLED":
           errorMessage = null;
           break;
 
-        case "SIGN_IN_CURRENTLY_IN_PROGRESS":
+        case "ERROR_SIGN_IN_CURRENTLY_IN_PROGRESS":
           errorMessage = "A sign in process is currently in progress";
           break;
 
-        case "SIGN_IN_FAILED":
+        case "ERROR_SIGN_IN_FAILED":
           errorMessage =
               "The sign in attempt didn't succeed with the current account.";
           break;
 
         default:
-          errorMessage = "An undefined Error happened.";
+          errorMessage = "An undefined Error happened. Please try again later.";
       }
       return Future.error(errorMessage);
     }
@@ -137,6 +137,16 @@ class Auth implements BaseAuth {
           errorMessage = "An error happened. Please try again later!";
       }
       return Future.error(errorMessage);
+    }
+    return null;
+  }
+
+  Future<void> changePassword(String password) async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    try {
+      await user.updatePassword(password);
+    } catch (error) {
+      return Future.error(error.code);
     }
     return null;
   }
