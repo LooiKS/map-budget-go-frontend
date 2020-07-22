@@ -3,7 +3,6 @@ import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/friend_list/friend_list.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
-import 'package:budgetgo/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import '../user_setting/user_setting.dart';

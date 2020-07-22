@@ -1,5 +1,6 @@
 import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/profile/update_password.dart';
 import 'package:budgetgo/services/authentication_service.dart';
 import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +28,9 @@ class MapScreenState extends State<ProfilePage>
   TextEditingController _lastName;
   TextEditingController _mobilePhone;
 
-  TextEditingController _oldPassword = TextEditingController();
-  TextEditingController _newPassword = TextEditingController();
-  TextEditingController _confirmPassword = TextEditingController();
+  TextEditingController _currentEmail = TextEditingController();
 
-  bool _validateOldPassword = false;
-  bool _validateNewPassword = false;
-  bool _validateConfirmPassword = false;
+  bool _validateEmail = false;
 
   @override
   void initState() {
@@ -53,7 +50,6 @@ class MapScreenState extends State<ProfilePage>
 
   Future updateProfile() async {
     User user = User.copy(widget.user);
-    print(user.friend[0].id);
     user.username = _username.text;
     user.firstName = _firstName.text;
     user.lastName = _lastName.text;
@@ -274,178 +270,11 @@ class MapScreenState extends State<ProfilePage>
       color: Colors.red,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       onPressed: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  child: Container(
-                    height: 450.0,
-                    width: 500.0,
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      children: <Widget>[
-                        buildTitle("Reset Password"),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Old Password",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextField(
-                                  controller: _oldPassword,
-                                  style: new TextStyle(
-                                      color: Colors.black,
-                                      height: 1.0,
-                                      fontSize: 18),
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                      errorText: _validateOldPassword
-                                          ? 'The password field cannot be empty'
-                                          : null,
-                                      border: InputBorder.none,
-                                      fillColor: Color(0xfff3f3f4),
-                                      filled: true,
-                                      contentPadding:
-                                          const EdgeInsets.all(10.0)))
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "New Password",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextField(
-                                  controller: _newPassword,
-                                  style: new TextStyle(
-                                      color: Colors.black,
-                                      height: 1.0,
-                                      fontSize: 18),
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                      errorText: _validateNewPassword
-                                          ? 'The new password field cannot be empty'
-                                          : null,
-                                      border: InputBorder.none,
-                                      fillColor: Color(0xfff3f3f4),
-                                      filled: true,
-                                      contentPadding:
-                                          const EdgeInsets.all(10.0)))
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Confirm New Password",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextField(
-                                  controller: _confirmPassword,
-                                  style: new TextStyle(
-                                      color: Colors.black,
-                                      height: 1.0,
-                                      fontSize: 18),
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                      errorText: _validateConfirmPassword
-                                          ? 'The confirm password field cannot be empty'
-                                          : null,
-                                      border: InputBorder.none,
-                                      fillColor: Color(0xfff3f3f4),
-                                      filled: true,
-                                      contentPadding:
-                                          const EdgeInsets.all(10.0)))
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Container(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 10.0),
-                                  child: Container(
-                                      child: RaisedButton(
-                                    child: Text("Cancel"),
-                                    textColor: Colors.white,
-                                    color: Colors.red,
-                                    onPressed: () {
-                                      setState(() {});
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                  )),
-                                ),
-                                flex: 2,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 10.0),
-                                  child: Container(
-                                      child: RaisedButton(
-                                    child: Text("Save"),
-                                    textColor: Colors.white,
-                                    color: Colors.green,
-                                    onPressed: () async {
-                                      if (_oldPassword.text.isEmpty ||
-                                          _newPassword.text.isEmpty ||
-                                          _confirmPassword.text.isEmpty) {
-                                        setState(() {
-                                          _validateOldPassword = true;
-                                          _validateNewPassword = true;
-                                          _validateConfirmPassword = true;
-                                        });
-                                      }
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                  )),
-                                ),
-                                flex: 2,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ));
-            });
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UpdatePasswordPage(
+                    email: widget.user.email, auth: widget.auth)));
       },
     );
   }
@@ -582,25 +411,6 @@ class MapScreenState extends State<ProfilePage>
           _status = false;
         });
       },
-    );
-  }
-}
-
-class FixedFieldValue extends StatelessWidget {
-  const FixedFieldValue(this.value);
-  final value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      child: Padding(
-        padding: EdgeInsets.only(right: 10.0),
-        child: TextField(
-          controller: TextEditingController()..text = value,
-          enabled: false,
-        ),
-      ),
-      flex: 2,
     );
   }
 }

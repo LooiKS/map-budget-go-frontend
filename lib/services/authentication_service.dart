@@ -144,6 +144,7 @@ class Auth implements BaseAuth {
   Future<void> changePassword(String password) async {
     FirebaseUser user = await _firebaseAuth.currentUser();
     try {
+      // user.
       await user.updatePassword(password);
     } catch (error) {
       return Future.error(error.code);
