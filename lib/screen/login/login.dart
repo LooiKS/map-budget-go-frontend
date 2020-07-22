@@ -1,8 +1,6 @@
-import 'package:budgetgo/model/user.dart';
-import 'package:budgetgo/screen/login/password_reset.dart';
+import 'package:budgetgo/screen/login/forgot_password.dart';
 import 'package:budgetgo/screen/register/register.dart';
 import 'package:budgetgo/model/base_auth.dart';
-import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -13,12 +11,7 @@ import '../home_page/home_page.dart';
 class LoginPage extends StatefulWidget {
   final toggleBrightness;
   final BaseAuth auth;
-  final String title;
-  LoginPage(
-      {Key key,
-      this.title = 'User Settings',
-      @required this.toggleBrightness,
-      this.auth})
+  LoginPage({Key key, @required this.toggleBrightness, this.auth})
       : super(key: key);
 
   @override
@@ -28,8 +21,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _validateEmail = false;
   bool _validatePassword = false;
-  final _email = TextEditingController();
-  final _password = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
 
   @override
   void dispose() {
@@ -39,36 +32,36 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signInViaEmail(email, password) async {
-    try {
-      showDialog(
-          context: context,
-          builder: (_) => Dialog(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: CircularProgressIndicator()),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Authenticating...',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          )
-                        ],
-                      ),
+    showDialog(
+        context: context,
+        builder: (_) => Dialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Authenticating...',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        )
+                      ],
                     ),
-                  ],
-                ),
-              ));
+                  ),
+                ],
+              ),
+            ));
+    try {
       await widget.auth.signIn(email, password);
       Navigator.pushReplacement(
           context,
@@ -79,22 +72,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ));
     } catch (error) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Login Error"),
-              content: Text(error.toString()),
-              actions: [
-                FlatButton(
-                  child: Text("Close"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
+      _showErrorDialog(error);
     }
   }
 
@@ -113,22 +91,7 @@ class _LoginPageState extends State<LoginPage> {
             ));
       }
     } catch (error) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error"),
-              content: Text(error.toString()),
-              actions: [
-                FlatButton(
-                  child: Text("Close"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
+      _showErrorDialog(error);
     }
   }
 
@@ -156,38 +119,69 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Widget _passwordEntryField(String title) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SingleChildScrollView(
+            child: Container(
+      alignment: Alignment.center,
+      height: MediaQuery.of(context).size.height,
+      child: Stack(
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          Container(
+            alignment: Alignment.topCenter,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 125,
+                ),
+                _title(),
+                SizedBox(
+                  height: 50,
+                ),
+                _emailPasswordWidget(),
+                SizedBox(
+                  height: 20,
+                ),
+                _submitButton(),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  alignment: Alignment.centerRight,
+                  child: _buildForgotPassword(context),
+                ),
+                _divider(),
+                _googleFacebookLogin(),
+                SizedBox(
+                  height: 5,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: SizedBox(),
+                ),
+              ],
+            ),
           ),
-          SizedBox(
-            height: 10,
+          Align(
+            alignment: Alignment.topCenter,
+            child: _createAccountLabel(),
           ),
-          TextField(
-              controller: _password,
-              style:
-                  new TextStyle(color: Colors.black, height: 1.0, fontSize: 18),
-              obscureText: true,
-              decoration: InputDecoration(
-                  errorText: _validatePassword
-                      ? 'The password field cannot be empty'
-                      : null,
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true,
-                  contentPadding: const EdgeInsets.all(10.0)))
+          Positioned(
+              top: -MediaQuery.of(context).size.height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              child: BezierContainer())
         ],
       ),
-    );
+    )));
   }
 
-  Widget _emailEntryField(String title) {
+  Container _formEntryField(
+      {String title,
+      TextEditingController controller,
+      bool validate,
+      String errorText}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -201,12 +195,12 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
-              controller: _email,
+              controller: controller,
               style:
                   new TextStyle(color: Colors.black, height: 1.0, fontSize: 18),
+              obscureText: title == "Password" ? true : false,
               decoration: InputDecoration(
-                  errorText:
-                      _validateEmail ? 'The email field cannot be empty' : null,
+                  errorText: validate ? '$errorText' : null,
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
                   filled: true,
@@ -226,7 +220,8 @@ class _LoginPageState extends State<LoginPage> {
           _email.text.isEmpty ? _validateEmail = true : _validateEmail = false;
         });
 
-        signInViaEmail(_email.text, _password.text);
+        if (_email.text.isNotEmpty && _password.text.isNotEmpty)
+          signInViaEmail(_email.text, _password.text);
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -339,8 +334,16 @@ class _LoginPageState extends State<LoginPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _emailEntryField("Email"),
-        _passwordEntryField("Password"),
+        _formEntryField(
+            title: "Email",
+            controller: _email,
+            errorText: 'The email field cannot be empty',
+            validate: _validateEmail),
+        _formEntryField(
+            title: "Password",
+            controller: _password,
+            errorText: "The password field cannot be empty",
+            validate: _validatePassword),
       ],
     );
   }
@@ -378,74 +381,40 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: SingleChildScrollView(
-            child: Container(
-      alignment: Alignment.center,
-      height: MediaQuery.of(context).size.height,
-      child: Stack(
-        children: <Widget>[
-          Container(
-            alignment: Alignment.topCenter,
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 125,
-                ),
-                _title(),
-                SizedBox(
-                  height: 50,
-                ),
-                _emailPasswordWidget(),
-                SizedBox(
-                  height: 20,
-                ),
-                _submitButton(),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PasswordReset(
-                                  toggleBrightness: widget.toggleBrightness,
-                                  auth: widget.auth,
-                                ))),
-                    child: Text('Forgot Password ?',
-                        style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500)),
-                  ),
-                ),
-                _divider(),
-                _googleFacebookLogin(),
-                SizedBox(
-                  height: 5,
-                ),
-                Expanded(
-                  flex: 2,
-                  child: SizedBox(),
-                ),
-              ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: _createAccountLabel(),
-          ),
-          Positioned(
-              top: -MediaQuery.of(context).size.height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer())
-        ],
-      ),
-    )));
+  Future _showErrorDialog(error) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Login Error"),
+            content: Text(error.toString()),
+            actions: [
+              FlatButton(
+                child: Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  GestureDetector _buildForgotPassword(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PasswordReset(
+                    toggleBrightness: widget.toggleBrightness,
+                    auth: widget.auth,
+                  ))),
+      child: Text('Forgot Password ?',
+          style: TextStyle(
+              decoration: TextDecoration.underline,
+              fontSize: 14,
+              fontWeight: FontWeight.w500)),
+    );
   }
 }
