@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart' as httpParser;
 
 // RestService is a wrapper class implmenting for REST API calls.
 //  The class is implemented using the Singleton design pattern.
@@ -40,15 +41,17 @@ class RestService {
     throw response;
   }
 
-  Future postPhoto(String endpoint, {dynamic data}) async {
+  Future postPhoto(String endpoint, {List<int> data}) async {
+    print('hi');
     var request = http.MultipartRequest(
       "POST",
       Uri.parse('$baseUrl/$endpoint'),
     );
-    request.files.add(http.MultipartFile.fromBytes('avatar', data));
+    request.files.add(
+        http.MultipartFile.fromBytes('avatar', data, contentType: httpParser.MediaType('','')));
 
     final response = await request.send();
-
+    print(response.statusCode);
     if (response.statusCode == 200) {
       return {"status": "ok"};
     }

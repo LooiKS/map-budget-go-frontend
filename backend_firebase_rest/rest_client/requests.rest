@@ -1,66 +1,128 @@
-### Endpoints:
-# /quotes               (GET, POST)
-# /quotes/:id           (GET, PUT, PATCH, DELETE)
-# /quotes/:id/like      (PATCH)
-# /quotes/:id/dislike   (PATCH)
-# /like/:id             (PATCH)
-
 @baseUrl = http://localhost:5001/map-budget-go/us-central1/api
 
-### Example of endpoints for basic CRUD operations.
-#    Later in your submission, leave only the one that you actually use and remove others from this file.
+######################################### TRIPS #########################################
+### Get the list of trips
+GET {{baseUrl}}/trips
 
+###  Getting a trip for a given id
+GET {{baseUrl}}/trips/Miz8ghbGjlulbiFC0dva
 
-### Get the list of quotes
-GET {{baseUrl}}/quotes
-
-###  Getting a quote for a given id
-GET {{baseUrl}}/quotes/Miz8ghbGjlulbiFC0dva
-
-###  Add a new quote
-POST {{baseUrl}}/users/profile
+###  Add a new trip
+POST {{baseUrl}}/trips
 Content-Type: application/json
-
 {
-    "data": "This is a new quote",
-    "like" : 0,
-    "dislike" : 0
+
 }
 
-### Update a quote partly
-PATCH {{baseUrl}}/quotes/Miz8ghbGjlulbiFC0dva
+### Update a trip partly
+PATCH {{baseUrl}}/trips/Miz8ghbGjlulbiFC0dva
 Content-Type: application/json
-
 {
-        "like" : 10
+
 }
 
-###
-PATCH {{baseUrl}}/quotes/Miz8ghbGjlulbiFC0dva
+### Replace an existing trip entirely
+PUT {{baseUrl}}/trips/Miz8ghbGjlulbiFC0dva
 Content-Type: application/json
-
 {
-        "dislike" : 2
+
 }
 
-### Replace an existing quote entirely
-PUT {{baseUrl}}/quotes/Miz8ghbGjlulbiFC0dva
-Content-Type: application/json
+### Delete a trip
+DELETE {{baseUrl}}/trips/Miz8ghbGjlulbiFC0dva
 
+
+######################################### USERS #########################################
+### Get the list of users
+GET {{baseUrl}}/users
+
+###  Getting a user for a given id
+GET {{baseUrl}}/users/Miz8ghbGjlulbiFC0dva
+
+###  Add a new user
+POST {{baseUrl}}/users
+Content-Type: application/json
 {
-    "data": "Programming is not everything",
-    "like" : 5,
-    "dislike" : 5
+
 }
 
-### Delete a quote
-DELETE {{baseUrl}}/quotes/Miz8ghbGjlulbiFC0dva
+### Update a user partly
+PATCH {{baseUrl}}/users/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
 
-### Thumb up (or Like) - Update the 'like' attribute by inreasing by 1
-PATCH {{baseUrl}}/quotes/04EaOUARuw2ei0ECbLAQ/dislike
+}
 
-###
-PATCH {{baseUrl}}/like/04EaOUARuw2ei0ECbLAQ
+### Replace an existing user entirely
+PUT {{baseUrl}}/users/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
 
-###
-PATCH {{baseUrl}}/quotes/04EaOUARuw2ei0ECbLAQ?vote=dislike
+}
+
+### Delete a user
+DELETE {{baseUrl}}/users/Miz8ghbGjlulbiFC0dva
+
+
+######################################### EXPENSES #########################################
+### Get the list of expenses
+GET {{baseUrl}}/expenses
+
+###  Getting a expense for a given id
+GET {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
+
+###  Add a new expense
+POST {{baseUrl}}/expenses
+Content-Type: application/json
+{
+
+}
+
+### Update a expense partly
+PATCH {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Replace an existing expense entirely
+PUT {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Delete a expense
+DELETE {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
+
+
+######################################### SCHEDULES #########################################
+### Get the list of schedules
+GET {{baseUrl}}/schedules
+
+###  Getting a schedule for a given id
+GET {{baseUrl}}/schedules/Miz8ghbGjlulbiFC0dva
+
+###  Add a new schedule
+POST {{baseUrl}}/schedules
+Content-Type: application/json
+{
+
+}
+
+### Update a schedule partly
+PATCH {{baseUrl}}/schedules/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Replace an existing schedule entirely
+PUT {{baseUrl}}/schedules/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Delete a schedule
+DELETE {{baseUrl}}/schedules/Miz8ghbGjlulbiFC0dva
