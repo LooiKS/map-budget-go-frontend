@@ -4,6 +4,7 @@ import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
+import 'package:budgetgo/services/expense_data_service.dart';
 
 class ExpenseDetailsScreen extends StatefulWidget {
   final TripExpenses expense;
@@ -28,6 +29,7 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
   bool descStatus = false;
   bool categoryStatus = false;
   bool totalStatus = false;
+  ExpensesDataService expensesDataService = ExpensesDataService();
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +112,10 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
                                     onPressed: () {
                                       setState(() {
                                         if (title != null) {
-                                          widget.expense.title = title;
+                                          widget.expense.title = title.trim();
+                                          expensesDataService.updateExpense(
+                                              widget.expense.id,
+                                              widget.expense);
                                         }
                                         titleStatus = false;
                                         buildSaveDialog(context);
@@ -177,7 +182,11 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
                                     onPressed: () {
                                       setState(() {
                                         if (description != null) {
-                                          widget.expense.desc = description;
+                                          widget.expense.desc =
+                                              description.trim();
+                                          expensesDataService.updateExpense(
+                                              widget.expense.id,
+                                              widget.expense);
                                         }
                                         descStatus = false;
                                         buildSaveDialog(context);
@@ -282,6 +291,9 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
                                       setState(() {
                                         if (_categoty != null) {
                                           widget.expense.category = _categoty;
+                                          expensesDataService.updateExpense(
+                                              widget.expense.id,
+                                              widget.expense);
                                         }
                                         categoryStatus = false;
                                         buildSaveDialog(context);
@@ -349,6 +361,9 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
                                       setState(() {
                                         if (total != null) {
                                           widget.expense.amount = total;
+                                          expensesDataService.updateExpense(
+                                              widget.expense.id,
+                                              widget.expense);
                                         }
                                         totalStatus = false;
                                         buildSaveDialog(context);
@@ -426,6 +441,9 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
                                             setState(() {
                                               widget.expense.sharedBy
                                                   .removeAt(index);
+                                              expensesDataService.updateExpense(
+                                                  widget.expense.id,
+                                                  widget.expense);
                                             });
                                             Navigator.pop(context);
                                           },

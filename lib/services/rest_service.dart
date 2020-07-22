@@ -21,6 +21,9 @@ class RestService {
   static const String baseUrl =
       'http://10.0.2.2:5001/map-budget-go/us-central1/api';
   // 'https://us-central1-map-budget-go.cloudfunctions.net/api';
+  // 'http://127.0.0.1:5001/map-budget-go/us-central1/api';
+  // 'http://10.0.2.2:5001/map-budget-go/us-central1/api';
+  // 'https://us-central1-map-budget-go.cloudfunctions.net/api';
 
   Future get(String endpoint) async {
     final response = await http.get('$baseUrl/$endpoint');
@@ -34,7 +37,6 @@ class RestService {
   Future post(String endpoint, {dynamic data}) async {
     final response = await http.post('$baseUrl/$endpoint',
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(data));
-
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
     }
@@ -47,8 +49,8 @@ class RestService {
       "POST",
       Uri.parse('$baseUrl/$endpoint'),
     );
-    request.files.add(
-        http.MultipartFile.fromBytes('avatar', data, contentType: httpParser.MediaType('','')));
+    request.files.add(http.MultipartFile.fromBytes('avatar', data,
+        contentType: httpParser.MediaType('', '')));
 
     final response = await request.send();
     print(response.statusCode);

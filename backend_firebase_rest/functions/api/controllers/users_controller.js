@@ -65,26 +65,37 @@ router.post("/profile", function (req, res, next) {
 router.get("/", async (req, res, next) => {
   try {
     const result = await usersModel.get();
+
+    if (req.query.email != null) {
+      for (var i = 0; i < result.length; i++) {
+        if (result[i].email == req.query.email) {
+          for (var j = 0; j < result[i].friend.length; j++) {
+            const friendResult = await usersModel.getById(result[i].friend[j]);
+            friendResult.friend = [];
+            result[i].friend[j] = friendResult;
+          }
+          return res.json(result[i]);
+        }
+      }
+      return res.json(null);
+    }
+
     return res.json(result);
   } catch (e) {
     return next(e);
   }
 });
 
-// Get one user
+// Get one user by id
 router.get("/:id", async (req, res, next) => {
   try {
     const result = await usersModel.getById(req.params.id);
     if (!result) return res.sendStatus(404);
 
-    console.log(result.friend);
-
     for (var i = 0; i < result.friend.length; i++) {
       const friendResult = await usersModel.getById(result.friend[i]);
       friendResult.friend = [];
-      console.log(friendResult);
       result.friend[i] = friendResult;
-      console.log(result.friend[i]);
     }
 
     return res.json(result);

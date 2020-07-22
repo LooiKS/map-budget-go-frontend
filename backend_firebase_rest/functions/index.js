@@ -15,12 +15,14 @@ const db = require("./api/database");
 //     extended: false,
 //   })
 // );
+const expensesRoute = require("./api/controllers/expenses_controller");
 
 app.use(express.json());
 app.use("/todos", todosRouter);
 app.use("/schedules", schedulesRouter);
 app.use("/users", usersRouter);
 app.use("/trips", tripsRouter);
+app.use("/expenses", expensesRoute);
 
 // create user when user is signing up
 exports.register = functions.auth.user().onCreate((user, context) => {

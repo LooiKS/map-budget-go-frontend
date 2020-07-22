@@ -58,7 +58,7 @@ router.patch("/:id", async (req, res, next) => {
     // Merge existing fields with the ones to be updated
     Object.keys(data).forEach((key) => (doc[key] = data[key]));
 
-    const updateResult = await schedulesModel.update(id, doc);
+    const updateResult = await tripsModel.update(id, doc);
     if (!updateResult) return res.sendStatus(404);
 
     return res.json(doc);
@@ -73,7 +73,7 @@ router.put("/:id", async (req, res, next) => {
     const updateResult = await tripsModel.update(req.params.id, req.body);
     if (!updateResult) return res.sendStatus(404);
 
-    const result = await schedulesModel.getById(req.params.id);
+    const result = await tripsModel.getById(req.params.id);
     return res.json(result);
   } catch (e) {
     return next(e);

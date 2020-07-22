@@ -102,124 +102,60 @@ class _AddMemberState extends State<AddMember> {
         _backButton();
         return new Future(() => false);
       },
-      child: DefaultTabController(
-        length: 2,
-        initialIndex: 0,
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            leading: IconButton(
-              onPressed: () => _backButton(),
-              icon: Icon(Icons.arrow_back),
-            ),
-            title: Text(
-              "Add Member",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            bottom: buildTab(),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () => _backButton(),
+            icon: Icon(Icons.arrow_back),
           ),
-          body: buildTabBarView(context),
+          title: Text(
+            "Add Member",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-    );
-  }
-
-  TabBarView buildTabBarView(BuildContext context) {
-    return TabBarView(
-          children: <Widget>[
-            Container(
-              child: Column(
-                children: <Widget>[
-                  buildSearchBar(context),
-                  if (_selectedMember.length > 0)
-                    Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              buildSearchBar(context),
+              if (_selectedMember.length > 0)
+                Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child: Text(
+                          "Selected: ${_selectedMember.length}",
+                          style: TextStyle(
+                              color: Colors.green, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      ButtonBar(
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Text(
-                              "Selected: ${_selectedMember.length}",
-                              style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          ButtonBar(
-                            children: <Widget>[
-                              buildSaveCancelBtn("Save"),
-                              buildSaveCancelBtn("Cancel"),
-                            ],
-                          ),
+                          buildSaveCancelBtn("Save"),
+                          buildSaveCancelBtn("Cancel"),
                         ],
                       ),
-                    ),
-                  buildFriendList(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 2.0),
-                    child: Text(
-                      "Total Friend: ${_friendList.length}",
-                      style: TextStyle(color: Colors.green),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              color: Colors.blue,
-              child: Center(child: Text("Call Tab")),
-            ),
-          ],
-        );
-  }
-
-  PreferredSize buildTab() {
-    return PreferredSize(
-            preferredSize: Size(10.0, 55.0),
-            child: TabBar(indicatorColor: Colors.purple, tabs: [
-              buildTabBarItem(
-                  ExactAssetImage('assets/images/contact_book.png'),
-                  "Friend List"),
-              buildTabBarItem(
-                  ExactAssetImage('assets/images/search_icon.png'),
-                  "ID/Phone No.")
-            ]),
-          );
-  }
-
-  Container buildTabBarItem(ExactAssetImage image, String title) {
-    return Container(
-      height: 58.0,
-      child: Tab(
-        child: Column(
-          children: <Widget>[
-            Container(
-              width: 35.0,
-              height: 35.0,
-              margin: EdgeInsets.only(bottom: 5.0),
-              decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: key.currentState.brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.transparent,
-                  image: DecorationImage(
-                    image: image,
-                    fit: BoxFit.contain,
-                  )),
-            ),
-            Text(
-              title,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ],
+                    ],
+                  ),
+                ),
+              buildFriendList(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 2.0),
+                child: Text(
+                  "Total Friend: ${_friendList.length}",
+                  style: TextStyle(color: Colors.green),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
   }
+
 
   Container buildSearchBar(BuildContext context) {
     return Container(
