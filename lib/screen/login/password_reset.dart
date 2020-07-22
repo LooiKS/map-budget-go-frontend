@@ -16,7 +16,6 @@ class PasswordReset extends StatefulWidget {
 class _PasswordResetState extends State<PasswordReset> {
   bool _validateEmail = false;
   final _email = TextEditingController();
-  final _password = TextEditingController();
 
   @override
   void dispose() {

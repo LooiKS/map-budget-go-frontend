@@ -59,7 +59,7 @@ class User {
           username: json["username"],
           password: json["password"],
           isChecked: json["isChecked"] == "true" ? true : false,
-          // friend: json["friend"].map<User>((f) => User.fromJson(f)).toList(),
+          friend: json["friend"].map<User>((f) => User.fromJson(f)).toList(),
         );
 
   String get _id => this.id;

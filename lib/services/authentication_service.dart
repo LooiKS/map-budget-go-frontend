@@ -141,13 +141,29 @@ class Auth implements BaseAuth {
     return null;
   }
 
-  Future<void> changePassword(String password) async {
+  Future<void> changePassword(String oldPassword, String newPassword) async {
     FirebaseUser user = await _firebaseAuth.currentUser();
+
     try {
-      // user.
-      await user.updatePassword(password);
+     await user.reauthenticateWithCredential(EmailAuthProvider.getCredential(
+          email: user.email, password: oldPassword));
+      await user.updatePassword(newPassword);
     } catch (error) {
-      return Future.error(error.code);
+      switch (error.code) {
+        case "ERROR_WEAK_PASSWORD":
+          errorMessage =
+              "The given password is invalid. Password should be at least 6 characters.";
+          break;
+
+        case "ERROR_WRONG_PASSWORD":
+          errorMessage = "The old password is not match.";
+          break;
+
+        default:
+          errorMessage = "An error happened. Please try again later!";
+      }
+
+      return Future.error(errorMessage);
     }
     return null;
   }

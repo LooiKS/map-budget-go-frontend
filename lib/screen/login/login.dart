@@ -349,27 +349,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> _loginErrorAlert(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login Error'),
-          content: const Text(
-              'The email and password are not matched. Please try again'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
