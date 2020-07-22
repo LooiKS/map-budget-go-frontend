@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart' as httpParser;
 
 // RestService is a wrapper class implmenting for REST API calls.
 //  The class is implemented using the Singleton design pattern.
@@ -20,6 +21,10 @@ class RestService {
   static const String baseUrl =
       'http://10.0.2.2:5001/map-budget-go/us-central1/api';
       // 'https://us-central1-map-budget-go.cloudfunctions.net/api';
+  // 'https://us-central1-map-budget-go.cloudfunctions.net/api';
+  // 'http://127.0.0.1:5001/map-budget-go/us-central1/api';
+  // 'http://10.0.2.2:5001/map-budget-go/us-central1/api';
+  // 'https://us-central1-map-budget-go.cloudfunctions.net/api';
 
   Future get(String endpoint) async {
     final response = await http.get('$baseUrl/$endpoint');
@@ -35,6 +40,23 @@ class RestService {
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(data));
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
+    }
+    throw response;
+  }
+
+  Future postPhoto(String endpoint, {List<int> data}) async {
+    print('hi');
+    var request = http.MultipartRequest(
+      "POST",
+      Uri.parse('$baseUrl/$endpoint'),
+    );
+    request.files.add(http.MultipartFile.fromBytes('avatar', data,
+        contentType: httpParser.MediaType('', '')));
+
+    final response = await request.send();
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return {"status": "ok"};
     }
     throw response;
   }

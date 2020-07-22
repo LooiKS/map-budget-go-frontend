@@ -1,0 +1,142 @@
+@baseUrl = http://localhost:5001/map-budget-go/us-central1/api
+
+######################################### TRIPS #########################################
+### Get the list of trips
+GET {{baseUrl}}/trips
+
+###  Getting a trip for a given id
+GET {{baseUrl}}/trips/1
+
+###  Add a new trip
+POST {{baseUrl}}/trips
+Content-Type: application/json
+{
+
+}
+
+### Update a trip partly
+PATCH {{baseUrl}}/trips/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Replace an existing trip entirely
+PUT {{baseUrl}}/trips/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Delete a trip
+DELETE {{baseUrl}}/trips/Miz8ghbGjlulbiFC0dva
+
+
+######################################### USERS #########################################
+### Get the list of users
+GET {{baseUrl}}/users
+
+###  Getting a user for a given id
+GET {{baseUrl}}/users/Miz8ghbGjlulbiFC0dva
+
+###  Add a new user
+POST {{baseUrl}}/users
+Content-Type: application/json
+{
+
+}
+
+### Update a user partly
+PATCH {{baseUrl}}/users/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Replace an existing user entirely
+PUT {{baseUrl}}/users/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Delete a user
+DELETE {{baseUrl}}/users/Miz8ghbGjlulbiFC0dva
+
+
+######################################### EXPENSES #########################################
+### Get the list of expenses
+GET {{baseUrl}}/expenses
+
+###  Getting a expense for a given id
+GET {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
+
+###  Add a new expense
+POST {{baseUrl}}/expenses
+Content-Type: application/json
+{
+
+}
+
+### Update a expense partly
+PATCH {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Replace an existing expense entirely
+PUT {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Delete a expense
+DELETE {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
+
+
+######################################### SCHEDULES #########################################
+### Get the list of schedules
+GET {{baseUrl}}/schedules
+
+###  Getting a schedule for a given id
+GET {{baseUrl}}/schedules/1
+
+###  Add a new schedule
+POST {{baseUrl}}/schedules
+Content-Type: application/json
+
+{
+    "endDt": "2020-04-10 11:00:00.000",
+    "activityDesc": "Mountain at Vancouver",
+    "createdDt": "2020-03-08 08:00:00.000",
+    "activityTitle": "Rocky Mountains Summer Explorer",
+    "createdBy": "BG0003",
+    "startDt": "2020-04-10 08:00:00.000",
+    "id": "1"
+}
+
+### Update a schedule partly
+PATCH {{baseUrl}}/schedules/1
+Content-Type: application/json
+
+{
+    "endDt": "2020-04-10 11:00:00.000",
+    "activityDesc": "Mountain at Vancouver",
+    "createdDt": "2020-03-08 08:00:00.000",
+    "activityTitle": "Rocky Mountains Summer Explorer",
+    "createdBy": "BG0003",
+    "startDt": "2020-04-10 08:00:00.000",
+    "id": "1"
+}
+
+### Replace an existing schedule entirely
+PUT {{baseUrl}}/schedules/Miz8ghbGjlulbiFC0dva
+Content-Type: application/json
+{
+
+}
+
+### Delete a schedule
+DELETE {{baseUrl}}/schedules/6

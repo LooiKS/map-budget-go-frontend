@@ -16,19 +16,19 @@ class Trips {
   String currency;
   String status;
 
-  Trips({
-    this.tripID,
-    this.tripTitle,
-    this.tripDetail,
-    this.owner,
-    this.members,
-    this.startDt,
-    this.endDt,
-    this.schedules,
-    this.expenses,
-    this.createdDt,
-    this.currency,
-    this.status});
+  Trips(
+      {this.tripID,
+      this.tripTitle,
+      this.tripDetail,
+      this.owner,
+      this.members,
+      this.startDt,
+      this.endDt,
+      this.schedules,
+      this.expenses,
+      this.createdDt,
+      this.currency,
+      this.status});
 
   Trips.copy(Trips from)
       : this(
@@ -36,7 +36,7 @@ class Trips {
           tripTitle: from.tripTitle,
           tripDetail: from.tripDetail,
           owner: from.owner,
-          members:[...from.members],
+          members: [...from.members],
           startDt: from.startDt,
           endDt: from.endDt,
           schedules: from.schedules,
@@ -47,25 +47,19 @@ class Trips {
         );
   Trips.fromJson(Map<String, dynamic> json)
       : this(
-            tripID: json['id'],
-            tripTitle: json['data'],
-            tripDetail: json['like'],
-            owner: json['dislike'],
-            members: json['dislike'],
-            startDt: json['dislike'],
-            endDt: json['dislike'],
-            schedules: json['dislike'],
-            expenses: json['dislike'],
-            createdDt: json['dislike'],
-            currency: json['dislike'],
-            status: json['dislike'],
-            );
-
-
-
-
-
-    
+          tripID: json['id'],
+          tripTitle: json['data'],
+          tripDetail: json['like'],
+          owner: json['dislike'],
+          members: json['dislike'],
+          startDt: json['dislike'],
+          endDt: json['dislike'],
+          schedules: json['dislike'],
+          expenses: json['dislike'],
+          createdDt: json['dislike'],
+          currency: json['dislike'],
+          status: json['dislike'],
+        );
 
   toJson() => {
         "tripID": tripID,

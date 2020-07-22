@@ -212,6 +212,36 @@ const schedules = [
     createdBy: "BG0001",
     createdDt: "2020-03-11 12:00:00.000",
   },
+  {
+    id: "4",
+    startDt: "2020-04-12 08:00:00.000",
+    endDt: "2020-04-12 23:00:00.000",
+    activityTitle: "Banff National Park",
+    activityDesc:
+      "Chance to explore Banff at your own pace, as there are no formal activities planned. Established in 1885, Banff is the oldest national park in the country, and contains over 1600 kilometres (995 miles) of hiking trails.",
+    createdBy: "BG0001",
+    createdDt: "2020-03-11 12:00:00.000",
+  },
+  {
+    id: "5",
+    startDt: "2020-04-12 08:00:00.000",
+    endDt: "2020-04-12 23:00:00.000",
+    activityTitle: "Banff National Park",
+    activityDesc:
+      "Chance to explore Banff at your own pace, as there are no formal activities planned. Established in 1885, Banff is the oldest national park in the country, and contains over 1600 kilometres (995 miles) of hiking trails.",
+    createdBy: "BG0001",
+    createdDt: "2020-03-11 12:00:00.000",
+  },
+  {
+    id: "6",
+    startDt: "2020-04-12 08:00:00.000",
+    endDt: "2020-04-12 23:00:00.000",
+    activityTitle: "Banff National Park",
+    activityDesc:
+      "Chance to explore Banff at your own pace, as there are no formal activities planned. Established in 1885, Banff is the oldest national park in the country, and contains over 1600 kilometres (995 miles) of hiking trails.",
+    createdBy: "BG0001",
+    createdDt: "2020-03-11 12:00:00.000",
+  },
 ];
 
 const expenses = [
@@ -281,7 +311,7 @@ const trips = [
     owner: "BG0001",
     startDt: "2020-04-10 00:00:00.000",
     endDt: "2020-05-20 00:00:00.000",
-    schedules: ["1", "2"],
+    schedules: ["1", "2", "3", "4", "5"],
     expenses: ["1", "2"],
     createdDt: "2020-07-18 08:26:06.243592",
     currency: "JPY",
@@ -295,7 +325,7 @@ const trips = [
     owner: "BG0002",
     startDt: "2020-04-10 00:00:00.000",
     endDt: "2020-05-20 00:00:00.000",
-    schedules: ["1", "2"],
+    schedules: ["1", "2", "6"],
     expenses: ["1", "2"],
     createdDt: "2020-07-18 08:26:06.243592",
     currency: "USD",

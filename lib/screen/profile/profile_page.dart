@@ -4,7 +4,9 @@ import 'package:budgetgo/services/authentication_service.dart';
 import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../main.dart';
+import '../../services/rest_service.dart';
 
 class ProfilePage extends StatefulWidget {
   User user;
@@ -490,9 +492,19 @@ class MapScreenState extends State<ProfilePage>
                 CircleAvatar(
                   backgroundColor: Colors.red,
                   radius: 25.0,
-                  child: Icon(
-                    Icons.camera_alt,
+                  child: IconButton(
                     color: Colors.white,
+                    onPressed: () {
+                      ImagePicker()
+                          .getImage(source: ImageSource.gallery)
+                          .then((pickedFile) async {
+                        var bytes = await pickedFile.readAsBytes();
+                        RestService().postPhoto('users/profile', data: bytes);
+                      });
+                    },
+                    icon: Icon(
+                      Icons.camera_alt,
+                    ),
                   ),
                 )
               ],
