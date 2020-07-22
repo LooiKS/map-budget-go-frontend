@@ -1,6 +1,5 @@
 import 'package:budgetgo/model/base_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import '../../widget/bezier_container.dart';
 
 class PasswordReset extends StatefulWidget {

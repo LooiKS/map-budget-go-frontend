@@ -1,16 +1,14 @@
 import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/profile/update_password.dart';
-import 'package:budgetgo/services/authentication_service.dart';
 import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../main.dart';
 import '../../services/rest_service.dart';
 
 class ProfilePage extends StatefulWidget {
-  User user;
+  final User user;
   final BaseAuth auth;
   ProfilePage({this.user, this.auth});
 
@@ -21,16 +19,11 @@ class ProfilePage extends StatefulWidget {
 class MapScreenState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   bool _status = true;
-  final FocusNode myFocusNode = FocusNode();
-
   TextEditingController _username;
   TextEditingController _firstName;
   TextEditingController _lastName;
   TextEditingController _mobilePhone;
-
-  TextEditingController _currentEmail = TextEditingController();
-
-  bool _validateEmail = false;
+  int _genderValue = -1;
 
   @override
   void initState() {
@@ -38,22 +31,60 @@ class MapScreenState extends State<ProfilePage>
     _firstName = TextEditingController(text: ('${widget.user.firstName}'));
     _lastName = TextEditingController(text: ('${widget.user.lastName}'));
     _mobilePhone = TextEditingController(text: ('${widget.user.phoneNum}'));
+    if (widget.user.gender == null || widget.user.gender == "-1")
+      _genderValue = -1;
+    widget.user.gender == "Male" ? _genderValue = 0 : _genderValue = 1;
     super.initState();
   }
 
   @override
   void dispose() {
     // Clean up the controller when the Widget is disposed
-    myFocusNode.dispose();
+    _username.dispose();
+    _firstName.dispose();
+    _lastName.dispose();
+    _mobilePhone.dispose();
     super.dispose();
   }
 
   Future updateProfile() async {
+    if (!_status)
+      showDialog(
+          context: context,
+          builder: (_) => Dialog(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: CircularProgressIndicator()),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Loading...',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ));
     User user = User.copy(widget.user);
     user.username = _username.text;
     user.firstName = _firstName.text;
     user.lastName = _lastName.text;
     user.phoneNum = _mobilePhone.text;
+    if (_genderValue == null || _genderValue == -1) user.gender = "-1";
+    _genderValue == 1 ? user.gender = "Female" : user.gender = "Male";
     await userDataService.updateUser(id: widget.user.id, user: user);
 
     setState(() {
@@ -72,12 +103,19 @@ class MapScreenState extends State<ProfilePage>
               child: Text('Ok'),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
             ),
           ],
         );
       },
     );
+  }
+
+  void _handleRadioValueChanged(int value) {
+    setState(() {
+      this._genderValue = value;
+    });
   }
 
   @override
@@ -182,8 +220,6 @@ class MapScreenState extends State<ProfilePage>
                               Flexible(
                                 child: TextField(
                                   controller: _username,
-                                  // TextEditingController()
-                                  //   ..text = '${widget.user.username}',
                                   decoration: const InputDecoration(
                                     hintText: "Enter Your Username",
                                   ),
@@ -202,8 +238,6 @@ class MapScreenState extends State<ProfilePage>
                               Flexible(
                                 child: TextField(
                                   controller: _firstName,
-                                  // TextEditingController()
-                                  //   ..text = '${widget.user.firstName}',
                                   decoration: const InputDecoration(
                                     hintText: "Enter Your Name",
                                   ),
@@ -222,8 +256,6 @@ class MapScreenState extends State<ProfilePage>
                               Flexible(
                                 child: TextField(
                                   controller: _lastName,
-                                  // TextEditingController()
-                                  //   ..text = '${widget.user.lastName}',
                                   decoration: const InputDecoration(
                                     hintText: "Enter Your Name",
                                   ),
@@ -242,8 +274,6 @@ class MapScreenState extends State<ProfilePage>
                               Flexible(
                                 child: TextField(
                                   controller: _mobilePhone,
-                                  // TextEditingController()
-                                  //   ..text = '${widget.user.phoneNum}',
                                   decoration: const InputDecoration(
                                       hintText: "Enter Mobile Number"),
                                   enabled: !_status,
@@ -251,6 +281,41 @@ class MapScreenState extends State<ProfilePage>
                               ),
                             ],
                           )),
+                      InfoTitle('Gender'),
+                      Padding(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Radio(
+                                        value: 0,
+                                        groupValue: _genderValue,
+                                        onChanged: !_status
+                                            ? _handleRadioValueChanged
+                                            : null),
+                                    Text(
+                                      "Male",
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                    Radio(
+                                        value: 1,
+                                        groupValue: _genderValue,
+                                        onChanged: !_status
+                                            ? _handleRadioValueChanged
+                                            : null),
+                                    Text(
+                                      "Female",
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ])),
                       !_status ? _getActionButtons() : Container(),
                     ],
                   ),
@@ -307,7 +372,9 @@ class MapScreenState extends State<ProfilePage>
                   shape: BoxShape.circle,
                   border: Border.all(width: 3),
                   image: DecorationImage(
-                    image: NetworkImage('${widget.user.profilePic}'),
+                    image: widget.user.profilePic == null
+                        ? AssetImage("assets/images/default_profile.png")
+                        : NetworkImage('${widget.user.profilePic}'),
                     fit: BoxFit.cover,
                   ),
                 )),
@@ -344,7 +411,7 @@ class MapScreenState extends State<ProfilePage>
 
   Widget _getActionButtons() {
     return Padding(
-      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -380,8 +447,11 @@ class MapScreenState extends State<ProfilePage>
                     _firstName.text = widget.user.firstName;
                     _lastName.text = widget.user.lastName;
                     _mobilePhone.text = widget.user.phoneNum;
+                    if (widget.user.gender == null) _genderValue = -1;
+                    widget.user.gender == "Male"
+                        ? _genderValue = 0
+                        : _genderValue = 1;
                     _status = true;
-                    FocusScope.of(context).requestFocus(FocusNode());
                   });
                 },
                 shape: RoundedRectangleBorder(

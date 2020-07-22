@@ -11,7 +11,7 @@ const users = [
       "https://img01.cp.aliimg.com/imgextra/i3/832716541/T2DkrxXg4XXXXXXXXX_!!832716541.jpg",
     username: "angela0210",
     friend: ["BG0002", "BG0003", "BG0004"],
-    password: "123",
+    gender: "Female",
     isChecked: false,
   },
   {
@@ -24,7 +24,7 @@ const users = [
       "https://weilamanner.com/wp-content/uploads/2014/03/150164784159860977.jpg",
     username: "sulin002",
     friend: ["BG0001", "BG0003", "BG0004"],
-    password: "123",
+    gender: "Female",
     isChecked: false,
   },
   {
@@ -37,7 +37,7 @@ const users = [
       "https://weilamanner.com/wp-content/uploads/2014/03/IMG_4905-e1552467791516.jpg",
     username: "puinam1010",
     friend: ["BG0002", "BG0005", "BG0004"],
-    password: "123",
+    gender: "Female",
     isChecked: false,
   },
   {
@@ -50,7 +50,7 @@ const users = [
       "https://upload.wikimedia.org/wikipedia/commons/c/ce/180819_%EB%B8%94%EB%9E%99%ED%95%91%ED%81%AC_%ED%8C%AC%EC%8B%B8%EC%9D%B8%ED%9A%8C_%EC%BD%94%EC%97%91%EC%8A%A4_%EB%9D%BC%EC%9D%B4%EB%B8%8C%ED%94%84%EB%9D%BC%EC%9E%90_%EB%A6%AC%EC%82%AC.jpg",
     username: "lisa0131",
     friend: ["BG0005", "BG0006", "BG0007"],
-    password: "123",
+    gender: "Female",
     isChecked: false,
   },
   {
@@ -63,7 +63,7 @@ const users = [
       "https://weilamanner.com/wp-content/uploads/2017/03/Sixtycents.jpg",
     username: "sixtycent",
     friend: ["BG0006", "BG0003", "BG0004"],
-    password: "123",
+    gender: "Male",
     isChecked: false,
   },
   {
@@ -76,7 +76,7 @@ const users = [
       "https://weilamanner.com/wp-content/uploads/2014/03/770807231652212499.jpg",
     username: "doris002",
     friend: ["BG0002", "BG0003", "BG0004"],
-    password: "123",
+    gender: "Female",
     isChecked: false,
   },
   {
@@ -89,7 +89,7 @@ const users = [
       "https://weilamanner.com/wp-content/uploads/2014/03/770807231652212499.jpg",
     username: "doris002",
     friend: ["BG0002", "BG0003", "BG0004"],
-    password: "123",
+    gender: "Female",
     isChecked: false,
   },
   {
@@ -102,7 +102,7 @@ const users = [
       "https://weilamanner.com/wp-content/uploads/2014/03/55880639554661888.jpg",
     username: "rachel",
     friend: ["BG0009", "BG0007", "BG0005"],
-    password: "123",
+    gender: "Female",
     isChecked: false,
   },
   {
@@ -115,7 +115,7 @@ const users = [
       "https://weilamanner.com/wp-content/uploads/2014/03/399776249949001879.jpg",
     username: "jeffrey002",
     friend: ["BG0002", "BG0003", "BG0004"],
-    password: "123",
+    gender: "Male",
     isChecked: false,
   },
   {
@@ -128,7 +128,7 @@ const users = [
       "https://weilamanner.com/wp-content/uploads/2014/03/69565572756834353.jpg",
     username: "houdee11",
     friend: ["BG0002", "BG0003", "BG0004"],
-    password: "123",
+    gender: "Male",
     isChecked: false,
   },
   {
@@ -141,7 +141,7 @@ const users = [
       "https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fblogs-images.forbes.com%2Fjvchamary%2Ffiles%2F2016%2F03%2Fman_of_steel-1200x800.jpg",
     username: "obama123",
     friend: ["BG0002", "BG0003", "BG0004"],
-    password: "123",
+    gender: "Male",
     isChecked: false,
   },
   {
@@ -154,7 +154,7 @@ const users = [
       "https://i.pinimg.com/736x/cf/00/b4/cf00b49556d88fe8a85c7200e7b649b2.jpg",
     username: "obama123",
     friend: ["BG0002", "BG0003", "BG0004"],
-    password: "123",
+    gender: "Male",
     isChecked: false,
   },
   {
@@ -164,7 +164,7 @@ const users = [
     id: "otKRvT5CCQQFwthAs4LTXfVSYG22",
     isChecked: false,
     lastName: "Tan",
-    password: "Tan1997.",
+    gender: "Male",
     phoneNum: null,
     profilePic: null,
     username: null,
@@ -176,10 +176,26 @@ const users = [
     id: "mSG1K1DRD4TN8yJxsO03ebGgX5F3",
     isChecked: false,
     lastName: "Tan",
-    password: "Tan1997.",
+    gender: "Male",
     phoneNum: "0125138660",
     profilePic: null,
     username: "asment1997",
+  },
+  {
+    email: "kenchin0225@hotmail.com",
+    firstName: "kean",
+    friend: [
+      "mSG1K1DRD4TN8yJxsO03ebGgX5F3",
+      "otKRvT5CCQQFwthAs4LTXfVSYG22",
+      "b89Opz9EAigxf1TdUVdwzgIokQ42",
+    ],
+    id: "sdbIsjtyuhhvxjlzMfIWob0sp5c2",
+    isChecked: false,
+    lastName: "kean",
+    gender: "Male",
+    phoneNum: "0125138660",
+    profilePic: null,
+    username: "kean",
   },
 ];
 

@@ -40,6 +40,35 @@ class _LoginPageState extends State<LoginPage> {
 
   void signInViaEmail(email, password) async {
     try {
+      showDialog(
+          context: context,
+          builder: (_) => Dialog(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: CircularProgressIndicator()),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Loading...',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ));
       await widget.auth.signIn(email, password);
       Navigator.pushReplacement(
           context,

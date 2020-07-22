@@ -30,8 +30,15 @@ class _MyHomePageState extends State<MyHomePage> {
   User _user;
   String uid = "";
 
+  @override
+  void initState() {
+    currentPage = 0;
+    getUID();
+    super.initState();
+  }
+
   void getUID() async {
-    final user = (await widget.auth.getCurrentUser()).uid;
+    final user = await widget.auth.getCurrentUser();
     if (user == null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
@@ -43,15 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
           (_) => false);
     }
     setState(() {
-      uid = user;
+      uid = user.uid;
     });
-  }
-
-  @override
-  void initState() {
-    currentPage = 0;
-    getUID();
-    super.initState();
   }
 
   void onDrawerRowTapped(String choice) async {
@@ -138,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return uid == ""
-        ? Center(child: CircularProgressIndicator())
+        ? CircularProgressIndicator()
         : FutureBuilder<User>(
             future: userDataService.getUser(id: uid),
             builder: (context, snapshot) {
@@ -204,7 +204,11 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: 5,
                         ),
                         image: DecorationImage(
-                          image: NetworkImage('${_user.profilePic}'),
+                          image:
+                              _user.profilePic == null
+                                  ? AssetImage("assets/images/default_profile.png")
+                                  :
+                              NetworkImage('${_user.profilePic}'),
                           fit: BoxFit.cover,
                         ),
                       )),
@@ -250,7 +254,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   GestureDetector buildDrawerRow(IconData icon, String title,
       {bool showBadge = false}) {
-    int count = mockdata.where((c) => c.status == "progress").toList().length;
     return GestureDetector(
       onTap: () {
         onDrawerRowTapped(title);

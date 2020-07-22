@@ -14,7 +14,7 @@ final User mockOwnUser = User(
     profilePic:
         "https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fblogs-images.forbes.com%2Fjvchamary%2Ffiles%2F2016%2F03%2Fman_of_steel-1200x800.jpg",
     username: "obama123",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: [
       mockUser1,
@@ -38,7 +38,7 @@ final User mockUser1 = User(
     profilePic:
         "https://img01.cp.aliimg.com/imgextra/i3/832716541/T2DkrxXg4XXXXXXXXX_!!832716541.jpg",
     username: "angela0210",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: []);
 
@@ -51,7 +51,7 @@ final User mockUser2 = User(
     profilePic:
         "https://weilamanner.com/wp-content/uploads/2014/03/150164784159860977.jpg",
     username: "sulin002",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: []);
 
@@ -64,7 +64,7 @@ final User mockUser3 = User(
     profilePic:
         "https://weilamanner.com/wp-content/uploads/2014/03/IMG_4905-e1552467791516.jpg",
     username: "puinam1010",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: []);
 
@@ -77,7 +77,7 @@ final User mockUser4 = User(
     profilePic:
         "https://upload.wikimedia.org/wikipedia/commons/c/ce/180819_%EB%B8%94%EB%9E%99%ED%95%91%ED%81%AC_%ED%8C%AC%EC%8B%B8%EC%9D%B8%ED%9A%8C_%EC%BD%94%EC%97%91%EC%8A%A4_%EB%9D%BC%EC%9D%B4%EB%B8%8C%ED%94%84%EB%9D%BC%EC%9E%90_%EB%A6%AC%EC%82%AC.jpg",
     username: "lisa0131",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: []);
 
@@ -90,7 +90,7 @@ final User mockUser5 = User(
     profilePic:
         "https://weilamanner.com/wp-content/uploads/2017/03/Sixtycents.jpg",
     username: "sixtycent",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: []);
 
@@ -103,7 +103,7 @@ final User mockUser6 = User(
     profilePic:
         "https://media.malaymail.com/uploads/articles/2020/2020-01/1501_jennie_image.png",
     username: "jennie520",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: []);
 
@@ -116,7 +116,7 @@ final User mockUser7 = User(
     profilePic:
         "https://weilamanner.com/wp-content/uploads/2014/03/399776249949001879.jpg",
     username: "jeffrey002",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: []);
 
@@ -129,7 +129,7 @@ final User mockUser8 = User(
     profilePic:
         "https://weilamanner.com/wp-content/uploads/2014/03/69565572756834353.jpg",
     username: "houdee11",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: []);
 
@@ -142,7 +142,7 @@ final User mockUser9 = User(
     profilePic:
         "https://weilamanner.com/wp-content/uploads/2014/03/770807231652212499.jpg",
     username: "doris002",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: []);
 
@@ -155,7 +155,7 @@ final User mockUser10 = User(
     profilePic:
         "https://weilamanner.com/wp-content/uploads/2014/03/55880639554661888.jpg",
     username: "rachel",
-    password: "123",
+    gender: "123",
     isChecked: false,
     friend: []);
 

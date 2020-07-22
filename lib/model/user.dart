@@ -7,7 +7,7 @@ class User {
   String profilePic;
   String username;
   List<User> friend;
-  String password;
+  String gender;
   bool isChecked;
 
   User(
@@ -18,7 +18,7 @@ class User {
       this.email,
       this.profilePic,
       this.username,
-      this.password,
+      this.gender,
       this.isChecked,
       this.friend});
 
@@ -31,7 +31,7 @@ class User {
             email: from.email,
             profilePic: from.profilePic,
             username: from.username,
-            password: from.password,
+            gender: from.gender,
             isChecked: from.isChecked,
             friend: [...from.friend]);
 
@@ -44,7 +44,7 @@ class User {
         "profilePic": profilePic,
         "username": username,
         "friend": friend == null ? null : friend.map((f) => f.id).toList(),
-        "password": password,
+        "gender": gender,
         "isChecked": isChecked,
       };
 
@@ -57,7 +57,7 @@ class User {
           email: json["email"],
           profilePic: json["profilePic"],
           username: json["username"],
-          password: json["password"],
+          gender: json["gender"],
           isChecked: json["isChecked"] == "true" ? true : false,
           friend: json["friend"].map<User>((f) => User.fromJson(f)).toList(),
         );
@@ -70,7 +70,7 @@ class User {
   String get _profilePic => this.profilePic;
   String get _username => this.username;
   List<User> get _friend => this.friend;
-  String get _password => this.password;
+  String get _gender => this.gender;
   bool get _isChecked => this.isChecked;
 
   set _id(String newValue) => this.id = newValue;
@@ -80,6 +80,6 @@ class User {
   set _profilePic(String newValue) => this.profilePic = newValue;
   set _username(String newValue) => this.username = newValue;
   set _friend(List<User> newValue) => this.friend = newValue;
-  set _password(String newValue) => this.password = newValue;
+  set _gender(String newValue) => this.gender = newValue;
   set _isChecked(bool newValue) => this.isChecked = newValue;
 }
