@@ -1,4 +1,3 @@
-import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import '../../model/user.dart';
@@ -13,7 +12,6 @@ class FriendList extends StatefulWidget {
 
 class _FriendListState extends State<FriendList> {
   List<User> _friendList = [];
-
   TextEditingController _email = TextEditingController();
   bool searched = false;
   bool added = false;
@@ -21,6 +19,7 @@ class _FriendListState extends State<FriendList> {
 
   @override
   void initState() {
+    _friendList = widget.user.friend;
     super.initState();
   }
 
@@ -50,10 +49,12 @@ class _FriendListState extends State<FriendList> {
 
   Future addFriend() async {
     User _owner = User.copy(widget.user);
-    _owner.friend.add(searchedUser);
-    widget.user.friend.add(searchedUser);
     User _friend = User.copy(searchedUser);
-    _friend.friend.add(_owner);
+    setState(() {
+      _owner.friend.add(searchedUser);
+      _friend.friend.add(_owner);
+      _friendList.add(searchedUser);
+    });
 
     await userDataService.updateUser(id: searchedUser.id, user: _friend);
     await userDataService.updateUser(id: widget.user.id, user: _owner);
@@ -77,6 +78,37 @@ class _FriendListState extends State<FriendList> {
         );
       },
     );
+  }
+
+  Future confirmDeleteFriend(int index) async {
+    setState(() {
+      _friendList.removeAt(index);
+    });
+    final result =
+        await userDataService.updateUser(id: widget.user.id, user: widget.user);
+
+    if (result != null) {
+      print("delete");
+      print(result.friend);
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Update Message'),
+            content: const Text('Delete Successfully.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   void filterSearchResults(String query) {
@@ -111,152 +143,6 @@ class _FriendListState extends State<FriendList> {
         resizeToAvoidBottomPadding: false,
         appBar: buildTab(),
         body: buildTabBarView(context),
-      ),
-    );
-  }
-
-  TabBarView buildTabBarView(BuildContext context) {
-    return TabBarView(
-      children: <Widget>[
-        _buildFriendContainer(context),
-        _buildSearchEmail(context),
-      ],
-    );
-  }
-
-  Container _buildFriendContainer(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          buildSearchBar(context),
-          buildFriendList(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 2.0),
-            child: Text(
-              "Total Friend: ${widget.user.friend.length}",
-              style: TextStyle(color: Colors.green),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Container _buildSearchEmail(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              padding:
-                  const EdgeInsets.only(top: 6.0, left: 7, right: 7, bottom: 0),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 7.5 / 100,
-              child: TextField(
-                controller: _email,
-                decoration: InputDecoration(
-                  hintText: "Search Email",
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () => searchEmail(),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 2.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0))),
-                ),
-              ),
-            ),
-          ),
-          if (searched == true)
-            searchedUser != null
-                ? Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: Stack(fit: StackFit.loose, children: <Widget>[
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Container(
-                                    width: 140.0,
-                                    height: 140.0,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          width: 3, color: Colors.orange),
-                                      image: DecorationImage(
-                                        image: searchedUser.profilePic == null
-                                            ? AssetImage(
-                                                "assets/images/default_profile.png")
-                                            : NetworkImage(
-                                                '${searchedUser.profilePic}'),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )),
-                              ],
-                            ),
-                          ]),
-                        ),
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  InfoTitle('Email: ${searchedUser.email}'),
-                                  InfoTitle(searchedUser.username == null
-                                      ? 'Username: -'
-                                      : 'Username: ${searchedUser.username}'),
-                                  InfoTitle(searchedUser.gender == null
-                                      ? 'Gender: -'
-                                      : 'Gender: ${searchedUser.gender}'),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 20.0, horizontal: 70.0),
-                          child: Container(
-                            child: added
-                                ? RaisedButton(
-                                    child: Text("Added"),
-                                    textColor: Colors.white,
-                                    color: Colors.grey,
-                                    onPressed: () => null,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                  )
-                                : RaisedButton(
-                                    child: Text("Add"),
-                                    textColor: Colors.white,
-                                    color: Colors.green,
-                                    onPressed: () => addFriend(),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                  ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Center(
-                    child: Text(
-                      "User does not exist",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-        ],
       ),
     );
   }
@@ -300,6 +186,33 @@ class _FriendListState extends State<FriendList> {
     );
   }
 
+  TabBarView buildTabBarView(BuildContext context) {
+    return TabBarView(
+      children: <Widget>[
+        Tab(child: _buildFriendContainer(context)),
+        Tab(child: _buildSearchEmail(context)),
+      ],
+    );
+  }
+
+  Container _buildFriendContainer(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          buildSearchBar(context),
+          buildFriendList(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2.0),
+            child: Text(
+              "Total Friend: ${widget.user.friend.length}",
+              style: TextStyle(color: Colors.green),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Container buildSearchBar(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 6.0, left: 7, right: 7, bottom: 0),
@@ -324,19 +237,18 @@ class _FriendListState extends State<FriendList> {
 
   Expanded buildFriendList() {
     return Expanded(
-      flex: 1,
       child: ListView.builder(
           shrinkWrap: true,
           itemBuilder: (context, index) => ListTile(
               leading: ClipOval(
                 child: FadeInImage.assetNetwork(
                   fadeInCurve: Curves.bounceIn,
-                  placeholder: widget.user.friend[index].profilePic == null
+                  placeholder: _friendList[index].profilePic == null
                       ? "assets/images/default_profile.png"
                       : "assets/images/loading.gif",
-                  image: widget.user.friend[index].profilePic == null
+                  image: _friendList[index].profilePic == null
                       ? ""
-                      : '${widget.user.friend[index].profilePic}',
+                      : '${_friendList[index].profilePic}',
                   fit: BoxFit.contain,
                   width: 50.0,
                   height: 50.0,
@@ -344,133 +256,224 @@ class _FriendListState extends State<FriendList> {
               ),
               title: FlatButton(
                 child: SizedBox(
-                  width: double.infinity,
-                  child: widget.user.friend[index].username == ""
-                      ? Text(
-                          "${widget.user.friend[index].email}",
-                          style: TextStyle(fontSize: 16.0),
-                          textAlign: TextAlign.left,
-                        )
-                      : Text(
-                          "${widget.user.friend[index].username}",
-                          style: TextStyle(fontSize: 16.0),
-                          textAlign: TextAlign.left,
-                        ),
-                ),
+                    width: double.infinity,
+                    child: _friendList[index].username == ""
+                        ? _buildListTitleText(
+                            title: "${_friendList[index].email}", index: index)
+                        : _buildListTitleText(
+                            title: "${_friendList[index].username}",
+                            index: index)),
                 onPressed: () {
-                  showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Friend Info'),
-                        content: Container(
-                          height: 300.0,
-                          width: 500.0,
-                          padding: EdgeInsets.all(5.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                  width: 110.0,
-                                  height: 110.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        width: 3, color: Colors.orange),
-                                    image: DecorationImage(
-                                      image: widget.user.friend[index]
-                                                  .profilePic ==
-                                              null
-                                          ? AssetImage(
-                                              "assets/images/default_profile.png")
-                                          : NetworkImage(
-                                              '${widget.user.friend[index].profilePic}'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )),
-                              InfoTitle(
-                                  'Email: ${widget.user.friend[index].email}'),
-                              InfoTitle(
-                                  'Userame: ${widget.user.friend[index].username}'),
-                              InfoTitle(
-                                  'Name: ${widget.user.friend[index].firstName} ${widget.user.friend[index].lastName}'),
-                              InfoTitle(
-                                  'Phone No.: ${widget.user.friend[index].phoneNum}'),
-                              InfoTitle(
-                                  'Gender: ${widget.user.friend[index].gender}'),
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Ok'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                  _buildShowFriendInfo(context, index);
                 },
               ),
-              trailing: IconButton(
-                icon: Icon(Icons.delete),
-                color: Colors.red,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Delete Friend'),
-                        content: const Text(
-                            'This will delete the friend from your friend list.'),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: const Text('Cancel'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          FlatButton(
-                            child: const Text('Confirm'),
-                            onPressed: () async {
-                              final result = await userDataService.updateUser(
-                                  id: widget.user.id, user: widget.user);
-                              setState(() {
-                                widget.user.friend.removeAt(index);
-                              });
-                              if (result != null) {
-                                showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Update Message'),
-                                      content:
-                                          const Text('Delete Successfully.'),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('Ok'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                          )
-                        ],
-                      );
-                    },
-                  );
-                },
-              )),
-          itemCount: widget.user.friend.length),
+              trailing: _buildDeleteFriendButton(context, index)),
+          itemCount: _friendList.length),
+    );
+  }
+
+  Text _buildListTitleText({String title, int index}) {
+    return Text(
+      title,
+      style: TextStyle(fontSize: 16.0),
+      textAlign: TextAlign.left,
+    );
+  }
+
+  Future _buildShowFriendInfo(BuildContext context, int index) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Friend Info'),
+          content: Container(
+            width: 500.0,
+            padding: EdgeInsets.all(5.0),
+            child: Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                      width: 110.0,
+                      height: 110.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(width: 3, color: Colors.orange),
+                        image: DecorationImage(
+                          image: widget.user.friend[index].profilePic == null
+                              ? AssetImage("assets/images/default_profile.png")
+                              : NetworkImage(
+                                  '${widget.user.friend[index].profilePic}'),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  InfoTitle('Email: ${widget.user.friend[index].email}'),
+                  InfoTitle('Userame: ${widget.user.friend[index].username}'),
+                  InfoTitle(
+                      'Name: ${widget.user.friend[index].firstName} ${widget.user.friend[index].lastName}'),
+                  InfoTitle('Phone No.: ${widget.user.friend[index].phoneNum}'),
+                  InfoTitle('Gender: ${widget.user.friend[index].gender}'),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  IconButton _buildDeleteFriendButton(BuildContext context, int index) {
+    return IconButton(
+      icon: Icon(Icons.delete),
+      color: Colors.red,
+      onPressed: () {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Delete Friend'),
+              content: const Text(
+                  'This will delete the friend from your friend list.'),
+              actions: <Widget>[
+                _buildFlatButton(context: context, title: "Cancel"),
+                _buildFlatButton(
+                    context: context, title: "Confirm", index: index),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  FlatButton _buildFlatButton({BuildContext context, String title, int index}) {
+    return FlatButton(
+      child: Text('$title'),
+      onPressed: () async => title == "Cancel"
+          ? Navigator.of(context).pop()
+          : await confirmDeleteFriend(index),
+    );
+  }
+
+// --------------------------------- Search User By Email ------------------------------
+  Container _buildSearchEmail(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          _buildSearchEmailBar(context),
+          if (searched == true)
+            searchedUser != null
+                ? _buildUserSearched()
+                : Center(
+                    child: Text(
+                      "User does not exist",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+        ],
+      ),
+    );
+  }
+
+  Flexible _buildUserSearched() {
+    return Flexible(
+      child: ListView(
+        shrinkWrap: true,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 20.0),
+            child: Stack(fit: StackFit.loose, children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      width: 140.0,
+                      height: 140.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(width: 3, color: Colors.orange),
+                        image: DecorationImage(
+                          image: searchedUser.profilePic == null
+                              ? AssetImage("assets/images/default_profile.png")
+                              : NetworkImage('${searchedUser.profilePic}'),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ],
+              ),
+            ]),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 50.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                InfoTitle('Email: ${searchedUser.email}'),
+                InfoTitle(searchedUser.username == null
+                    ? 'Username: -'
+                    : 'Username: ${searchedUser.username}'),
+                InfoTitle(searchedUser.gender == null
+                    ? 'Gender: -'
+                    : 'Gender: ${searchedUser.gender}'),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 70.0),
+            child: Container(
+                child: added
+                    ? _buildAddUserButton(title: "Added", color: Colors.grey)
+                    : _buildAddUserButton(title: "Add", color: Colors.green)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  RaisedButton _buildAddUserButton({String title, Color color}) {
+    return RaisedButton(
+      child: Text("$title"),
+      textColor: Colors.white,
+      color: color,
+      onPressed: () => title == "Added" ? null : addFriend(),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+    );
+  }
+
+  Padding _buildSearchEmailBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: const EdgeInsets.only(top: 6.0, left: 7, right: 7, bottom: 0),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 7.5 / 100,
+        child: TextField(
+          controller: _email,
+          decoration: InputDecoration(
+            hintText: "Search Email",
+            suffixIcon: IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () => searchEmail(),
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -482,19 +485,17 @@ class InfoTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 15.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
         child: Row(
           mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                ),
-              ],
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.visible,
+              ),
             ),
           ],
         ));
