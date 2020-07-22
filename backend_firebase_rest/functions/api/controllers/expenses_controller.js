@@ -1,21 +1,21 @@
-const tripsModel = require("../models/trips_model");
+const expensesModel = require("../models/expenses_model");
 const express = require("express");
 const router = express.Router();
 
-// Get all trips
-router.get("/", async(req, res, next) => {
+// Get all expenses
+router.get("/", async (req, res, next) => {
     try {
-        const result = await tripsModel.get();
+        const result = await expensesModel.get();
         return res.json(result);
     } catch (e) {
         return next(e);
     }
 });
 
-// Get one todo
-router.get("/:id", async(req, res, next) => {
+// Get one expense
+router.get("/:id", async (req, res, next) => {
     try {
-        const result = await tripsModel.getById(req.params.id);
+        const result = await expensesModel.getById(req.params.id);
         if (!result) return res.sendStatus(404);
         return res.json(result);
     } catch (e) {
@@ -23,10 +23,10 @@ router.get("/:id", async(req, res, next) => {
     }
 });
 
-// Create a new todo
-router.post("/", async(req, res, next) => {
+// Create new expense
+router.post("/", async (req, res, next) => {
     try {
-        const result = await tripsModel.create(req.body);
+        const result = await expensesModel.create(req.body);
         if (!result) return res.sendStatus(409);
         return res.status(201).json(result);
     } catch (e) {
@@ -34,10 +34,10 @@ router.post("/", async(req, res, next) => {
     }
 });
 
-// Delete a todo
-router.delete("/:id", async(req, res, next) => {
+// Delete an expense
+router.delete("/:id", async (req, res, next) => {
     try {
-        const result = await tripsModel.delete(req.params.id);
+        const result = await expensesModel.delete(req.params.id);
         if (!result) return res.sendStatus(404);
         return res.sendStatus(200);
     } catch (e) {
@@ -45,20 +45,20 @@ router.delete("/:id", async(req, res, next) => {
     }
 });
 
-// Update a todo
-router.patch("/:id", async(req, res, next) => {
+// Update an expense
+router.patch("/:id", async (req, res, next) => {
     try {
         // return res.sendStatus(200);
         const id = req.params.id;
         const data = req.body;
 
-        const doc = await tripsModel.getById(id);
+        const doc = await expensesModel.getById(id);
         if (!doc) return res.sendStatus(404);
 
         // Merge existing fields with the ones to be updated
         Object.keys(data).forEach((key) => (doc[key] = data[key]));
 
-        const updateResult = await tripsModel.update(id, doc);
+        const updateResult = await expensesModel.update(id, doc);
         if (!updateResult) return res.sendStatus(404);
 
         return res.json(doc);
@@ -67,13 +67,13 @@ router.patch("/:id", async(req, res, next) => {
     }
 });
 
-// Replace a todo
-router.put("/:id", async(req, res, next) => {
+// Replace an expense
+router.put("/:id", async (req, res, next) => {
     try {
-        const updateResult = await tripsModel.update(req.params.id, req.body);
+        const updateResult = await expensesModel.update(req.params.id, req.body);
         if (!updateResult) return res.sendStatus(404);
 
-        const result = await tripsModel.getById(req.params.id);
+        const result = await expensesModel.getById(req.params.id);
         return res.json(result);
     } catch (e) {
         return next(e);

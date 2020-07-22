@@ -6,12 +6,14 @@ const schedulesRouter = require("./api/controllers/schedules_controller");
 const usersRouter = require("./api/controllers/users_controller");
 const tripsRouter = require("./api/controllers/trips_controller");
 const users_model = require("./api/models/users_model");
+const expensesRoute = require("./api/controllers/expenses_controller");
 
 app.use(express.json());
 app.use("/todos", todosRouter);
 app.use("/schedules", schedulesRouter);
 app.use("/users", usersRouter);
 app.use("/trips", tripsRouter);
+app.use("/expenses", expensesRoute);
 
 // create user when user is signing up
 exports.register = functions.auth.user().onCreate((user, context) => {

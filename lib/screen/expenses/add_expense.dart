@@ -1,10 +1,10 @@
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
+import 'package:budgetgo/services/expense_data_service.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   final List<TripExpenses> tripExpenses;
@@ -26,8 +26,9 @@ class AddExpenseScreenState extends State<AddExpenseScreen> {
     'Others'
   ];
   String _categoty = 'Accommodation';
-  String title, description, paidBy, shareWith;
+  String title, description;
   double total;
+  ExpensesDataService expensesDataService = ExpensesDataService();
 
   @override
   Widget build(BuildContext context) {
@@ -182,25 +183,21 @@ class AddExpenseScreenState extends State<AddExpenseScreen> {
                             child: new Text("Create"),
                             textColor: Colors.white,
                             color: Colors.green,
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState.validate()) {
-                                TripExpenses _expenses = new TripExpenses(
-                                  title,
-                                  description,
-                                  _categoty,
-                                  formatDate(
-                                      DateTime.now(), [yy, '-', M, '-', d]),
-                                  total,
-                                  widget.owner,
-                                  widget.owner,
-                                  widget.member,
+                                TripExpenses _expense = new TripExpenses(
+                                  title: title.trim(),
+                                  desc: description.trim(),
+                                  category: _categoty,
+                                  createdDt: DateTime.now(),
+                                  amount: total,
+                                  payBy: widget.owner,
+                                  createdBy: widget.owner,
+                                  sharedBy: widget.member,
                                 );
-                                // setState(() {
-                                //   widget.tripExpenses.add(
-                                //     _expenses,
-                                //   );
-                                // });
-                                Navigator.pop(context, _expenses);
+                                await expensesDataService
+                                    .createExpense(_expense);
+                                Navigator.pop(context, _expense);
                               }
                             },
                             shape: new RoundedRectangleBorder(

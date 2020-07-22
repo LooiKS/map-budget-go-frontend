@@ -4,7 +4,7 @@ import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/screen/expenses/expenses_details.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
-
+import 'package:budgetgo/services/expense_data_service.dart';
 import 'add_expense.dart';
 
 class ExpensesScreen extends StatefulWidget {
@@ -16,6 +16,7 @@ class ExpensesScreen extends StatefulWidget {
 }
 
 class ExpensesScreenState extends State<ExpensesScreen> {
+  ExpensesDataService expensesDataService = ExpensesDataService();
   void _navigateAddExpenses() async {
     TripExpenses returnData = await Navigator.push(
       context,
@@ -29,7 +30,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
     );
     if (returnData != null) {
       setState(() {
-        widget.trips.expenses.add(returnData);
+        // widget.trips.expenses.add(returnData);
       });
     }
   }
@@ -168,6 +169,8 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                               onPressed: () {
                                 setState(() {
                                   widget.trips.expenses.removeAt(index);
+                                  expensesDataService.deleteExpense(
+                                      widget.trips.expenses[index].id);
                                 });
                                 Navigator.pop(context);
                               },

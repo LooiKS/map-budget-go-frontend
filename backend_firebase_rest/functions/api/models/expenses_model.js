@@ -2,21 +2,54 @@ const database = require('../database');
 
 // Here, we are implementing the class with Singleton design pattern
 
-class TodoModel {
+class ExpensesModel {
     constructor() {
         if (this.instance) return this.instance;
-        TodoModel.instance = this;
+        ExpensesModel.instance = this;
     }
 
-    get() { return database.getList('todos') }
+    get() {
+        return database.getList('expenses');
+    }
 
-    getById(id) { return database.get('todos', id) }
+    getById(id) {
+        return database.get('expenses', id);
+    }
 
-    create(todo) { return database.create('todos', todo) }
+    async create(expense) {
+        var expense = await database.create("expenses", expense);
+        expense["createdBy"] = await database.get("users", expense["createdBy"]);
+        expense["payBy"] = await database.get("users", expense["payBy"]);
+        // var members = [];
+        // for (var i in expense["sharedBy"]) {
+        //     members.push(database.get("users", i));
+        // }
+        // expense["sharedBy"] = members;
+        for (var i = 0; i < expense["sharedBy"].length; i++) {
+            expense["sharedBy"][i] = database.get("users", expense["sharedBy"][i]);
+        }
+        return expense;
+    }
 
-    delete(id) { return database.delete('todos', id) }
+    delete(id) {
+        return database.delete('expenses', id);
+    }
 
-    update(id, todo) { return database.set('todos', id, todo) }
+    async update(id, expense) {
+        var expense = await database.set("expenses", id, expense);
+        // TODO: call users_model method instead of calling db
+        expense["createdBy"] = await database.get("users", expense["createdBy"]);
+        expense["payBy"] = await database.get("users", expense["payBy"]);
+        // var members = [];
+        // for (var i in expense["sharedBy"]) {
+        //     members.push(database.get("users", i));
+        // }
+        // expense["sharedBy"] = members;
+        for (var i = 0; i < expense["sharedBy"].length; i++) {
+            expense["sharedBy"][i] = await database.get("users", expense["sharedBy"][i]);
+        }
+        return expense;
+    }
 }
 
-module.exports = new TodoModel();
+module.exports = new ExpensesModel();

@@ -18,8 +18,9 @@ class RestService {
   // TODO: change the baseUrl to your own REST API service hosted on Firebase (or heroku)
 
   static const String baseUrl =
-      'http://10.0.2.2:5001/map-budget-go/us-central1/api';
-      // 'https://us-central1-map-budget-go.cloudfunctions.net/api';
+      // 'http://127.0.0.1:5001/map-budget-go/us-central1/api';
+      // 'http://10.0.2.2:5001/map-budget-go/us-central1/api';
+      'https://us-central1-map-budget-go.cloudfunctions.net/api';
 
   Future get(String endpoint) async {
     final response = await http.get('$baseUrl/$endpoint');
@@ -33,7 +34,6 @@ class RestService {
   Future post(String endpoint, {dynamic data}) async {
     final response = await http.post('$baseUrl/$endpoint',
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(data));
-
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
     }
