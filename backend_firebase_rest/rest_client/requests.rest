@@ -5,7 +5,7 @@
 GET {{baseUrl}}/trips
 
 ###  Getting a trip for a given id
-GET {{baseUrl}}/trips/Miz8ghbGjlulbiFC0dva
+GET {{baseUrl}}/trips/1
 
 ###  Add a new trip
 POST {{baseUrl}}/trips
@@ -101,20 +101,34 @@ DELETE {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
 GET {{baseUrl}}/schedules
 
 ###  Getting a schedule for a given id
-GET {{baseUrl}}/schedules/Miz8ghbGjlulbiFC0dva
+GET {{baseUrl}}/schedules/1
 
 ###  Add a new schedule
 POST {{baseUrl}}/schedules
 Content-Type: application/json
-{
 
+{
+    "endDt": "2020-04-10 11:00:00.000",
+    "activityDesc": "Mountain at Vancouver",
+    "createdDt": "2020-03-08 08:00:00.000",
+    "activityTitle": "Rocky Mountains Summer Explorer",
+    "createdBy": "BG0003",
+    "startDt": "2020-04-10 08:00:00.000",
+    "id": "1"
 }
 
 ### Update a schedule partly
-PATCH {{baseUrl}}/schedules/Miz8ghbGjlulbiFC0dva
+PATCH {{baseUrl}}/schedules/1
 Content-Type: application/json
-{
 
+{
+    "endDt": "2020-04-10 11:00:00.000",
+    "activityDesc": "Mountain at Vancouver",
+    "createdDt": "2020-03-08 08:00:00.000",
+    "activityTitle": "Rocky Mountains Summer Explorer",
+    "createdBy": "BG0003",
+    "startDt": "2020-04-10 08:00:00.000",
+    "id": "1"
 }
 
 ### Replace an existing schedule entirely
@@ -125,4 +139,4 @@ Content-Type: application/json
 }
 
 ### Delete a schedule
-DELETE {{baseUrl}}/schedules/Miz8ghbGjlulbiFC0dva
+DELETE {{baseUrl}}/schedules/6

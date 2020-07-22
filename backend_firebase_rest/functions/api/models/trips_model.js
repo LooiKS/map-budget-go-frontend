@@ -74,6 +74,18 @@ class TripModel {
   update(id, trip) {
     return database.set("trips", id, trip);
   }
+
+  async getTripOfSchedule(scheduleId) {
+    const trips = await database.getList("trips");
+    if (trips != null)
+      for (var i = 0; i < trips.length; i++) {
+        var trip = trips[i];
+        if (trip["schedules"].indexOf(scheduleId) > -1) {
+          return trip;
+        }
+      }
+    return null;
+  }
 }
 
 module.exports = new TripModel();

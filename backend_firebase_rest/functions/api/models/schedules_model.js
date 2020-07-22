@@ -1,4 +1,5 @@
 const database = require("../database");
+const tripModel = require("./trips_model");
 
 // Here, we are implementing the class with Singleton design pattern
 
@@ -22,7 +23,12 @@ class SchedulesModel {
     return schedule;
   }
 
-  delete(id) {
+  async delete(id) {
+    var trip = await tripModel.getTripOfSchedule(id);
+    if (trip != null) {
+      trip.schedules.splice(trip.schedules.indexOf(id), 1);
+      tripModel.update(trip["id"], trip);
+    }
     return database.delete("schedules", id);
   }
 
