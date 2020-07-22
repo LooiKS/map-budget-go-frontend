@@ -61,7 +61,6 @@ class _SplashScreenState extends State<SplashScreen> {
                   builder: (context) => MyHomePage(
                     toggleBrightness: widget.toggleBrightness,
                     auth: widget.auth,
-                    uid: uid,
                   ),
                 ));
           }

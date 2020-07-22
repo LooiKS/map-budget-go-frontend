@@ -16,10 +16,8 @@ import '../../services/users_date_service.dart';
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
   final BaseAuth auth;
-  final String uid;
 
-  MyHomePage({Key key, this.toggleBrightness, this.auth, this.uid})
-      : super(key: key);
+  MyHomePage({Key key, this.toggleBrightness, this.auth}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -61,7 +59,11 @@ class _MyHomePageState extends State<MyHomePage> {
       case "My profile":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage(user: _user)),
+          MaterialPageRoute(
+              builder: (context) => ProfilePage(
+                    user: _user,
+                    auth: widget.auth,
+                  )),
         );
         break;
 
@@ -109,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
       case 3:
-        return FriendList(user:_user);
+        return FriendList(user: _user);
     }
   }
 

@@ -149,7 +149,7 @@ const users = [
     firstName: "asdf",
     lastName: "Obama",
     phoneNum: "0123123123",
-    email: "ken@gmail.com",
+    email: "kenchin0225@hotmail.com",
     profilePic:
       "https://i.pinimg.com/736x/cf/00/b4/cf00b49556d88fe8a85c7200e7b649b2.jpg",
     username: "obama123",

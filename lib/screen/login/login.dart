@@ -1,4 +1,5 @@
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/login/password_reset.dart';
 import 'package:budgetgo/screen/register/register.dart';
 import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/services/users_date_service.dart';
@@ -42,17 +43,34 @@ class _LoginPageState extends State<LoginPage> {
       final result = await widget.auth.signIn(email, password);
 
       if (result != null) {
-        print("user loging");
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => MyHomePage(
                 toggleBrightness: widget.toggleBrightness,
                 auth: widget.auth,
-                uid: result,
               ),
             ));
       }
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(result.toString()),
+              actions: [
+                FlatButton(
+                  child: Text("Close"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+                )
+              ],
+            );
+          });
     } catch (e) {
       showDialog(
           context: context,
@@ -92,7 +110,6 @@ class _LoginPageState extends State<LoginPage> {
               builder: (context) => MyHomePage(
                 toggleBrightness: widget.toggleBrightness,
                 auth: widget.auth,
-                uid: result.uid,
               ),
             ));
       }
@@ -395,9 +412,12 @@ class _LoginPageState extends State<LoginPage> {
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   alignment: Alignment.centerRight,
-                  child: Text('Forgot Password ?',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>PasswordReset())),
+                    child: Text('Forgot Password ?',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500)),
+                  ),
                 ),
                 _divider(),
                 _googleFacebookLogin(),

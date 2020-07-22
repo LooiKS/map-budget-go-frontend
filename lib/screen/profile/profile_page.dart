@@ -1,4 +1,6 @@
+import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/services/authentication_service.dart';
 import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,7 +8,8 @@ import '../../main.dart';
 
 class ProfilePage extends StatefulWidget {
   User user;
-  ProfilePage({this.user});
+  final BaseAuth auth;
+  ProfilePage({this.user, this.auth});
 
   @override
   MapScreenState createState() => MapScreenState();
@@ -139,7 +142,16 @@ class MapScreenState extends State<ProfilePage>
                                 children: <Widget>[
                                   Row(
                                     children: <Widget>[
-                                      buildQRButton(context),
+                                      RaisedButton(
+                                        child: Text("Reset Password"),
+                                        textColor: Colors.white,
+                                        color: Colors.red,
+                                        onPressed: () async {
+                                          await widget.auth.resetPassword(
+                                              "${widget.user.email}");
+                                        },
+                                      ),
+                                      // buildQRButton(context),
                                       Padding(
                                         padding: EdgeInsets.only(right: 15.0),
                                       ),

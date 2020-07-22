@@ -19,6 +19,7 @@ class Auth implements BaseAuth {
       user = result.user;
       return user.uid;
       // if (user.isEmailVerified) return user.uid;
+      // return null;
     } catch (error) {
       switch (error.code) {
         case "ERROR_INVALID_EMAIL":
@@ -117,6 +118,16 @@ class Auth implements BaseAuth {
   Future<bool> isEmailVerified() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
     return user.isEmailVerified;
+  }
+
+  Future<String> resetPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      return null;
+    } catch (error) {
+      errorMessage = error.code;
+      return Future.error(errorMessage);
+    }
   }
 
   Future<FirebaseUser> signInViaFacebook() async {
