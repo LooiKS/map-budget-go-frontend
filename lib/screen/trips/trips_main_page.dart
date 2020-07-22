@@ -1,69 +1,114 @@
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/trips/trips_create.dart';
+import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import './trips_detail.dart';
 import '../../main.dart';
+import '../../services/trip_data_service.dart';
+
 
 class TripsMainPage extends StatefulWidget {
-  final List<Trips> tripsData;
-  TripsMainPage(this.tripsData);
+  User user;
+
+  TripsMainPage({this.user});
   @override
   _TripsMainPageState createState() => _TripsMainPageState();
 }
 
 class _TripsMainPageState extends State<TripsMainPage> {
+  List<Trips> _trips = [];
+  List<Trips> _tempTrips = [];
+  //String _tempUser = "BG0011";  
+  final dataService = TripDataService();
   List<Trips> progressTrips = [];
   List<Trips> upcomingTrips = [];
   List<Trips> pastTrips = [];
+  
   void _navigateTripDetails(int index) async {
-    Trips returnData = await Navigator.push(
+    //Trips returnData = await 
+    Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TripsDetail(widget.tripsData[index]),
+        builder: (context) => TripsDetail(_trips[index]),
       ),
     );
-    if (returnData != null) {
-      setState(() => widget.tripsData[index] = returnData);
-      setState(() {
-        widget.tripsData.removeWhere((item) => item.tripDetail == 'cancel');
-      });
-    } else {}
+    // if (returnData != null) {
+    //   setState(() => _trips[index] = returnData);
+    //   setState(() {
+    //     _trips.removeWhere((item) => item.tripDetail == 'cancel');
+    //   });
+      
+    // } else {}
   }
 
   void _navigateCreateTrip() async {
-    Trips returnData = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => TripsCreatePage()));
+    final returnData = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => TripsCreatePage(ownerUser: widget.user)));
     if (returnData != null) {
       setState(() {
-        widget.tripsData.add(returnData);
-        _tripAddedAlert(context);
+       _tripAddedAlert(context);
       });
     }
   }
+  
+
 
   @override
   Widget build(BuildContext context) {
+      return FutureBuilder<List<Trips>>(
+        future: dataService.getAllTrips(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            _tempTrips = snapshot.data;
+            _trips.clear();
+            for (int j = 0; j<_tempTrips.length ; j++){
+                if (_tempTrips[j].owner.id == widget.user.id){
+                  _trips.add(_tempTrips[j]);
+                }
+            }
+            return buildMainScreen();
+          }
+          return _buildFetchingDataScreen();
+        });
+  }
+   Scaffold _buildFetchingDataScreen() {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CircularProgressIndicator(),
+            SizedBox(height: 50),
+            Text('Fetching data... Please wait'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildMainScreen(){
     progressTrips.clear();
-    upcomingTrips.clear();
-    pastTrips.clear();
-    for (int i = 0; i < widget.tripsData.length; i++) {
-      if (widget.tripsData[i].startDt.isBefore(DateTime.now()) &&
-          widget.tripsData[i].endDt.isBefore(DateTime.now())) {
-        widget.tripsData[i].status = "past";
-        pastTrips.add(widget.tripsData[i]);
-      } else if (widget.tripsData[i].startDt.isBefore(DateTime.now()) &&
-          widget.tripsData[i].endDt.isAfter(DateTime.now())) {
-        widget.tripsData[i].status = "progress";
-        progressTrips.add(widget.tripsData[i]);
-      } else if (widget.tripsData[i].startDt.isAfter(DateTime.now()) &&
-          widget.tripsData[i].endDt.isAfter(DateTime.now())) {
-        widget.tripsData[i].status = "upcoming";
-        upcomingTrips.add(widget.tripsData[i]);
-      }
-      }
+            upcomingTrips.clear();
+            pastTrips.clear();
+            for (int i = 0; i < _trips.length; i++) {
+              if (_trips[i].startDt.isBefore(DateTime.now()) &&
+                  _trips[i].endDt.isBefore(DateTime.now())) {
+                _trips[i].status = "past";
+                pastTrips.add(_trips[i]);
+              } else if (_trips[i].startDt.isBefore(DateTime.now()) &&
+                  _trips[i].endDt.isAfter(DateTime.now())) {
+                _trips[i].status = "progress";
+                progressTrips.add(_trips[i]);
+              } else if (_trips[i].startDt.isAfter(DateTime.now()) &&
+                  _trips[i].endDt.isAfter(DateTime.now())) {
+                _trips[i].status = "upcoming";
+                upcomingTrips.add(_trips[i]);
+              }
+              }
+    
     return DefaultTabController(
       length: 3,
       initialIndex: 0,
@@ -200,7 +245,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
                 ),
               ]),
           onTap: () {
-            int newIndex = widget.tripsData.indexOf(progressTrips[index]);
+            int newIndex =_trips.indexOf(progressTrips[index]);
             _navigateTripDetails(newIndex);
           },
         ),
@@ -287,7 +332,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
                 ),
               ]),
           onTap: () {
-            int newIndex = widget.tripsData.indexOf(upcomingTrips[index]);
+            int newIndex = _trips.indexOf(upcomingTrips[index]);
             _navigateTripDetails(newIndex);
           },
         ),
@@ -374,7 +419,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
                 ),
               ]),
           onTap: () {
-            int newIndex = widget.tripsData.indexOf(pastTrips[index]);
+            int newIndex = _trips.indexOf(pastTrips[index]);
             _navigateTripDetails(newIndex);
           },
         ),
@@ -396,8 +441,9 @@ class _TripsMainPageState extends State<TripsMainPage> {
       icon: icons,
       onTap: () {
         if (caption == "Delete") {
-          int newIndex = widget.tripsData.indexOf(trips[index]);
-          _deleteConfirmation(context, newIndex);
+          int newIndex = _trips.indexOf(trips[index]);
+          //String newID = trips[index].trip;
+          _deleteConfirmation(context, trips[index].id, newIndex);
         }
       },
     );
@@ -437,7 +483,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
     );
   }
 
-  Future _deleteConfirmation(BuildContext context, int index) {
+  Future _deleteConfirmation(BuildContext context, String index, int tripsIndex) {
     return showDialog(
       context: context,
       barrierDismissible: false,
@@ -457,10 +503,9 @@ class _TripsMainPageState extends State<TripsMainPage> {
               child: const Text('Confirm'),
               onPressed: () {
                 setState(() {
-                  widget.tripsData.removeWhere((item) =>
-                      item.tripDetail == widget.tripsData[index].tripDetail);
+                  dataService.deleteTrip(index);
+                  Navigator.of(context).pop();
                 });
-                Navigator.of(context).pop();
               },
             )
           ],
@@ -468,6 +513,8 @@ class _TripsMainPageState extends State<TripsMainPage> {
       },
     );
   }
+
+  
 
   Future<void> _tripAddedAlert(BuildContext context) {
     return showDialog<void>(

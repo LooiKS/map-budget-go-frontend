@@ -5,6 +5,7 @@ import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/home_page/home_page.dart';
 import 'package:budgetgo/screen/trips/add_members.dart';
+import 'package:budgetgo/services/trip_data_service.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,7 @@ class TripsEdit extends StatefulWidget {
 }
 
 class _TripsEditState extends State<TripsEdit> {
+  final dataService = TripDataService();
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final dateInputFormat = DateFormat("dd-MM-yyyy");
@@ -48,7 +50,8 @@ class _TripsEditState extends State<TripsEdit> {
   }
 
   void _navigateAddFriend() async {
-    final returnData = await Navigator.push(
+    final returnData = await 
+    Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => AddMember(Trips.copy(widget._tripData))),
@@ -94,6 +97,7 @@ class _TripsEditState extends State<TripsEdit> {
               DateTime.parse(_startDate.text.substring(0, 10));
           widget._tripData.endDt =
               DateTime.parse(_endDate.text.substring(0, 10));
+          dataService.updateTrip(widget._tripData.id ,widget._tripData);    
         });
         _tripEdittedAlert(context);
       } else {
@@ -133,17 +137,13 @@ class _TripsEditState extends State<TripsEdit> {
               child: const Text('Confirm'),
               onPressed: () {
                 setState(() {
-                  for (int i = 0; i < mockdata.length; i++) {
-                    if (mockdata[i].tripID == widget._tripData.tripID &&
-                        mockdata[i].owner == widget._tripData.owner) {
-                      mockdata.remove(mockdata[i]);
-                    }
-                  }
+                  dataService.deleteTrip(widget._tripData.id);
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         builder: (context) => MyHomePage(),
                       ),
                       (_) => true);
+                       
                 });
               },
             )

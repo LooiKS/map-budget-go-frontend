@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
 
       case 1:
-        return TripsMainPage(mockdata);
+        return TripsMainPage(user: _user);
 
       case 2:
         return Center(

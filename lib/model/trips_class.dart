@@ -3,7 +3,7 @@ import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/user.dart';
 
 class Trips {
-  int tripID;
+  String id;
   String tripTitle;
   String tripDetail;
   User owner;
@@ -16,27 +16,27 @@ class Trips {
   String currency;
   String status;
 
-  Trips(
-      {this.tripID,
-      this.tripTitle,
-      this.tripDetail,
-      this.owner,
-      this.members,
-      this.startDt,
-      this.endDt,
-      this.schedules,
-      this.expenses,
-      this.createdDt,
-      this.currency,
-      this.status});
+  Trips({
+    this.id,
+    this.tripTitle,
+    this.tripDetail,
+    this.owner,
+    this.members,
+    this.startDt,
+    this.endDt,
+    this.schedules,
+    this.expenses,
+    this.createdDt,
+    this.currency,
+    this.status});
 
   Trips.copy(Trips from)
       : this(
-          tripID: from.tripID,
+          id: from.id,
           tripTitle: from.tripTitle,
           tripDetail: from.tripDetail,
           owner: from.owner,
-          members: [...from.members],
+          members:[...from.members],
           startDt: from.startDt,
           endDt: from.endDt,
           schedules: from.schedules,
@@ -45,38 +45,40 @@ class Trips {
           currency: from.currency,
           status: from.status,
         );
-  Trips.fromJson(Map<String, dynamic> json)
+  Trips.fromJson(json)
       : this(
-          tripID: json['id'],
-          tripTitle: json['data'],
-          tripDetail: json['like'],
-          owner: json['dislike'],
-          members: json['dislike'],
-          startDt: json['dislike'],
-          endDt: json['dislike'],
-          schedules: json['dislike'],
-          expenses: json['dislike'],
-          createdDt: json['dislike'],
-          currency: json['dislike'],
-          status: json['dislike'],
-        );
+            id: json['id'],
+            tripTitle: json['tripTitle'],
+            tripDetail: json['tripDetail'],
+            owner: User.fromJson(json['owner']),
+            members: json["members"].map<User>((f) => User.fromJson(f)).toList(),
+            startDt: convertdatetime(json['startDt']),
+            endDt: convertdatetime(json['endDt']),
+            schedules: json["schedules"].map<Schedule>((s) => Schedule.fromJson(s)).toList(),
+            expenses: json["expenses"].map<TripExpenses>((e) => TripExpenses.fromJson(e)).toList(),
+            createdDt: convertdatetime(json['createdDt']),
+            currency: json['currency'],
+            status: json['status'],
+            );
 
-  toJson() => {
-        "tripID": tripID,
+
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
         "tripTitle": tripTitle,
         "tripDetail": tripDetail,
-        "members": members.map((f) => f.toJson()).toList(),
-        "owner": owner.toJson(),
+        "members": members == null ? null : members.map((f) => f.id).toList(),
+        "owner": owner.id.toString(),
         "startDt": startDt.toString(),
         "endDt": endDt.toString(),
-        "schedules": schedules.map((f) => f.toJson()).toList(),
-        "expenses": expenses.map((f) => f.toJson()).toList(),
+        "schedules": schedules == null ? null : schedules.map((s) => s.id).toList(),
+        "expenses": expenses == null ? null : expenses.map((e) => e.id).toList(),
         "createdDt": createdDt.toString(),
         "currency": currency,
         "status": status,
       };
 
-  int get _tripID => this.tripID;
+  String get _tripID => this.id;
   String get _tripTitle => this.tripTitle;
   String get _tripDetail => this.tripDetail;
   User get _owner => this.owner;
@@ -89,7 +91,7 @@ class Trips {
   String get _currency => this.currency;
   String get _status => this.status;
 
-  set _tripID(int newValue) => this.tripID = newValue;
+  set _tripID(String newValue) => this.id = newValue;
   set _tripTitle(String newValue) => this.tripTitle = newValue;
   set _tripDetail(String newValue) => this.tripDetail = newValue;
   set _owner(User newValue) => this.owner = newValue;
@@ -101,4 +103,15 @@ class Trips {
   set _createdDt(DateTime newValue) => this.createdDt = newValue;
   set _currency(String newValue) => this.currency = newValue;
   set _status(String newValue) => this.status = newValue;
+
+  static DateTime convertdatetime(String s) {
+    int year = int.parse(s.split('-')[0]);
+    int month = int.parse(s.split('-')[1]);
+    int day = int.parse(s.split('-')[2].split(' ')[0]);
+    int hour = int.parse(s.split('-')[2].split(' ')[1].split(':')[0]);
+    int min = int.parse(s.split('-')[2].split(' ')[1].split(':')[1]);
+    int sec =
+        int.parse(s.split('-')[2].split(' ')[1].split(':')[2].split('.')[0]);
+    return DateTime(year, month, day, hour, min, sec);
+  }
 }

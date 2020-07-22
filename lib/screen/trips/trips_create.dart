@@ -3,12 +3,15 @@ import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/trips/trips_users_edit.dart';
+import 'package:budgetgo/services/trip_data_service.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../widget/custom_shape.dart';
 
 class TripsCreatePage extends StatefulWidget {
+  User ownerUser;
+  TripsCreatePage({this.ownerUser});
   @override
   _TripsCreateState createState() => _TripsCreateState();
 }
@@ -19,11 +22,13 @@ class _TripsCreateState extends State<TripsCreatePage> {
   List<User> memberList = [];
   List<User> currentUsers = [];
   List<User> tempUsers = [];
+  final tripsDataService = TripDataService();
 
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   void _navigateEditFriend() async {
-    List<User> userList = memberMockData;
+
+    List<User> userList = widget.ownerUser.friend;
     for (User u in userList) {
       if (currentUsers.contains(u)) {
         u.isChecked = true;
@@ -31,11 +36,11 @@ class _TripsCreateState extends State<TripsCreatePage> {
         u.isChecked = false;
       }
     }
+
     List<User> returnData = await Navigator.push(
       context,
-      //Trips.copy(widget.tripsData[index])
       MaterialPageRoute(
-          builder: (context) => EditUserList(userList, mockOwnUser)),
+          builder: (context) => EditUserList(widget.ownerUser, userList)),
     );
     if (returnData != null) {
       tempUsers.clear();
@@ -47,7 +52,7 @@ class _TripsCreateState extends State<TripsCreatePage> {
 
       setState(() => currentUsers = tempUsers);
       memberList.clear();
-      memberList.add(mockOwnUser);
+      memberList.add(widget.ownerUser);
       memberList.addAll(currentUsers);
     }
   }
@@ -72,7 +77,7 @@ class _TripsCreateState extends State<TripsCreatePage> {
             //     widget._tripData.memberUser, widget._tripData.ownerUser),
             SizedBox(height: 10.0),
             buildCategoryTitle("Members"),
-            tripMemberList(currentUsers, mockOwnUser),
+            tripMemberList(currentUsers, widget.ownerUser),
             buildCategoryTitle("Trip Information"),
             buildTripForm(),
           ],
@@ -297,21 +302,33 @@ class _TripsCreateState extends State<TripsCreatePage> {
                         if (_dateStart.isBefore(_dateEnd) == true) {
                           setState(() {
                             _formKey.currentState.save();
+                            // User tempUser = new User(id: "BG0011",
+                            //     firstName: "Barack",
+                            //     lastName: "Obama",
+                            //     phoneNum: "0123123123",
+                            //     email: "john@example.com",
+                            //     profilePic:
+                            //         "https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fblogs-images.forbes.com%2Fjvchamary%2Ffiles%2F2016%2F03%2Fman_of_steel-1200x800.jpg",
+                            //     username: "obama123",
+                            //     password: "123",
+                            //     isChecked: false,
+                            //     friend:[]);
                             Trips _newTrip = new Trips(
-                                // mockdata.length + 1,
-                                // _tripTitle.text,
-                                // _tripDetail.text,
-                                // mockOwnUser,
-                                // currentUsers,
-                                // _dateStart,
-                                // _dateEnd,
-                                // [],
-                                // [],
-                                // DateTime.now(),
-                                // _inputCurrency,
-                                // "upcoming"
+                                id: "",
+                                tripTitle: _tripTitle.text,
+                                tripDetail: _tripDetail.text,
+                                owner: widget.ownerUser,
+                                members: [],
+                                startDt: _dateStart,
+                                endDt: _dateEnd,
+                                schedules: [],
+                                expenses: [],
+                                createdDt: DateTime.now(),
+                                currency: _inputCurrency,
+                                status:"upcoming"
                                 );
-                            Navigator.pop(context, _newTrip);
+                               tripsDataService.createTrip(trip : _newTrip);
+                               Navigator.pop(context, 'Added');
                           });
                         } else {
                           _dateErrorAlert(context);
@@ -327,6 +344,8 @@ class _TripsCreateState extends State<TripsCreatePage> {
           ),
         ));
   }
+  
+
 
   Future<void> _dateErrorAlert(BuildContext context) {
     return showDialog<void>(
