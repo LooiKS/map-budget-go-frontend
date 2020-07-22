@@ -289,33 +289,38 @@ class _FriendListState extends State<FriendList> {
           content: Container(
             width: 500.0,
             padding: EdgeInsets.all(5.0),
-            child: Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                      width: 110.0,
-                      height: 110.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(width: 3, color: Colors.orange),
-                        image: DecorationImage(
-                          image: widget.user.friend[index].profilePic == null
-                              ? AssetImage("assets/images/default_profile.png")
-                              : NetworkImage(
-                                  '${widget.user.friend[index].profilePic}'),
-                          fit: BoxFit.cover,
-                        ),
-                      )),
-                  InfoTitle('Email: ${widget.user.friend[index].email}'),
-                  InfoTitle('Userame: ${widget.user.friend[index].username}'),
-                  InfoTitle(
-                      'Name: ${widget.user.friend[index].firstName} ${widget.user.friend[index].lastName}'),
-                  InfoTitle('Phone No.: ${widget.user.friend[index].phoneNum}'),
-                  InfoTitle('Gender: ${widget.user.friend[index].gender}'),
-                ],
-              ),
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                        width: 110.0,
+                        height: 110.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 3, color: Colors.orange),
+                          image: DecorationImage(
+                            image: widget.user.friend[index].profilePic == null
+                                ? AssetImage(
+                                    "assets/images/default_profile.png")
+                                : NetworkImage(
+                                    '${widget.user.friend[index].profilePic}'),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    InfoTitle('Email: ${widget.user.friend[index].email}'),
+                    InfoTitle('Userame: ${widget.user.friend[index].username}'),
+                    InfoTitle(
+                        'Name: ${widget.user.friend[index].firstName} ${widget.user.friend[index].lastName}'),
+                    InfoTitle(
+                        'Phone No.: ${widget.user.friend[index].phoneNum}'),
+                    InfoTitle('Gender: ${widget.user.friend[index].gender}'),
+                  ],
+                ),
+              ],
             ),
           ),
           actions: <Widget>[
