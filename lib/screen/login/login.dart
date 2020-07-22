@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Row(
+                      child: Column(
                         children: <Widget>[
                           SizedBox(
                               height: 50,
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              'Loading...',
+                              'Authenticating...',
                               style: TextStyle(fontSize: 20),
                             ),
                           )

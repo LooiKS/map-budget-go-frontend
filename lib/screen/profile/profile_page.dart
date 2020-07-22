@@ -48,68 +48,36 @@ class MapScreenState extends State<ProfilePage>
   }
 
   Future updateProfile() async {
-    if (!_status)
-      showDialog(
-          context: context,
-          builder: (_) => Dialog(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: CircularProgressIndicator()),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Loading...',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ));
+    if (!_status) _showLoadingDialog();
+
     User user = User.copy(widget.user);
     user.username = _username.text;
     user.firstName = _firstName.text;
     user.lastName = _lastName.text;
     user.phoneNum = _mobilePhone.text;
+
     if (_genderValue == null || _genderValue == -1) user.gender = "-1";
     _genderValue == 1 ? user.gender = "Female" : user.gender = "Male";
+
     await userDataService.updateUser(id: widget.user.id, user: user);
 
     setState(() {
       _status = true;
-      FocusScope.of(context).requestFocus(FocusNode());
     });
 
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Update Message'),
-          content: const Text('Your profile updated successfully.'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+    return _showSuccessUpdateDialog();
+  }
+
+  void _handleCancel() {
+    setState(() {
+      _username.text = widget.user.username;
+      _firstName.text = widget.user.firstName;
+      _lastName.text = widget.user.lastName;
+      _mobilePhone.text = widget.user.phoneNum;
+      if (widget.user.gender == null) _genderValue = -1;
+      widget.user.gender == "Male" ? _genderValue = 0 : _genderValue = 1;
+      _status = true;
+    });
   }
 
   void _handleRadioValueChanged(int value) {
@@ -196,126 +164,41 @@ class MapScreenState extends State<ProfilePage>
                               )
                             ],
                           )),
-                      InfoTitle('User ID'),
-                      Padding(
-                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Flexible(
-                                child: TextField(
-                                  controller: TextEditingController()
-                                    ..text = '${widget.user.id}',
-                                  enabled: false,
-                                ),
-                              ),
-                            ],
-                          )),
-                      InfoTitle('Username'),
-                      Padding(
-                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Flexible(
-                                child: TextField(
-                                  controller: _username,
-                                  decoration: const InputDecoration(
-                                    hintText: "Enter Your Username",
-                                  ),
-                                  enabled: !_status,
-                                  autofocus: !_status,
-                                ),
-                              ),
-                            ],
-                          )),
-                      InfoTitle('First Name'),
-                      Padding(
-                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Flexible(
-                                child: TextField(
-                                  controller: _firstName,
-                                  decoration: const InputDecoration(
-                                    hintText: "Enter Your Name",
-                                  ),
-                                  enabled: !_status,
-                                  autofocus: !_status,
-                                ),
-                              ),
-                            ],
-                          )),
-                      InfoTitle('Last Name'),
-                      Padding(
-                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Flexible(
-                                child: TextField(
-                                  controller: _lastName,
-                                  decoration: const InputDecoration(
-                                    hintText: "Enter Your Name",
-                                  ),
-                                  enabled: !_status,
-                                  autofocus: !_status,
-                                ),
-                              ),
-                            ],
-                          )),
-                      InfoTitle('Mobile Number'),
-                      Padding(
-                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Flexible(
-                                child: TextField(
-                                  controller: _mobilePhone,
-                                  decoration: const InputDecoration(
-                                      hintText: "Enter Mobile Number"),
-                                  enabled: !_status,
-                                ),
-                              ),
-                            ],
-                          )),
-                      InfoTitle('Gender'),
-                      Padding(
-                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Radio(
-                                        value: 0,
-                                        groupValue: _genderValue,
-                                        onChanged: !_status
-                                            ? _handleRadioValueChanged
-                                            : null),
-                                    Text(
-                                      "Male",
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                    Radio(
-                                        value: 1,
-                                        groupValue: _genderValue,
-                                        onChanged: !_status
-                                            ? _handleRadioValueChanged
-                                            : null),
-                                    Text(
-                                      "Female",
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ])),
+                      SizedBox(height: 15.0),
+                      _buildFixedField(
+                          title: "User ID",
+                          defaultText: "${widget.user.id}",
+                          enabled: false),
+                      SizedBox(height: 15.0),
+                      _buildInputEntry(
+                          title: "Username",
+                          controller: _username,
+                          hintText: "Enter your username",
+                          autofocus: !_status,
+                          enabled: !_status),
+                      SizedBox(height: 15.0),
+                      _buildInputEntry(
+                          title: "First Name",
+                          controller: _firstName,
+                          hintText: "Enter your first name",
+                          autofocus: !_status,
+                          enabled: !_status),
+                      SizedBox(height: 15.0),
+                      _buildInputEntry(
+                          title: "Last Name",
+                          controller: _lastName,
+                          hintText: "Enter your last name",
+                          autofocus: !_status,
+                          enabled: !_status),
+                      SizedBox(height: 15.0),
+                      _buildInputEntry(
+                          title: "Mobile Number",
+                          controller: _mobilePhone,
+                          hintText: "Enter your mobile number",
+                          autofocus: !_status,
+                          enabled: !_status),
+                      SizedBox(height: 15.0),
+                      _buildGenderInputEntry(),
                       !_status ? _getActionButtons() : Container(),
                     ],
                   ),
@@ -326,6 +209,94 @@ class MapScreenState extends State<ProfilePage>
         ],
       ),
     ));
+  }
+
+  Padding _buildGenderInputEntry() {
+    return Padding(
+        padding: EdgeInsets.only(left: 25.0, right: 25.0),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "Gender",
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              ),
+              Row(
+                children: <Widget>[
+                  _buildRadioButton(
+                      value: 0, groupValue: _genderValue, status: !_status),
+                  _buildGenderText("Male"),
+                  _buildRadioButton(
+                      value: 1, groupValue: _genderValue, status: !_status),
+                  _buildGenderText("Female"),
+                ],
+              )
+            ]));
+  }
+
+  Text _buildGenderText(String gender) {
+    return Text(
+      "$gender",
+      style: TextStyle(
+        fontSize: 14.0,
+      ),
+    );
+  }
+
+  Radio<int> _buildRadioButton({int value, int groupValue, bool status}) {
+    return Radio(
+        value: value,
+        groupValue: groupValue,
+        onChanged: status ? _handleRadioValueChanged : null);
+  }
+
+  Padding _buildInputEntry(
+      {String title,
+      TextEditingController controller,
+      String hintText,
+      bool enabled,
+      bool autofocus}) {
+    return Padding(
+      padding: EdgeInsets.only(left: 25.0, right: 25.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "$title",
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: "$hintText",
+            ),
+            enabled: enabled,
+            autofocus: autofocus,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _buildFixedField({String title, String defaultText, bool enabled}) {
+    return Padding(
+      padding: EdgeInsets.only(left: 25.0, right: 25.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "$title",
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          TextField(
+            controller: TextEditingController()..text = '$defaultText',
+            enabled: enabled,
+          ),
+        ],
+      ),
+    );
   }
 
   RaisedButton buildResetPasswordButton(BuildContext context) {
@@ -441,19 +412,7 @@ class MapScreenState extends State<ProfilePage>
                 child: Text("Cancel"),
                 textColor: Colors.white,
                 color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    _username.text = widget.user.username;
-                    _firstName.text = widget.user.firstName;
-                    _lastName.text = widget.user.lastName;
-                    _mobilePhone.text = widget.user.phoneNum;
-                    if (widget.user.gender == null) _genderValue = -1;
-                    widget.user.gender == "Male"
-                        ? _genderValue = 0
-                        : _genderValue = 1;
-                    _status = true;
-                  });
-                },
+                onPressed: () => _handleCancel(),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0)),
               )),
@@ -483,48 +442,57 @@ class MapScreenState extends State<ProfilePage>
       },
     );
   }
-}
 
-class ExpendedTitle extends StatelessWidget {
-  const ExpendedTitle(this.title);
-  final title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        child: Text(
-          title,
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-        ),
-      ),
-      flex: 2,
-    );
-  }
-}
-
-class InfoTitle extends StatelessWidget {
-  final title;
-  const InfoTitle(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 15.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                ),
-              ],
+  Future _showSuccessUpdateDialog() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Update Message'),
+          content: const Text('Your profile updated successfully.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
             ),
           ],
-        ));
+        );
+      },
+    );
+  }
+
+  Future _showLoadingDialog() {
+    return showDialog(
+        context: context,
+        builder: (_) => Dialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Updating....',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
   }
 }
