@@ -41,19 +41,18 @@ class RestService {
     throw response;
   }
 
-  Future postPhoto(String endpoint, {List<int> data}) async {
-    print('hi');
+  Future postPhoto(String endpoint, {List<int> data, String fileName}) async {
     var request = http.MultipartRequest(
       "POST",
       Uri.parse('$baseUrl/$endpoint'),
     );
-    request.files.add(http.MultipartFile.fromBytes('avatar', data,
-        contentType: httpParser.MediaType('', '')));
+    request.files.add(http.MultipartFile.fromBytes(fileName, data,
+        contentType: httpParser.MediaType('image', 'jpg'), filename: fileName));
 
-    final response = await request.send();
-    print(response.statusCode);
+    http.StreamedResponse response = await request.send();
+
     if (response.statusCode == 200) {
-      return {"status": "ok"};
+      return jsonDecode(await response.stream.bytesToString());
     }
     throw response;
   }

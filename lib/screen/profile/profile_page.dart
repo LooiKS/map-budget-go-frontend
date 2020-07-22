@@ -345,7 +345,9 @@ class MapScreenState extends State<ProfilePage>
                   image: DecorationImage(
                     image: widget.user.profilePic == null
                         ? AssetImage("assets/images/default_profile.png")
-                        : NetworkImage('${widget.user.profilePic}'),
+                        : NetworkImage(
+                            '${widget.user.profilePic}',
+                          ),
                     fit: BoxFit.cover,
                   ),
                 )),
@@ -365,8 +367,15 @@ class MapScreenState extends State<ProfilePage>
                       ImagePicker()
                           .getImage(source: ImageSource.gallery)
                           .then((pickedFile) async {
-                        var bytes = await pickedFile.readAsBytes();
-                        RestService().postPhoto('users/profile', data: bytes);
+                        if (pickedFile != null) {
+                          var bytes = await pickedFile.readAsBytes();
+                          print(pickedFile.path.split('/').last);
+                          userDataService.uploadPhoto(
+                              bytes: bytes,
+                              fileName: pickedFile.path.split('/').last,
+                              user: widget.user);
+                          setState(() {});
+                        }
                       });
                     },
                     icon: Icon(

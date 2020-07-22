@@ -9,17 +9,18 @@ class Database {
     // We only proceedd to the following lines only if no instance has been created from this class
     Database.instance = this;
 
-    const admin = require("firebase-admin"); // To access Firestore API
+    this.admin = require("firebase-admin"); // To access Firestore API
 
     // Since the functions and firestore run on the same server,
     //  we can simply use default credential.
     // However, if your app run different location, you need to create a JSON Firebase credentials
 
-    admin.initializeApp({
-      credential: admin.credential.applicationDefault(),
+    this.admin.initializeApp({
+      credential: this.admin.credential.applicationDefault(),
+      storageBucket: "map-budget-go.appspot.com",
     });
 
-    this.firestore = admin.firestore();
+    this.firestore = this.admin.firestore();
   }
 
   // Define some helper methods for CRUD operations

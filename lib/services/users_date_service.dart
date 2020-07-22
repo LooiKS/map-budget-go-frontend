@@ -41,6 +41,23 @@ class UsersDataService {
       return null;
     }
   }
+
+  Future<User> uploadPhoto({String fileName, User user, List bytes}) async {
+    try {
+      var url = await RestService()
+          .postPhoto('users/profile', data: bytes, fileName: fileName);
+
+      final response = await updateUser(
+          id: user.id, user: user..profilePic = url['photoUrl']);
+
+      if (response != null) {
+        return response;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
 } // class User
 
 final userDataService = UsersDataService();

@@ -1,4 +1,5 @@
 const usersModel = require("../models/users_model");
+const db = require("../database");
 const express = require("express");
 const router = express.Router();
 
@@ -10,13 +11,15 @@ router.post("/profile", function (req, res) {
   const Busboy = require("busboy");
   const busboy = new Busboy({ headers: req.headers });
   const uploads = {};
+  var bucket = db.admin.storage().bucket();
+  var newFileName = "";
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
-    filename = new Date().getTime() + "-" + filename;
+    newFileName = new Date().getTime() + "-" + filename;
 
     // Note that os.tmpdir() is an in-memory file system, so should only
     // be used for files small enough to fit in memory.
-    const filepath = path.join(os.tmpdir(), filename);
+    const filepath = path.join(os.tmpdir(), newFileName);
     uploads[fieldname] = { file: filepath };
     file.pipe(fs.createWriteStream(filepath));
   });
@@ -31,10 +34,11 @@ router.post("/profile", function (req, res) {
         uploadedFile.makePublic();
         fs.unlinkSync(file);
       });
+      res.json({
+        photoUrl: `https://storage.googleapis.com/map-budget-go.appspot.com/${newFileName}`,
+      });
     }
-    res.json({
-      photoUrl: `https://storage.googleapis.com/trip-planner-budget-manager.appspot.com/${filename}`,
-    });
+    res.end(); //json({});
   });
 
   // The raw bytes of the upload will be in req.rawBody.  Send it to busboy, and get
