@@ -206,9 +206,7 @@ class _LoginPageState extends State<LoginPage> {
           _email.text.isEmpty ? _validateEmail = true : _validateEmail = false;
         });
 
-        // if (_validatePassword == false && _validateEmail == false) {
         signInViaEmail(_email.text, _password.text);
-        // }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -413,10 +411,18 @@ class _LoginPageState extends State<LoginPage> {
                   padding: EdgeInsets.symmetric(vertical: 10),
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>PasswordReset())),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PasswordReset(
+                                  toggleBrightness: widget.toggleBrightness,
+                                  auth: widget.auth,
+                                ))),
                     child: Text('Forgot Password ?',
                         style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
+                            decoration: TextDecoration.underline,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500)),
                   ),
                 ),
                 _divider(),

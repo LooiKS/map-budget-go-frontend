@@ -123,11 +123,22 @@ class Auth implements BaseAuth {
   Future<String> resetPassword(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
-      return null;
     } catch (error) {
-      errorMessage = error.code;
+      switch (error.code) {
+        case "ERROR_USER_NOT_FOUND":
+          errorMessage = "There is no user corresponding to the email address.";
+          break;
+
+        case "ERROR_INVALID_EMAIL":
+          errorMessage = "The email address is not valid";
+          break;
+
+        default:
+          errorMessage = "An error happened. Please try again later!";
+      }
       return Future.error(errorMessage);
     }
+    return null;
   }
 
   Future<FirebaseUser> signInViaFacebook() async {

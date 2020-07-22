@@ -8,7 +8,7 @@ abstract class BaseAuth {
   Future<void> sendEmailVerification();
   Future<void> signOut();
   Future<bool> isEmailVerified();
-  Future<void> resetPassword(String email);
+  Future<String> resetPassword(String email);
   Future<FirebaseUser> signInViaGoogle();
   Future<FirebaseUser> signInViaFacebook();
 }

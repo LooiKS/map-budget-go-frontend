@@ -24,12 +24,59 @@ class _PasswordResetState extends State<PasswordReset> {
     super.dispose();
   }
 
-  Widget _submitButton() {
+  Widget _title() {
+    return Text(
+      "Reset Password",
+      style: TextStyle(fontSize: 30),
+    );
+  }
+
+  Widget _emailEntryField() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Email Address",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+              controller: _email,
+              style:
+                  TextStyle(color: Colors.black, height: 1.0, fontSize: 18.0),
+              decoration: InputDecoration(
+                  hintText: "e.g. email@domain.com",
+                  errorText:
+                      _validateEmail ? 'The email field cannot be empty' : null,
+                  border: OutlineInputBorder(),
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true,
+                  contentPadding: const EdgeInsets.all(10.0)))
+        ],
+      ),
+    );
+  }
+
+  Widget _submitButton({BuildContext context}) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         setState(() {
           _email.text.isEmpty ? _validateEmail = true : _validateEmail = false;
         });
+        if (!_validateEmail) {
+          try {
+            await widget.auth.resetPassword(_email.text);
+            return _resetPasswordAlert(
+                context, "Password reset email sent. Please check your entered email.", "Email Sent");
+          } catch (error) {
+            return _resetPasswordAlert(
+                context, error.toString(), "Reset Error");
+          }
+        }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -54,58 +101,14 @@ class _PasswordResetState extends State<PasswordReset> {
     );
   }
 
-  Widget _title() {
-    return Text(
-      "Reset Password",
-      style: TextStyle(fontSize: 30),
-    );
-  }
-
-  Widget _emailPasswordWidget() {
-    return Column(
-      children: <Widget>[
-        _emailEntryField("Email Address"),
-      ],
-    );
-  }
-
-  Widget _emailEntryField(String title) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextField(
-              controller: _email,
-              style:
-                  new TextStyle(color: Colors.black, height: 1.0, fontSize: 18),
-              decoration: InputDecoration(
-                  errorText:
-                      _validateEmail ? 'The email field cannot be empty' : null,
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true,
-                  contentPadding: const EdgeInsets.all(10.0)))
-        ],
-      ),
-    );
-  }
-
-  Future<void> _loginErrorAlert(BuildContext context) {
+  Future<void> _resetPasswordAlert(
+      BuildContext context, String message, String title) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Login Error'),
-          content: const Text(
-              'The email and password are not matched. Please try again'),
+          title: Text('$title'),
+          content: Text('$message'),
           actions: <Widget>[
             FlatButton(
               child: Text('Ok'),
@@ -122,83 +125,63 @@ class _PasswordResetState extends State<PasswordReset> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
         body: SingleChildScrollView(
             child: Container(
-      alignment: Alignment.center,
-      height: MediaQuery.of(context).size.height,
-      child: Stack(
-        children: <Widget>[
-          Container(
-            alignment: Alignment.topCenter,
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 165,
-                ),
-                _title(),
-                SizedBox(
-                  height: 50,
-                ),
-                Text(
-                    "Enter your email address and we'll send you a link to reset your password."),
-                    SizedBox(width: 50,)
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    children: <Widget>[
-                      SizedBox(
-                        width: 20,
+          alignment: Alignment.center,
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 165,
+                    ),
+                    _title(),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Text(
+                      "Enter your email address and we'll send you a link to reset your password.",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16.0),
+                    ),
+                    SizedBox(
+                      child: Divider(
+                        thickness: 1,
                       ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: Divider(
-                            thickness: 1,
-                          ),
-                        ),
-                      ),
-                      Text('or sign in with'),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                          child: Divider(
-                            thickness: 1,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                    ],
-                  ),
+                      height: 50,
+                    ),
+                    _emailEntryField(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _submitButton(context: context),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: SizedBox(),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 50,
-                ),
-                _emailPasswordWidget(),
-                SizedBox(
-                  height: 20,
-                ),
-                _submitButton(),
-                SizedBox(
-                  height: 5,
-                ),
-                Expanded(
-                  flex: 2,
-                  child: SizedBox(),
-                ),
-              ],
-            ),
+              ),
+              Positioned(
+                  top: -MediaQuery.of(context).size.height * .15,
+                  right: -MediaQuery.of(context).size.width * .4,
+                  child: BezierContainer())
+            ],
           ),
-          Positioned(
-              top: -MediaQuery.of(context).size.height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer())
-        ],
-      ),
-    )));
+        )));
   }
 }
