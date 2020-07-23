@@ -54,11 +54,14 @@ class MapScreenState extends State<UpdatePasswordPage>
         _validateEmail = false;
         _showErrorDialog(
             error: "Please enter valid email address",
-            title: "Email Incorrect");
+            title: "Email Incorrect",
+            popCount: 1);
       } else {
         _validateEmail = false;
         _showErrorDialog(
-            error: "Your email is not match.", title: "Email Incorrect");
+            error: "Your email is not match.",
+            title: "Email Incorrect",
+            popCount: 1);
       }
     });
   }
@@ -70,6 +73,7 @@ class MapScreenState extends State<UpdatePasswordPage>
       if (_newPassword.text != _confirmNewPassword.text) {
         _showErrorDialog(
             error: "The new password does not match with confirm password.",
+            popCount: 1,
             title: "Mismatch");
       } else {
         try {
@@ -78,7 +82,8 @@ class MapScreenState extends State<UpdatePasswordPage>
               .changePassword(_oldPassword.text, _newPassword.text);
           _showUpdateSuccessDialog();
         } catch (error) {
-          _showErrorDialog(error: error.toString(), title: "Error Occurs");
+          _showErrorDialog(
+              error: error.toString(), title: "Error Occurs", popCount: 2);
         }
       }
     }
@@ -371,7 +376,7 @@ class MapScreenState extends State<UpdatePasswordPage>
             ));
   }
 
-  Future _showErrorDialog({String error, String title}) {
+  Future _showErrorDialog({String error, String title, int popCount}) {
     return showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -380,7 +385,10 @@ class MapScreenState extends State<UpdatePasswordPage>
               actions: <Widget>[
                 FlatButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      int count = 0;
+                      Navigator.popUntil(context, (route) {
+                        return popCount == 2 ? count++ == 2 : count++ == 1;
+                      });
                     },
                     child: Text('OK'))
               ],
@@ -397,8 +405,10 @@ class MapScreenState extends State<UpdatePasswordPage>
                 FlatButton(
                     onPressed: () {
                       handleCancelResetPassword();
-                      Navigator.pop(context);
-                      Navigator.pop(context);
+                      int count = 0;
+                      Navigator.popUntil(context, (route) {
+                        return count++ == 2;
+                      });
                     },
                     child: Text('OK'))
               ],
