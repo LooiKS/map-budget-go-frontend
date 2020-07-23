@@ -32,35 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signInViaEmail(email, password) async {
-    showDialog(
-        context: context,
-        builder: (_) => Dialog(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: CircularProgressIndicator()),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Authenticating...',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ));
+    _showSigninLoadingDialog();
     try {
       await widget.auth.signIn(email, password);
       Navigator.pushReplacement(
@@ -392,13 +364,47 @@ class _LoginPageState extends State<LoginPage> {
               FlatButton(
                 child: Text("Close"),
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  int count = 0;
+                  Navigator.popUntil(context, (route) {
+                    return count++ == 2;
+                  });
                 },
               )
             ],
           );
         });
+  }
+
+  Future _showSigninLoadingDialog() {
+    return showDialog(
+        context: context,
+        builder: (_) => Dialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Authenticating...',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
   }
 
   GestureDetector _buildForgotPassword(BuildContext context) {
