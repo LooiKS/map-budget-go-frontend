@@ -64,9 +64,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
             _tempTrips = snapshot.data;
             _trips.clear();
             for (int j = 0; j < _tempTrips.length; j++) {
-              if (_tempTrips[j]
-                  .members
-                  .any((user) => user.id == widget.user.id)) {
+              if ((_tempTrips[j].members.any((user)=>user.id == widget.user.id))||_tempTrips[j].owner.id == widget.user.id){
                 _trips.add(_tempTrips[j]);
               }
             }

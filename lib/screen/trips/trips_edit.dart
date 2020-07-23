@@ -25,7 +25,7 @@ class _TripsEditState extends State<TripsEdit> {
   final dataService = TripDataService();
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final dateInputFormat = DateFormat("dd-MM-yyyy");
+  final dateInputFormat = DateFormat("yyyy-MM-dd");
   List<User> memberList = [];
   List<User> tempUsers = [];
   List<Trips> dummyTrip = <Trips>[];
@@ -138,12 +138,8 @@ class _TripsEditState extends State<TripsEdit> {
               onPressed: () {
                 setState(() {
                   dataService.deleteTrip(widget._tripData.id);
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => MyHomePage(),
-                      ),
-                      (_) => true);
-                       
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+     
                 });
               },
             )

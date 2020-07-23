@@ -302,23 +302,12 @@ class _TripsCreateState extends State<TripsCreatePage> {
                         if (_dateStart.isBefore(_dateEnd) == true) {
                           setState(() {
                             _formKey.currentState.save();
-                            // User tempUser = new User(id: "BG0011",
-                            //     firstName: "Barack",
-                            //     lastName: "Obama",
-                            //     phoneNum: "0123123123",
-                            //     email: "john@example.com",
-                            //     profilePic:
-                            //         "https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fblogs-images.forbes.com%2Fjvchamary%2Ffiles%2F2016%2F03%2Fman_of_steel-1200x800.jpg",
-                            //     username: "obama123",
-                            //     password: "123",
-                            //     isChecked: false,
-                            //     friend:[]);
                             Trips _newTrip = new Trips(
                                 id: "",
                                 tripTitle: _tripTitle.text,
                                 tripDetail: _tripDetail.text,
                                 owner: widget.ownerUser,
-                                members: [],
+                                members: currentUsers,
                                 startDt: _dateStart,
                                 endDt: _dateEnd,
                                 schedules: [],
