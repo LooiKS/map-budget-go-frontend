@@ -22,102 +22,40 @@ class _PasswordResetState extends State<PasswordReset> {
     super.dispose();
   }
 
-  Widget _title() {
-    return Text(
-      "Reset Password",
-      style: TextStyle(fontSize: 30),
-    );
-  }
-
-  Widget _emailEntryField() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "Email Address",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextField(
-              controller: _email,
-              style:
-                  TextStyle(color: Colors.black, height: 1.0, fontSize: 18.0),
-              decoration: InputDecoration(
-                  hintText: "e.g. email@domain.com",
-                  errorText:
-                      _validateEmail ? 'The email field cannot be empty' : null,
-                  border: OutlineInputBorder(),
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true,
-                  contentPadding: const EdgeInsets.all(10.0)))
-        ],
-      ),
-    );
-  }
-
-  Widget _submitButton({BuildContext context}) {
-    return InkWell(
-      onTap: () async {
-        setState(() {
-          _email.text.isEmpty ? _validateEmail = true : _validateEmail = false;
-        });
-        if (!_validateEmail) {
-          try {
-            await widget.auth.resetPassword(_email.text);
-            return _resetPasswordAlert(
-                context, "Password reset email sent. Please check your entered email.", "Email Sent");
-          } catch (error) {
-            return _resetPasswordAlert(
-                context, error.toString(), "Reset Error");
-          }
-        }
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 13),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.green.withAlpha(100),
-                  offset: Offset(2, 4),
-                  blurRadius: 8,
-                  spreadRadius: 2)
-            ],
-            color: Colors.green),
-        child: Text(
-          'Reset Password',
-          style: TextStyle(
-              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _resetPasswordAlert(
-      BuildContext context, String message, String title) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('$title'),
-          content: Text('$message'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  Future sendEmail() async {
+    if (_email.text.isEmpty) {
+      setState(() {
+        _validateEmail = true;
+      });
+    } else if (!RegExp(r'[\w\.-]+@[\w\.-]+\.\w{2,4}').hasMatch(_email.text)) {
+      setState(() {
+        _validateEmail = false;
+      });
+      _resetPasswordAlert(
+          context: context,
+          message: "Please enter valid email address",
+          title: "Email Incorrect");
+    } else {
+      setState(() {
+        _validateEmail = false;
+      });
+      try {
+        _showLoadingDialog();
+        await widget.auth.resetPassword(_email.text);
+        return _resetPasswordAlert(
+            context: context,
+            title: "Email Sent",
+            message:
+                "Password reset email sent. Please check your entered email.",
+            popCount: 2);
+      } catch (error) {
+        return _resetPasswordAlert(
+            context: context,
+            message: error.toString(),
+            title: "Reset Error",
+            popCount: 2);
+      }
+    }
   }
 
   @override
@@ -181,5 +119,125 @@ class _PasswordResetState extends State<PasswordReset> {
             ],
           ),
         )));
+  }
+
+  Widget _title() {
+    return Text(
+      "Reset Password",
+      style: TextStyle(fontSize: 30),
+    );
+  }
+
+  Widget _emailEntryField() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Email Address",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+              controller: _email,
+              style:
+                  TextStyle(color: Colors.black, height: 1.0, fontSize: 18.0),
+              decoration: InputDecoration(
+                  hintText: "e.g. email@domain.com",
+                  errorText:
+                      _validateEmail ? 'The email field cannot be empty' : null,
+                  border: OutlineInputBorder(),
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true,
+                  contentPadding: const EdgeInsets.all(10.0)))
+        ],
+      ),
+    );
+  }
+
+  Widget _submitButton({BuildContext context}) {
+    return InkWell(
+      onTap: () => sendEmail(),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 13),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.green.withAlpha(100),
+                  offset: Offset(2, 4),
+                  blurRadius: 8,
+                  spreadRadius: 2)
+            ],
+            color: Colors.green),
+        child: Text(
+          'Reset Password',
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Future _resetPasswordAlert(
+      {BuildContext context, String message, String title, int popCount}) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('$title'),
+          content: Text('$message'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                int count = 0;
+                Navigator.popUntil(context, (route) {
+                  if (popCount == 2) return count++ == 2;
+                  return count++ == 1;
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future _showLoadingDialog() {
+    return showDialog(
+        context: context,
+        builder: (_) => Dialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Sending email....',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
   }
 }

@@ -5,7 +5,6 @@ import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../services/rest_service.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -59,6 +58,7 @@ class MapScreenState extends State<ProfilePage>
     if (_genderValue == null || _genderValue == -1) user.gender = "-1";
     _genderValue == 1 ? user.gender = "Female" : user.gender = "Male";
 
+    print(user.phoneNum);
     await userDataService.updateUser(id: widget.user.id, user: user);
 
     setState(() {
@@ -463,8 +463,10 @@ class MapScreenState extends State<ProfilePage>
             FlatButton(
               child: Text('Ok'),
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                int count = 0;
+                Navigator.popUntil(context, (route) {
+                  return count++ == 2;
+                });
               },
             ),
           ],

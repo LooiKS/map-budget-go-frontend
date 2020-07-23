@@ -21,6 +21,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _validateEmail = false;
   bool _validatePassword = false;
+  bool _showPassword = true;
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
 
@@ -32,35 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signInViaEmail(email, password) async {
-    showDialog(
-        context: context,
-        builder: (_) => Dialog(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: CircularProgressIndicator()),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Authenticating...',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ));
+    _showSigninLoadingDialog();
     try {
       await widget.auth.signIn(email, password);
       Navigator.pushReplacement(
@@ -69,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
             builder: (context) => MyHomePage(
               toggleBrightness: widget.toggleBrightness,
               auth: widget.auth,
+            
             ),
           ));
     } catch (error) {
@@ -178,7 +152,8 @@ class _LoginPageState extends State<LoginPage> {
       {String title,
       TextEditingController controller,
       bool validate,
-      String errorText}) {
+      String errorText,
+      IconButton icon}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -193,10 +168,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
           TextField(
               controller: controller,
-              style:
-                  new TextStyle(color: Colors.black, height: 1.0, fontSize: 18),
-              obscureText: title == "Password" ? true : false,
+              style: TextStyle(color: Colors.black, height: 1.0, fontSize: 18),
+              obscureText: title == "Password" ? _showPassword : false,
               decoration: InputDecoration(
+                  suffixIcon: title == "Password" ? icon : null,
                   errorText: validate ? '$errorText' : null,
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
@@ -337,10 +312,20 @@ class _LoginPageState extends State<LoginPage> {
             errorText: 'The email field cannot be empty',
             validate: _validateEmail),
         _formEntryField(
-            title: "Password",
-            controller: _password,
-            errorText: "The password field cannot be empty",
-            validate: _validatePassword),
+          title: "Password",
+          controller: _password,
+          errorText: "The password field cannot be empty",
+          validate: _validatePassword,
+          icon: IconButton(
+              onPressed: () {
+                setState(() {
+                  _showPassword = !_showPassword;
+                });
+              },
+              icon: _showPassword
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off)),
+        )
       ],
     );
   }
@@ -389,13 +374,47 @@ class _LoginPageState extends State<LoginPage> {
               FlatButton(
                 child: Text("Close"),
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  int count = 0;
+                  Navigator.popUntil(context, (route) {
+                    return count++ == 2;
+                  });
                 },
               )
             ],
           );
         });
+  }
+
+  Future _showSigninLoadingDialog() {
+    return showDialog(
+        context: context,
+        builder: (_) => Dialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Authenticating...',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
   }
 
   GestureDetector _buildForgotPassword(BuildContext context) {

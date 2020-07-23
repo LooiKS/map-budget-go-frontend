@@ -1,5 +1,4 @@
 import 'package:budgetgo/model/base_auth.dart';
-import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -37,79 +36,76 @@ class MapScreenState extends State<UpdatePasswordPage>
     // Clean up the controller when the Widget is disposed
     _currentEmail.dispose();
     _newPassword.dispose();
+    _oldPassword.dispose();
+    _confirmNewPassword.dispose();
     super.dispose();
   }
 
+  void validateEmail() {
+    setState(() {
+      if (_currentEmail.text.isEmpty) {
+        _validateEmail = true;
+      } else if (_currentEmail.text == widget.email &&
+          _currentEmail.text.isNotEmpty) {
+        _validateEmail = false;
+        _buildPasswordEntryDialog(context);
+      } else if (!RegExp(r'[\w\.-]+@[\w\.-]+\.\w{2,4}')
+          .hasMatch(_currentEmail.text)) {
+        _validateEmail = false;
+        _showErrorDialog(
+            error: "Please enter valid email address",
+            title: "Email Incorrect",
+            popCount: 1);
+      } else {
+        _validateEmail = false;
+        _showErrorDialog(
+            error: "Your email is not match.",
+            title: "Email Incorrect",
+            popCount: 1);
+      }
+    });
+  }
+
   void resetPassword() async {
-    if (_oldPassword.text.isEmpty) {
-      setState(() {
-        _validateOldPassword = true;
-      });
-    }
-    if (_newPassword.text.isEmpty) {
-      setState(() {
-        _validateNewPassword = true;
-      });
-    }
-    if (_confirmNewPassword.text.isEmpty) {
-      setState(() {
-        _validateConfirmPassword = true;
-      });
-    }
     if (_oldPassword.text.isNotEmpty &&
         _newPassword.text.isNotEmpty &&
-        _confirmNewPassword.text.isNotEmpty &&
-        (_confirmNewPassword.text == _newPassword.text)) {
-      try {
-        await widget.auth.changePassword(_oldPassword.text, _newPassword.text);
-        showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-                  title: Text('Update Successfully'),
-                  content: Text('Password update successfully.'),
-                  actions: <Widget>[
-                    FlatButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        child: Text('OK'))
-                  ],
-                ));
-      } catch (error) {
-        showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-                  title: Text('Error Occurs'),
-                  content: Text('${error.toString()}'),
-                  actions: <Widget>[
-                    FlatButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text('OK'))
-                  ],
-                ));
+        _confirmNewPassword.text.isNotEmpty) {
+      if (_newPassword.text != _confirmNewPassword.text) {
+        _showErrorDialog(
+            error: "The new password does not match with confirm password.",
+            popCount: 1,
+            title: "Mismatch");
+      } else {
+        try {
+          _showLoadingDialog();
+          await widget.auth
+              .changePassword(_oldPassword.text, _newPassword.text);
+          _showUpdateSuccessDialog();
+        } catch (error) {
+          _showErrorDialog(
+              error: error.toString(), title: "Error Occurs", popCount: 2);
+        }
       }
-    } else {
-      showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-                title: Text('Error'),
-                content: Text(
-                    'The new password does not match with confirm password.'),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('OK'))
-                ],
-              ));
     }
+  }
+
+  void handleCancelResetPassword() {
+    setState(() {
+      _validateOldPassword = false;
+      _validateNewPassword = false;
+      _validateConfirmPassword = false;
+      _oldPassword.clear();
+      _newPassword.clear();
+      _confirmNewPassword.clear();
+    });
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Reset Password"),
+          title: Text("Update Password"),
         ),
         body: Container(
           padding: EdgeInsets.all(20),
@@ -123,26 +119,11 @@ class MapScreenState extends State<UpdatePasswordPage>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      "Re-Enter Your Email",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
+                    _buildTextEntryTitle("Re-Enter Your Email"),
                     SizedBox(
                       height: 10,
                     ),
-                    TextField(
-                        controller: _currentEmail,
-                        style: TextStyle(
-                            color: Colors.black, height: 1.0, fontSize: 18),
-                        decoration: InputDecoration(
-                            errorText: _validateEmail
-                                ? 'The email field cannot be empty'
-                                : null,
-                            border: InputBorder.none,
-                            fillColor: Color(0xfff3f3f4),
-                            filled: true,
-                            contentPadding: const EdgeInsets.all(10.0)))
+                    _buildEmailTextField()
                   ],
                 ),
               ),
@@ -151,237 +132,10 @@ class MapScreenState extends State<UpdatePasswordPage>
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Container(
-                            child: RaisedButton(
-                          child: Text("Cancel"),
-                          textColor: Colors.white,
-                          color: Colors.red,
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
-                        )),
-                      ),
-                      flex: 2,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Container(
-                            child: RaisedButton(
-                          child: Text("Submit"),
-                          textColor: Colors.white,
-                          color: Colors.green,
-                          onPressed: () async {
-                            if (_currentEmail.text.isEmpty) {
-                              setState(() {
-                                _validateEmail = true;
-                              });
-                            } else if (_currentEmail.text == widget.email &&
-                                _currentEmail.text.isNotEmpty) {
-                              setState(() {
-                                _validateEmail = false;
-                              });
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return StatefulBuilder(
-                                      builder: (context, setState) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              20.0)), //this right here
-                                      child: Container(
-                                        height: 400,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: ListView(
-                                            children: [
-                                              Text(
-                                                "Old Password",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18),
-                                              ),
-                                              TextField(
-                                                controller: _oldPassword,
-                                                obscureText: _showOldPassword,
-                                                decoration: InputDecoration(
-                                                  suffixIcon: IconButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _showOldPassword =
-                                                              !_showOldPassword;
-                                                        });
-                                                      },
-                                                      icon: Icon(_showOldPassword
-                                                          ? Icons.visibility
-                                                          : Icons
-                                                              .visibility_off)),
-                                                  hintText:
-                                                      "Enter old password",
-                                                  errorText: _validateOldPassword
-                                                      ? 'The old password field cannot be empty.'
-                                                      : null,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                "New Password",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18),
-                                              ),
-                                              TextField(
-                                                controller: _newPassword,
-                                                obscureText: _showNewPassword,
-                                                decoration: InputDecoration(
-                                                  suffixIcon: IconButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _showNewPassword =
-                                                              !_showNewPassword;
-                                                        });
-                                                      },
-                                                      icon: Icon(_showNewPassword
-                                                          ? Icons.visibility
-                                                          : Icons
-                                                              .visibility_off)),
-                                                  hintText:
-                                                      "Enter new password",
-                                                  errorText: _validateNewPassword
-                                                      ? 'The new password field cannot be empty.'
-                                                      : null,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                "Confirm New Password",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18),
-                                              ),
-                                              TextField(
-                                                controller: _confirmNewPassword,
-                                                obscureText:
-                                                    _showConfirmNewPassword,
-                                                decoration: InputDecoration(
-                                                  suffixIcon: IconButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _showConfirmNewPassword =
-                                                              !_showConfirmNewPassword;
-                                                        });
-                                                      },
-                                                      icon: Icon(
-                                                          _showConfirmNewPassword
-                                                              ? Icons.visibility
-                                                              : Icons
-                                                                  .visibility_off)),
-                                                  hintText:
-                                                      "Enter confirm new password",
-                                                  errorText:
-                                                      _validateConfirmPassword
-                                                          ? 'The confirm password field cannot be empty.'
-                                                          : null,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.all(10.0),
-                                                      child: Container(
-                                                          child: RaisedButton(
-                                                        child: Text("Cancel"),
-                                                        textColor: Colors.white,
-                                                        color: Colors.red,
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20.0)),
-                                                      )),
-                                                    ),
-                                                    flex: 2,
-                                                  ),
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.all(10.0),
-                                                      child: Container(
-                                                          child: RaisedButton(
-                                                        child: Text("Reset"),
-                                                        textColor: Colors.white,
-                                                        color: Colors.green,
-                                                        onPressed: () {
-                                                          resetPassword();
-                                                        },
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20.0)),
-                                                      )),
-                                                    ),
-                                                    flex: 2,
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  });
-                                },
-                              );
-                            } else {
-                              setState(() {
-                                _validateEmail = false;
-                              });
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text("Email Incorrect"),
-                                      content: Text("Your email is not match."),
-                                      actions: [
-                                        FlatButton(
-                                          child: Text("Close"),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  });
-                            }
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
-                        )),
-                      ),
-                      flex: 2,
-                    ),
+                    _buildEmailButtonGroup(
+                        context: context, title: "Cancel", color: Colors.red),
+                    _buildEmailButtonGroup(
+                        context: context, title: "Submit", color: Colors.green),
                   ],
                 ),
               ),
@@ -390,34 +144,274 @@ class MapScreenState extends State<UpdatePasswordPage>
         ));
   }
 
-  Column buildTitle(String title) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Text(
-          '$title',
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-        ),
-      ],
+  TextField _buildEmailTextField() {
+    return TextField(
+        controller: _currentEmail,
+        style: TextStyle(color: Colors.black, height: 1.0, fontSize: 18),
+        decoration: InputDecoration(
+            errorText:
+                _validateEmail ? 'The email field cannot be empty' : null,
+            border: InputBorder.none,
+            fillColor: Color(0xfff3f3f4),
+            filled: true,
+            contentPadding: const EdgeInsets.all(10.0)));
+  }
+
+  Expanded _buildEmailButtonGroup(
+      {BuildContext context, String title, Color color}) {
+    return Expanded(
+      flex: 2,
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Container(
+            child: RaisedButton(
+          child: Text("$title"),
+          textColor: Colors.white,
+          color: color,
+          onPressed: () =>
+              title == "Cancel" ? Navigator.of(context).pop() : validateEmail(),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        )),
+      ),
     );
   }
-}
 
-class ExpendedTitle extends StatelessWidget {
-  const ExpendedTitle(this.title);
-  final title;
+  Future _buildPasswordEntryDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, StateSetter setState) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 400,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: ListView(
+                  children: [
+                    _buildTextEntryTitle("Old Password"),
+                    _buildPasswordTextField(
+                        setState: setState,
+                        controller: _oldPassword,
+                        showHide: _showOldPassword,
+                        validate: _validateOldPassword,
+                        passwordType: 1,
+                        errorText: 'The old password field cannot be empty.',
+                        hintText: "Enter old password"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    _buildTextEntryTitle("New Password"),
+                    _buildPasswordTextField(
+                        setState: setState,
+                        controller: _newPassword,
+                        showHide: _showNewPassword,
+                        validate: _validateNewPassword,
+                        passwordType: 2,
+                        errorText: 'The new password field cannot be empty.',
+                        hintText: "Enter new password"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    _buildTextEntryTitle("Confirm New Password"),
+                    _buildPasswordTextField(
+                        setState: setState,
+                        controller: _confirmNewPassword,
+                        showHide: _showConfirmNewPassword,
+                        validate: _validateConfirmPassword,
+                        passwordType: 3,
+                        errorText:
+                            'The confirm password field cannot be empty.',
+                        hintText: "Enter confirm new password"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _buildPasswordButtonGroup(
+                            title: "Cancel", color: Colors.red),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Container(
+                                child: RaisedButton(
+                              child: Text("Reset"),
+                              textColor: Colors.white,
+                              color: Colors.green,
+                              onPressed: () {
+                                setState(() {
+                                  _oldPassword.text.isEmpty
+                                      ? _validateOldPassword = true
+                                      : _validateOldPassword = false;
+                                  _newPassword.text.isEmpty
+                                      ? _validateNewPassword = true
+                                      : _validateNewPassword = false;
+                                  _confirmNewPassword.text.isEmpty
+                                      ? _validateConfirmPassword = true
+                                      : _validateConfirmPassword = false;
+                                });
+                                resetPassword();
+                              },
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                            )),
+                          ),
+                          flex: 2,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
+  Expanded _buildPasswordButtonGroup({String title, Color color}) {
     return Expanded(
-      child: Container(
-        child: Text(
-          title,
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-        ),
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Container(
+            child: RaisedButton(
+          child: Text("$title"),
+          textColor: Colors.white,
+          color: color,
+          onPressed: () => handleCancelResetPassword(),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        )),
       ),
       flex: 2,
     );
+  }
+
+  TextField _buildPasswordTextField({
+    StateSetter setState,
+    TextEditingController controller,
+    bool showHide,
+    int passwordType,
+    String hintText,
+    String errorText,
+    bool validate,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: showHide,
+      decoration: InputDecoration(
+        suffixIcon: IconButton(
+            onPressed: () {
+              switch (passwordType) {
+                // 1 : Old Password
+                // 2 : New Password
+                // 3 : Confirm New Password
+                case 1:
+                  setState(() {
+                    _showOldPassword = !showHide;
+                    showHide = !showHide;
+                  });
+                  break;
+                case 2:
+                  setState(() {
+                    _showNewPassword = !showHide;
+                    showHide = !showHide;
+                  });
+                  break;
+                case 3:
+                  setState(() {
+                    _showConfirmNewPassword = !showHide;
+                    showHide = !showHide;
+                  });
+                  break;
+              }
+            },
+            icon: Icon(showHide ? Icons.visibility : Icons.visibility_off)),
+        hintText: "$hintText",
+        errorText: validate ? '$errorText' : null,
+      ),
+    );
+  }
+
+  Text _buildTextEntryTitle(String text) {
+    return Text(
+      "$text",
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+    );
+  }
+
+  Future _showLoadingDialog() {
+    return showDialog(
+        context: context,
+        builder: (_) => Dialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Reseting...',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
+  }
+
+  Future _showErrorDialog({String error, String title, int popCount}) {
+    return showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text('$title'),
+              content: Text('$error'),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      int count = 0;
+                      Navigator.popUntil(context, (route) {
+                        return popCount == 2 ? count++ == 2 : count++ == 1;
+                      });
+                    },
+                    child: Text('OK'))
+              ],
+            ));
+  }
+
+  Future _showUpdateSuccessDialog() {
+    return showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text('Update Successfully'),
+              content: Text('Password update successfully.'),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      handleCancelResetPassword();
+                      int count = 0;
+                      Navigator.popUntil(context, (route) {
+                        return count++ == 2;
+                      });
+                    },
+                    child: Text('OK'))
+              ],
+            ));
   }
 }
