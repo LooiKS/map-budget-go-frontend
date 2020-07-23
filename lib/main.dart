@@ -64,9 +64,10 @@ class MainAppState extends State<MainApp> {
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
           case '/scheduledetails':
+          dynamic args = jsonDecode(settings.arguments);
             return MaterialPageRoute(
                 settings: RouteSettings(name: settings.name),
-                builder: (context) => ScheduleDetailScreen(settings.arguments));
+                builder: (context) => ScheduleDetailScreen(args['trip'], args['schedule']));
           default:
             return null;
         }

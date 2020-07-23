@@ -9,7 +9,6 @@ import './trips_detail.dart';
 import '../../main.dart';
 import '../../services/trip_data_service.dart';
 
-
 class TripsMainPage extends StatefulWidget {
   User user;
 
@@ -21,14 +20,14 @@ class TripsMainPage extends StatefulWidget {
 class _TripsMainPageState extends State<TripsMainPage> {
   List<Trips> _trips = [];
   List<Trips> _tempTrips = [];
-  //String _tempUser = "BG0011";  
+  //String _tempUser = "BG0011";
   final dataService = TripDataService();
   List<Trips> progressTrips = [];
   List<Trips> upcomingTrips = [];
   List<Trips> pastTrips = [];
-  
+
   void _navigateTripDetails(int index) async {
-    //Trips returnData = await 
+    //Trips returnData = await
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -40,41 +39,46 @@ class _TripsMainPageState extends State<TripsMainPage> {
     //   setState(() {
     //     _trips.removeWhere((item) => item.tripDetail == 'cancel');
     //   });
-      
+
     // } else {}
   }
 
   void _navigateCreateTrip() async {
     final returnData = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => TripsCreatePage(ownerUser: widget.user)));
+        context,
+        MaterialPageRoute(
+            builder: (context) => TripsCreatePage(ownerUser: widget.user)));
     if (returnData != null) {
       setState(() {
-       _tripAddedAlert(context);
+        _tripAddedAlert(context);
       });
     }
   }
-  
-
 
   @override
   Widget build(BuildContext context) {
-      return FutureBuilder<List<Trips>>(
+    print('rebuild ?');
+    return FutureBuilder<List<Trips>>(
         future: dataService.getAllTrips(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             _tempTrips = snapshot.data;
             _trips.clear();
-            for (int j = 0; j<_tempTrips.length ; j++){
-                if (_tempTrips[j].owner.id == widget.user.id){
-                  _trips.add(_tempTrips[j]);
-                }
+            for (int j = 0; j < _tempTrips.length; j++) {
+              if (_tempTrips[j]
+                  .members
+                  .any((user) => user.id == widget.user.id)) {
+                _trips.add(_tempTrips[j]);
+              }
             }
+            print(_trips);
             return buildMainScreen();
           }
           return _buildFetchingDataScreen();
         });
   }
-   Scaffold _buildFetchingDataScreen() {
+
+  Scaffold _buildFetchingDataScreen() {
     return Scaffold(
       body: Center(
         child: Column(
@@ -89,26 +93,26 @@ class _TripsMainPageState extends State<TripsMainPage> {
     );
   }
 
-  Widget buildMainScreen(){
+  Widget buildMainScreen() {
     progressTrips.clear();
-            upcomingTrips.clear();
-            pastTrips.clear();
-            for (int i = 0; i < _trips.length; i++) {
-              if (_trips[i].startDt.isBefore(DateTime.now()) &&
-                  _trips[i].endDt.isBefore(DateTime.now())) {
-                _trips[i].status = "past";
-                pastTrips.add(_trips[i]);
-              } else if (_trips[i].startDt.isBefore(DateTime.now()) &&
-                  _trips[i].endDt.isAfter(DateTime.now())) {
-                _trips[i].status = "progress";
-                progressTrips.add(_trips[i]);
-              } else if (_trips[i].startDt.isAfter(DateTime.now()) &&
-                  _trips[i].endDt.isAfter(DateTime.now())) {
-                _trips[i].status = "upcoming";
-                upcomingTrips.add(_trips[i]);
-              }
-              }
-    
+    upcomingTrips.clear();
+    pastTrips.clear();
+    for (int i = 0; i < _trips.length; i++) {
+      if (_trips[i].startDt.isBefore(DateTime.now()) &&
+          _trips[i].endDt.isBefore(DateTime.now())) {
+        _trips[i].status = "past";
+        pastTrips.add(_trips[i]);
+      } else if (_trips[i].startDt.isBefore(DateTime.now()) &&
+          _trips[i].endDt.isAfter(DateTime.now())) {
+        _trips[i].status = "progress";
+        progressTrips.add(_trips[i]);
+      } else if (_trips[i].startDt.isAfter(DateTime.now()) &&
+          _trips[i].endDt.isAfter(DateTime.now())) {
+        _trips[i].status = "upcoming";
+        upcomingTrips.add(_trips[i]);
+      }
+    }
+
     return DefaultTabController(
       length: 3,
       initialIndex: 0,
@@ -245,7 +249,7 @@ class _TripsMainPageState extends State<TripsMainPage> {
                 ),
               ]),
           onTap: () {
-            int newIndex =_trips.indexOf(progressTrips[index]);
+            int newIndex = _trips.indexOf(progressTrips[index]);
             _navigateTripDetails(newIndex);
           },
         ),
@@ -483,7 +487,8 @@ class _TripsMainPageState extends State<TripsMainPage> {
     );
   }
 
-  Future _deleteConfirmation(BuildContext context, String index, int tripsIndex) {
+  Future _deleteConfirmation(
+      BuildContext context, String index, int tripsIndex) {
     return showDialog(
       context: context,
       barrierDismissible: false,
@@ -513,8 +518,6 @@ class _TripsMainPageState extends State<TripsMainPage> {
       },
     );
   }
-
-  
 
   Future<void> _tripAddedAlert(BuildContext context) {
     return showDialog<void>(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/schedule.dart';
+import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/screen/schedule/schedule_form.dart';
 import 'package:budgetgo/screen/trips/trips_detail.dart';
 import 'package:budgetgo/utils/calendar.dart';
@@ -9,8 +10,9 @@ import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleDetailScreen extends StatefulWidget {
+  final Trips trip;
   final Schedule index;
-  ScheduleDetailScreen(this.index);
+  ScheduleDetailScreen(this.trip,this.index);
 
   @override
   _ScheduleScreenState createState() => _ScheduleScreenState();
@@ -29,7 +31,7 @@ class _ScheduleScreenState extends State<ScheduleDetailScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Schedule ${loggedInUser.id} ${schedule.createdBy.id}',
+            'Schedule',
             style: TextStyle(color: Colors.white),
           ),
           shape: CustomShapeBorder(),
@@ -41,7 +43,7 @@ class _ScheduleScreenState extends State<ScheduleDetailScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          ScheduleForm(widget.index)))
+                                          ScheduleForm(widget.trip, widget.index)))
                               .then((newSchedule) {
                             // if (newSchedule != null)
                             // setState(() => widget.index.activityTitle = newSchedule);

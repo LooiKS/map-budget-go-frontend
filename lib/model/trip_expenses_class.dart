@@ -84,10 +84,10 @@ class TripExpenses {
     int year = int.parse(s.split('-')[0]);
     int month = int.parse(s.split('-')[1]);
     int day = int.parse(s.split('-')[2].split(' ')[0]);
-    int hour = int.parse(s.split('-')[2].split(' ')[1].split(':')[0]);
-    int min = int.parse(s.split('-')[2].split(' ')[1].split(':')[1]);
-    int sec =
-        int.parse(s.split('-')[2].split(' ')[1].split(':')[2].split('.')[0]);
-    return DateTime(year, month, day, hour, min, sec);
+    // int hour = int.parse(s.split('-')[2].split(' ')[1].split(':')[0]);
+    // int min = int.parse(s.split('-')[2].split(' ')[1].split(':')[1]);
+    // int sec =
+    //     int.parse(s.split('-')[2].split(' ')[1].split(':')[2].split('.')[0]);
+    return DateTime(year, month, day);
   }
 }

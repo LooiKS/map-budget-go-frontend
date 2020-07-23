@@ -2,6 +2,7 @@ import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
 import 'package:budgetgo/screen/schedule/schedule_form.dart';
 import 'package:budgetgo/screen/schedule/schedule_screen.dart';
 import 'package:budgetgo/screen/trips/trips_edit.dart';
@@ -107,7 +108,7 @@ class _TripsDetailState extends State<TripsDetail> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                ScheduleForm(Schedule.empty(mockOwnUser))))
+                                                ScheduleForm(widget.tripsData, Schedule.empty(mockOwnUser))))
                                     .then((newSchedule) => newSchedule != null
                                         ? widget.tripsData.schedules
                                             .add(newSchedule)
@@ -116,7 +117,7 @@ class _TripsDetailState extends State<TripsDetail> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            ScheduleScreen(widget.tripsData.schedules)));
+                                            ScheduleScreen(widget.tripsData, widget.tripsData.schedules)));
                           })
                 : Text(""),
           ]),
@@ -183,40 +184,43 @@ class _TripsDetailState extends State<TripsDetail> {
             child: ListView.builder(
               shrinkWrap: true,
               itemBuilder: (context, index) => Card(
-                margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
-                elevation: 1,
-                child: ListTile(
-                  title: Text(
-                    widget.tripsData.schedules[index].activityTitle,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  leading: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.event,
-                        color: Colors.orange,
+                  margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+                  elevation: 1,
+                  child: ListTile(
+                      title: Text(
+                        widget.tripsData.schedules[index].activityTitle,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
                       ),
-                      Text(
-                          '${Month[widget.tripsData.schedules[index].startDt.month]}, ${widget.tripsData.schedules[index].startDt.day}')
-                    ],
-                  ),
-                  subtitle: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text('${Month[widget.tripsData.schedules[index].startDt.month]}, ${widget.tripsData.schedules[index].startDt.day} ${widget.tripsData.schedules[index].startDt.year} ' +
-                        '${widget.tripsData.schedules[index].startDt.hour.toString().padLeft(2, '0')}:${widget.tripsData.schedules[index].startDt.minute.toString().padLeft(2, '0')}\n' +
-                        '${Month[widget.tripsData.schedules[index].endDt.month]}, ${widget.tripsData.schedules[index].endDt.day} ${widget.tripsData.schedules[index].endDt.year} ' +
-                        '${widget.tripsData.schedules[index].endDt.hour.toString().padLeft(2, '0')}:${widget.tripsData.schedules[index].endDt.minute.toString().padLeft(2, '0')}'),
-                  ),
-                  contentPadding: EdgeInsets.all(8.0),
-                  trailing: Icon(
-                    Icons.keyboard_arrow_right,
-                    size: 30.0,
-                  ),
-                  onTap: () => Navigator.pushNamed(context, '/scheduledetails',
-                      arguments: widget.tripsData.schedules[index]),
-                ),
-              ),
+                      leading: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.event,
+                            color: Colors.orange,
+                          ),
+                          Text(
+                              '${Month[widget.tripsData.schedules[index].startDt.month]}, ${widget.tripsData.schedules[index].startDt.day}')
+                        ],
+                      ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text('${Month[widget.tripsData.schedules[index].startDt.month]}, ${widget.tripsData.schedules[index].startDt.day} ${widget.tripsData.schedules[index].startDt.year} ' +
+                            '${widget.tripsData.schedules[index].startDt.hour.toString().padLeft(2, '0')}:${widget.tripsData.schedules[index].startDt.minute.toString().padLeft(2, '0')}\n' +
+                            '${Month[widget.tripsData.schedules[index].endDt.month]}, ${widget.tripsData.schedules[index].endDt.day} ${widget.tripsData.schedules[index].endDt.year} ' +
+                            '${widget.tripsData.schedules[index].endDt.hour.toString().padLeft(2, '0')}:${widget.tripsData.schedules[index].endDt.minute.toString().padLeft(2, '0')}'),
+                      ),
+                      contentPadding: EdgeInsets.all(8.0),
+                      trailing: Icon(
+                        Icons.keyboard_arrow_right,
+                        size: 30.0,
+                      ),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ScheduleDetailScreen(
+                                  widget.tripsData,
+                                  widget.tripsData.schedules[index]))))),
               itemCount: widget.tripsData.schedules.length,
             ),
           );

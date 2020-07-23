@@ -1,14 +1,17 @@
 import 'package:budgetgo/model/schedule.dart';
+import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/services/schedule_data_service.dart';
+import 'package:budgetgo/services/trip_data_service.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class ScheduleForm extends StatefulWidget {
+  final Trips trip;
   final Schedule schedule;
 
-  ScheduleForm(this.schedule);
+  ScheduleForm(this.trip, this.schedule);
 
   @override
   _ScheduleFormState createState() => _ScheduleFormState();
@@ -225,7 +228,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
     );
   }
 
-  void _onSave() {
+  void _onSave() async {
     String errorMsg = '';
     schedule.activityTitle = schedule.activityTitle.trim();
     schedule.activityDesc = schedule.activityDesc.trim();
@@ -252,12 +255,51 @@ class _ScheduleFormState extends State<ScheduleForm> {
       widget.schedule.activityDesc = schedule.activityDesc;
       widget.schedule.startDt = schedule.startDt;
       widget.schedule.endDt = schedule.endDt;
-      Navigator.pop(
-          context,
-          widget.schedule.id == ''
-              ? scheduleDataService.createSchedule(schedule)
-              : scheduleDataService.updateSchedule(
-                  widget.schedule.id, schedule));
+      Schedule _schedule;
+      showDialog(
+          context: context,
+          builder: (_) => Dialog(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: CircularProgressIndicator()),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Loading...',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ));
+      if (widget.schedule.id == '') {
+        print('lol1');
+        _schedule = await scheduleDataService.createSchedule(schedule);
+        widget.trip.schedules.add(_schedule);
+        TripDataService().updateTrip(widget.trip.id, widget.trip);
+        print('lol2');
+      } else {
+        print('lol3');
+        _schedule = await scheduleDataService.updateSchedule(
+            widget.schedule.id, schedule);
+        print('lol4');
+      }
+      print('lol5');
+      Navigator.pop(context);
+      Navigator.pop(context, _schedule);
     }
   }
 
