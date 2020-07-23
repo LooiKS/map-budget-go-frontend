@@ -3,11 +3,13 @@ import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
 import 'package:budgetgo/screen/schedule/schedule_form.dart';
+import 'package:budgetgo/services/authentication_service.dart';
 import 'package:budgetgo/services/schedule_data_service.dart';
 import 'package:budgetgo/services/trip_data_service.dart';
 // import 'package:budgetgo/screen/trips/schedule_form.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -21,6 +23,14 @@ class ScheduleScreen extends StatefulWidget {
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
   ScheduleDataService scheduleDataService = ScheduleDataService();
+  FirebaseUser user;
+
+  @override
+  void initState() {
+    Auth().getCurrentUser().then((firebaseUser) => user = firebaseUser);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,69 +118,72 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 // setState(() => widget.schedules[index] = updatedSchedule);
                 // }
                 ),
-            onLongPress: () => showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                      title: Text('Delete'),
-                      content: Text(
-                          'Are you sure to delete the schedule ${widget.schedules[index].activityTitle}?'),
-                      actions: <Widget>[
-                        FlatButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text('No')),
-                        FlatButton(
-                            onPressed: () {
-                              Navigator.pop(context);
+            onLongPress: () => widget.schedules[index].createdBy.id == user.uid
+                ? showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text('Delete'),
+                          content: Text(
+                              'Are you sure to delete the schedule ${widget.schedules[index].activityTitle}?'),
+                          actions: <Widget>[
+                            FlatButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('No')),
+                            FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
 
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => Dialog(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                children: <Widget>[
-                                                  SizedBox(
-                                                      height: 50,
-                                                      width: 50,
-                                                      child:
-                                                          CircularProgressIndicator()),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Text(
-                                                      'Loading...',
-                                                      style: TextStyle(
-                                                          fontSize: 20),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => Dialog(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      SizedBox(
+                                                          height: 50,
+                                                          width: 50,
+                                                          child:
+                                                              CircularProgressIndicator()),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(
+                                                          'Loading...',
+                                                          style: TextStyle(
+                                                              fontSize: 20),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      ));
-                              scheduleDataService
-                                  .deleteSchedule(widget.schedules[index].id);
-                              widget.trip.schedules.removeWhere(
-                                  (s) => s.id == widget.schedules[index].id);
-                              TripDataService()
-                                  .updateTrip(widget.trip.id, widget.trip);
-                              setState(() => widget.schedules.removeAt(index));
-                              print('doneeeee');
-                              Navigator.pop(context);
-                            },
-                            child: Text('Yes'))
-                      ],
-                    )),
+                                          ));
+                                  scheduleDataService.deleteSchedule(
+                                      widget.schedules[index].id);
+                                  widget.trip.schedules.removeWhere((s) =>
+                                      s.id == widget.schedules[index].id);
+                                  TripDataService()
+                                      .updateTrip(widget.trip.id, widget.trip);
+                                  setState(
+                                      () => widget.schedules.removeAt(index));
+                                  print('doneeeee');
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Yes'))
+                          ],
+                        ))
+                : null,
           ),
         ),
         itemCount: widget.schedules.length,
