@@ -109,10 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                 content: Text('Error occurred. ${e.message}'),
                 actions: <Widget>[
                   FlatButton(
-                      onPressed: () => Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (_) => MyHomePage()),
-                          (_) => false),
+                      onPressed: () => Navigator.pop(context),
                       child: Text('OK'))
                 ],
               ));
