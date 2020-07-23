@@ -1,7 +1,7 @@
 import 'package:budgetgo/model/base_auth.dart';
-import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/friend_list/friend_list.dart';
+import 'package:budgetgo/screen/login/login.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (user == null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) => LogoutPage(
+            builder: (context) => LoginPage(
               toggleBrightness: widget.toggleBrightness,
               auth: widget.auth,
             ),
@@ -204,11 +204,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: 5,
                         ),
                         image: DecorationImage(
-                          image:
-                              _user.profilePic == null
-                                  ? AssetImage("assets/images/default_profile.png")
-                                  :
-                              NetworkImage('${_user.profilePic}'),
+                          image: _user.profilePic == null
+                              ? AssetImage("assets/images/default_profile.png")
+                              : NetworkImage('${_user.profilePic}'),
                           fit: BoxFit.cover,
                         ),
                       )),

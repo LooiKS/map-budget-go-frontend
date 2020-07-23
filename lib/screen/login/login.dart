@@ -42,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
             builder: (context) => MyHomePage(
               toggleBrightness: widget.toggleBrightness,
               auth: widget.auth,
+            
             ),
           ));
     } catch (error) {
