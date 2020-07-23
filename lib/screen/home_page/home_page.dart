@@ -16,8 +16,10 @@ import '../../services/users_date_service.dart';
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
   final BaseAuth auth;
+  final String uid;
 
-  MyHomePage({Key key, this.toggleBrightness, this.auth}) : super(key: key);
+  MyHomePage({Key key, this.toggleBrightness, this.auth, this.uid})
+      : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -28,30 +30,11 @@ class _MyHomePageState extends State<MyHomePage> {
   String appBarTitle = "Home";
 
   User _user;
-  String uid = "";
 
   @override
   void initState() {
     currentPage = 0;
-    getUID();
     super.initState();
-  }
-
-  void getUID() async {
-    final user = await widget.auth.getCurrentUser();
-    if (user == null) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => LoginPage(
-              toggleBrightness: widget.toggleBrightness,
-              auth: widget.auth,
-            ),
-          ),
-          (_) => false);
-    }
-    setState(() {
-      uid = user.uid;
-    });
   }
 
   void onDrawerRowTapped(String choice) async {
@@ -137,17 +120,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return uid == ""
-        ? CircularProgressIndicator()
-        : FutureBuilder<User>(
-            future: userDataService.getUser(id: uid),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                _user = snapshot.data;
-                return buildScaffold();
-              }
-              return Center(child: CircularProgressIndicator());
-            });
+    return FutureBuilder<User>(
+        future: userDataService.getUser(id: widget.uid),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            _user = snapshot.data;
+            return buildScaffold();
+          }
+          return _buildLoading();
+        });
+  }
+
+  Scaffold _buildLoading() {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(appBarTitle),
+        shape: CustomShapeBorder(),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CircularProgressIndicator(),
+            SizedBox(height: 50),
+            Text('Fetching data... Please wait'),
+          ],
+        ),
+      ),
+    );
   }
 
   Scaffold buildScaffold() {

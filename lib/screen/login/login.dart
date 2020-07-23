@@ -35,14 +35,14 @@ class _LoginPageState extends State<LoginPage> {
   void signInViaEmail(email, password) async {
     _showSigninLoadingDialog();
     try {
-      await widget.auth.signIn(email, password);
+      final uid = await widget.auth.signIn(email, password);
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => MyHomePage(
               toggleBrightness: widget.toggleBrightness,
               auth: widget.auth,
-            
+              uid: uid,
             ),
           ));
     } catch (error) {
@@ -59,9 +59,9 @@ class _LoginPageState extends State<LoginPage> {
             context,
             MaterialPageRoute(
               builder: (context) => MyHomePage(
-                toggleBrightness: widget.toggleBrightness,
-                auth: widget.auth,
-              ),
+                  toggleBrightness: widget.toggleBrightness,
+                  auth: widget.auth,
+                  uid: result.uid),
             ));
       }
     } catch (error) {
@@ -73,8 +73,14 @@ class _LoginPageState extends State<LoginPage> {
     try {
       var result = await widget.auth.signInViaFacebook();
       if (result != null)
-        Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (_) => MyHomePage()), (_) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (_) => MyHomePage(
+                    toggleBrightness: widget.toggleBrightness,
+                    auth: widget.auth,
+                    uid: result.uid)),
+            (_) => false);
     } on PlatformException catch (e) {
       showDialog(
           context: context,

@@ -59,9 +59,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => MyHomePage(
-                    toggleBrightness: widget.toggleBrightness,
-                    auth: widget.auth,
-                  ),
+                      toggleBrightness: widget.toggleBrightness,
+                      auth: widget.auth,
+                      uid: uid),
                 ));
           }
           break;
