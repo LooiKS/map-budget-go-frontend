@@ -463,8 +463,10 @@ class MapScreenState extends State<ProfilePage>
             FlatButton(
               child: Text('Ok'),
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                int count = 0;
+                Navigator.popUntil(context, (route) {
+                  return count++ == 2;
+                });
               },
             ),
           ],
