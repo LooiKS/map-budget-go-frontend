@@ -184,7 +184,7 @@ List<User> loginData = [
 final mockdata = [
   //Trip #1
   Trips(
-      tripID: 1,
+      id: "1",
       tripTitle: "Japan",
       tripDetail: "Honey Moon",
       owner: mockOwnUser,
@@ -199,7 +199,7 @@ final mockdata = [
 
   //Trip #2
   Trips(
-      tripID: 2,
+      id: "2",
       tripTitle: "Canada",
       tripDetail: "See polar bear",
       owner: mockOwnUser,
@@ -288,7 +288,7 @@ final mockdata = [
       currency: "USD",
       status: "upcoming"),
   Trips(
-      tripID: 3,
+      id: "3",
       tripTitle: "Russia",
       tripDetail: "Eat Polar BEar",
       owner: mockOwnUser,
@@ -378,7 +378,7 @@ final mockdata = [
       status: "progress"),
   //trips 4
   Trips(
-      tripID: 4,
+      id: "4",
       tripTitle: "Singapore",
       tripDetail: "marina bayy",
       owner: mockOwnUser,
@@ -467,7 +467,7 @@ final mockdata = [
       currency: "USD",
       status: "upcoming"),
   Trips(
-      tripID: 5,
+      id: "5",
       tripTitle: "USA",
       tripDetail: "NBA",
       owner: mockOwnUser,

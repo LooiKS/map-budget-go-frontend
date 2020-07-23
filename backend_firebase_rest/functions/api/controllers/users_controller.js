@@ -1,64 +1,49 @@
 const usersModel = require("../models/users_model");
+const db = require("../database");
 const express = require("express");
 const router = express.Router();
 
 // under development, do not use
-router.post("/profile", function (req, res, next) {
-  var multer = require("multer");
-  var upload = multer({ dest: "uploads/" });
+router.post("/profile", function (req, res) {
   const path = require("path");
   const os = require("os");
   const fs = require("fs");
   const Busboy = require("busboy");
   const busboy = new Busboy({ headers: req.headers });
   const uploads = {};
+  var bucket = db.admin.storage().bucket();
+  var newFileName = "";
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
-    console.log(
-      `File [${fieldname}] filename: ${filename}, encoding: ${encoding}, mimetype: ${mimetype}`
-    );
+    newFileName = new Date().getTime() + "-" + filename;
+
     // Note that os.tmpdir() is an in-memory file system, so should only
     // be used for files small enough to fit in memory.
-    const filepath = path.join(os.tmpdir(), filename);
+    const filepath = path.join(os.tmpdir(), newFileName);
     uploads[fieldname] = { file: filepath };
-    console.log(`Saving '${fieldname}' to ${filepath}`);
     file.pipe(fs.createWriteStream(filepath));
   });
-  console.log(uploads);
 
   // This callback will be invoked after all uploaded files are saved.
   busboy.on("finish", () => {
     for (const name in uploads) {
       const upload = uploads[name];
       const file = upload.file;
-      res.write(`${file}\n`);
-      const { Storage } = require("@google-cloud/storage");
-      const storage = new Storage();
-      const bucket = storage.bucket("albums");
-      console.log(upload);
-      // fs.unlinkSync(file);
-
       // return db.admin
-      bucket.upload(
-        "C:\\Users\\looik\\AppData\\Local\\Temp\\angela.jpg",
-        function (err, file, apiResponse) {
-          // Your bucket now contains:
-          // - "image.png" (with the contents of `/local/path/image.png')
-          // `file` is an instance of a File object that refers to your new file.
-        }
-      );
+      bucket.upload(file, function (err, uploadedFile, apiResponse) {
+        uploadedFile.makePublic();
+        fs.unlinkSync(file);
+      });
+      res.json({
+        photoUrl: `https://storage.googleapis.com/map-budget-go.appspot.com/${newFileName}`,
+      });
     }
-    res.end();
+    res.end(); //json({});
   });
 
   // The raw bytes of the upload will be in req.rawBody.  Send it to busboy, and get
   // a callback when it's finished.
   busboy.end(req.rawBody);
-
-  // console.log(req.file);
-  // res.json({ hi: "" });
-  // req.file is the `avatar` file
-  // req.body will hold the text fields, if there were any
 });
 
 // Get all users

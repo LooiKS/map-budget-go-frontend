@@ -1,4 +1,5 @@
 import 'package:budgetgo/model/trips_class.dart';
+import 'package:budgetgo/services/trip_data_service.dart';
 import 'package:flutter/material.dart';
 import '../../model/user.dart';
 import '../../main.dart';
@@ -12,6 +13,7 @@ class DelMembers extends StatefulWidget {
 }
 
 class _DelMembersState extends State<DelMembers> {
+  final dataService = TripDataService();
   List<User> _memberList = [];
   List<User> _selectedMember = [];
   @override
@@ -55,6 +57,8 @@ class _DelMembersState extends State<DelMembers> {
       setState(() {
         for (User member in _selectedMember) {
           widget.tripData.members.remove(member);
+          dataService.updateTrip(widget.tripData.id, widget.tripData);
+
         }
       });
       Navigator.of(context).pop(widget.tripData);

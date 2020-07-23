@@ -15,10 +15,22 @@ class TripDataService {
 
   Future<List<Trips>> getAllTrips() async {
     final listJson = await rest.get('trips');
-
     return (listJson as List)
-        .map((itemJson) => Trips.copy(itemJson))
+        .map((itemJson) => Trips.fromJson(itemJson))
         .toList();
+  }
+
+  Future<Trips> createTrip({Trips trip}) async {
+    //final json = await rest.post('trips', data: trip);
+    return Trips.fromJson(await rest.post('trips', data:trip));
+  }
+
+  Future deleteTrip(String id) {
+    return rest.delete('$endpoint/$id');
+  }
+
+  Future<Trips> updateTrip(String id, Trips trip) async {
+    return Trips.fromJson(await rest.patch('$endpoint/$id', data: trip));
   }
 }
 

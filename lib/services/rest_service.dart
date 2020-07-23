@@ -19,7 +19,8 @@ class RestService {
   // TODO: change the baseUrl to your own REST API service hosted on Firebase (or heroku)
 
   static const String baseUrl =
-      'http://10.0.2.2:5001/map-budget-go/us-central1/api';
+  'http://localhost:5001/map-budget-go/us-central1/api';
+   //   'http://10.0.2.2:5001/map-budget-go/us-central1/api';
   // 'http://127.0.0.1:5001/map-budget-go/us-central1/api';
   // 'https://us-central1-map-budget-go.cloudfunctions.net/api';
 
@@ -35,25 +36,27 @@ class RestService {
   Future post(String endpoint, {dynamic data}) async {
     final response = await http.post('$baseUrl/$endpoint',
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(data));
+        print(response);
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
     }
     throw response;
   }
 
-  Future postPhoto(String endpoint, {List<int> data}) async {
-    print('hi');
+  
+
+  Future postPhoto(String endpoint, {List<int> data, String fileName}) async {
     var request = http.MultipartRequest(
       "POST",
       Uri.parse('$baseUrl/$endpoint'),
     );
-    request.files.add(http.MultipartFile.fromBytes('avatar', data,
-        contentType: httpParser.MediaType('', '')));
+    request.files.add(http.MultipartFile.fromBytes(fileName, data,
+        contentType: httpParser.MediaType('image', 'jpg'), filename: fileName));
 
-    final response = await request.send();
-    print(response.statusCode);
+    http.StreamedResponse response = await request.send();
+
     if (response.statusCode == 200) {
-      return {"status": "ok"};
+      return jsonDecode(await response.stream.bytesToString());
     }
     throw response;
   }
