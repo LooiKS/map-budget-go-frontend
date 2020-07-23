@@ -57,7 +57,6 @@ class _TripsMainPageState extends State<TripsMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('rebuild ?');
     return FutureBuilder<List<Trips>>(
         future: dataService.getAllTrips(),
         builder: (context, snapshot) {
@@ -71,7 +70,6 @@ class _TripsMainPageState extends State<TripsMainPage> {
                 _trips.add(_tempTrips[j]);
               }
             }
-            print(_trips);
             return buildMainScreen();
           }
           return _buildFetchingDataScreen();
