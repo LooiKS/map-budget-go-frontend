@@ -48,66 +48,43 @@ class _FriendListState extends State<FriendList> {
   }
 
   Future addFriend() async {
+    _showLoadingDialog();
     User _owner = User.copy(widget.user);
     User _friend = User.copy(searchedUser);
+
+    //Check friend that desired to add
+    bool alreadyAdded = false;
+    for (int i = 0; i < _friend.friend.length; i++) {
+      if (_friend.friend[i].id.contains(_owner.id)) {
+        alreadyAdded = true;
+      }
+    }
+
     setState(() {
       _owner.friend.add(searchedUser);
-      _friend.friend.add(_owner);
       _friendList.add(searchedUser);
+      widget.user.friend.add(searchedUser);
+      if (!alreadyAdded) _friend.friend.add(_owner);
     });
 
     await userDataService.updateUser(id: searchedUser.id, user: _friend);
     await userDataService.updateUser(id: widget.user.id, user: _owner);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Succcess Message'),
-          content: const Text('Added Successfully.'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                setState(() {
-                  added = true;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+    _showResultDialog(
+        title: "Succcess Message", content: "Added Successfully", type: 1);
   }
 
   Future confirmDeleteFriend(int index) async {
+    _showLoadingDialog();
     setState(() {
       _friendList.removeAt(index);
+      widget.user.friend.removeAt(index);
     });
     final result =
         await userDataService.updateUser(id: widget.user.id, user: widget.user);
 
     if (result != null) {
-      print("delete");
-      print(result.friend);
-      showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Update Message'),
-            content: const Text('Delete Successfully.'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Ok'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      _showResultDialog(
+          title: "Update Message", content: "Delete Successfully", type: 2);
     }
   }
 
@@ -480,6 +457,65 @@ class _FriendListState extends State<FriendList> {
         ),
       ),
     );
+  }
+
+  Future _showResultDialog({String title, String content, int type}) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('$title'),
+          content: Text('$content'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                if (type == 1)
+                  setState(() {
+                    added = true;
+                  });
+                int count = 0;
+                Navigator.popUntil(context, (route) {
+                  return type == 2 ? count++ == 3 : count++ == 2;
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future _showLoadingDialog() {
+    return showDialog(
+        context: context,
+        builder: (_) => Dialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Loading...',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
   }
 }
 

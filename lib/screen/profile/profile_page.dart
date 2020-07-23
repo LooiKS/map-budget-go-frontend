@@ -5,7 +5,6 @@ import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../services/rest_service.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
