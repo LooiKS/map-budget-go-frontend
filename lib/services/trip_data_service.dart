@@ -3,8 +3,7 @@ import 'package:budgetgo/model/trips_class.dart';
 import './rest_service.dart';
 
 class TripDataService {
-  static final TripDataService _instance =
-      TripDataService._constructor();
+  static final TripDataService _instance = TripDataService._constructor();
   factory TripDataService() {
     return _instance;
   }
@@ -22,7 +21,7 @@ class TripDataService {
 
   Future<Trips> createTrip({Trips trip}) async {
     //final json = await rest.post('trips', data: trip);
-    return Trips.fromJson(await rest.post('trips', data:trip));
+    return Trips.fromJson(await rest.post('trips', data: trip));
   }
 
   Future deleteTrip(String id) {
@@ -34,16 +33,16 @@ class TripDataService {
   }
 }
 
-  // Future<Schedule> createSchedule(String id, Schedule schedule) {
-  //   return rest.post(endpoint, data: schedule);
-  // }
+// Future<Schedule> createSchedule(String id, Schedule schedule) {
+//   return rest.post(endpoint, data: schedule);
+// }
 
-  // Future<Schedule> updateSchedule(String id, Schedule schedule) async {
-  //   print('$endpoint/$id'); //, data: schedule);
-  //   return Schedule.fromJson(await rest.patch('$endpoint/$id', data: schedule));
-  // }
+// Future<Schedule> updateSchedule(String id, Schedule schedule) async {
+//   print('$endpoint/$id'); //, data: schedule);
+//   return Schedule.fromJson(await rest.patch('$endpoint/$id', data: schedule));
+// }
 
-  // Future<Schedule> deleteSchedule(String id) {
-  //   return rest.delete('$endpoint/$id');
-  // }
- // class Schedule
+// Future<Schedule> deleteSchedule(String id) {
+//   return rest.delete('$endpoint/$id');
+// }
+// class Schedule

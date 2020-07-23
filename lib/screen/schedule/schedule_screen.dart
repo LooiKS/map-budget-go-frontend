@@ -1,16 +1,19 @@
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/schedule.dart';
+import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
 import 'package:budgetgo/screen/schedule/schedule_form.dart';
 import 'package:budgetgo/services/schedule_data_service.dart';
+import 'package:budgetgo/services/trip_data_service.dart';
 // import 'package:budgetgo/screen/trips/schedule_form.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleScreen extends StatefulWidget {
+  final Trips trip;
   final List<Schedule> schedules;
-  ScheduleScreen(this.schedules);
+  ScheduleScreen(this.trip, this.schedules);
 
   @override
   _ScheduleScreenState createState() => _ScheduleScreenState();
@@ -52,8 +55,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          ScheduleForm(Schedule.empty(mockOwnUser))))
+                      builder: (context) => ScheduleForm(
+                          widget.trip, Schedule.empty(mockOwnUser))))
               .then((newSchedule) {
             if (newSchedule != null)
               setState(() => widget.schedules.add(newSchedule));
@@ -98,8 +101,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ScheduleDetailScreen(widget.schedules[index]))
+                    builder: (context) => ScheduleDetailScreen(
+                        widget.trip, widget.schedules[index]))
                 // .then((updatedSchedule) {
                 // if (updatedSchedule != null)
                 // setState(() => widget.schedules[index] = updatedSchedule);
@@ -117,9 +120,52 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             child: Text('No')),
                         FlatButton(
                             onPressed: () {
+                              Navigator.pop(context);
+
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => Dialog(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  SizedBox(
+                                                      height: 50,
+                                                      width: 50,
+                                                      child:
+                                                          CircularProgressIndicator()),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      'Loading...',
+                                                      style: TextStyle(
+                                                          fontSize: 20),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ));
                               scheduleDataService
                                   .deleteSchedule(widget.schedules[index].id);
+                              widget.trip.schedules.removeWhere(
+                                  (s) => s.id == widget.schedules[index].id);
+                              TripDataService()
+                                  .updateTrip(widget.trip.id, widget.trip);
                               setState(() => widget.schedules.removeAt(index));
+                              print('doneeeee');
                               Navigator.pop(context);
                             },
                             child: Text('Yes'))

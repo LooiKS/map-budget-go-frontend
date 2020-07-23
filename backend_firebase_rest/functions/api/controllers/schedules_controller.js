@@ -1,6 +1,7 @@
 const schedulesModel = require("../models/schedules_model");
 const express = require("express");
 const router = express.Router();
+const userModel = require("../models/users_model");
 
 // Get all schedules
 router.get("/", async (req, res, next) => {
@@ -26,9 +27,19 @@ router.get("/:id", async (req, res, next) => {
 // Create a new todo
 router.post("/", async (req, res, next) => {
   try {
-    const result = await schedulesModel.create(req.body);
-    if (!result) return res.sendStatus(409);
-    return res.status(201).json(result);
+    const schedule = await schedulesModel.create(req.body);
+    if (!schedule) return res.sendStatus(409);
+    console.log(schedule);
+    schedule["createdBy"] = await userModel.getById(schedule["createdBy"]); //await database.get("users", schedule["createdBy"]);
+    for (let i = 0; i < schedule["createdBy"]["friend"].length; i++) {
+      const friend = schedule["createdBy"]["friend"][i];
+      var f = await userModel.getById(friend);
+      f["friend"] = [];
+      schedule["createdBy"]["friend"][i] = f;
+    }
+    console.log(schedule);
+
+    return res.status(201).json(schedule);
   } catch (e) {
     return next(e);
   }
@@ -58,10 +69,17 @@ router.patch("/:id", async (req, res, next) => {
     // Merge existing fields with the ones to be updated
     Object.keys(data).forEach((key) => (doc[key] = data[key]));
 
-    const updateResult = await schedulesModel.update(id, doc);
-    if (!updateResult) return res.sendStatus(404);
+    const schedule = await schedulesModel.update(id, doc);
+    schedule["createdBy"] = await userModel.getById(schedule["createdBy"]); //await database.get("users", schedule["createdBy"]);
+    for (let i = 0; i < schedule["createdBy"]["friend"].length; i++) {
+      const friend = schedule["createdBy"]["friend"][i];
+      var f = await userModel.getById(friend);
+      f["friend"] = [];
+      schedule["createdBy"]["friend"][i] = f;
+    }
+    if (!schedule) return res.sendStatus(404);
 
-    return res.json(doc);
+    return res.json(schedule);
   } catch (e) {
     return next(e);
   }
