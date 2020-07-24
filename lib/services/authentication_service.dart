@@ -72,7 +72,7 @@ class Auth implements BaseAuth {
 
   Future<FirebaseUser> signInViaGoogle() async {
     FirebaseUser user;
-
+    signOut();
     try {
       bool isSignedIn = await _googleSignIn.isSignedIn();
 
@@ -145,7 +145,7 @@ class Auth implements BaseAuth {
     FirebaseUser user = await _firebaseAuth.currentUser();
 
     try {
-     await user.reauthenticateWithCredential(EmailAuthProvider.getCredential(
+      await user.reauthenticateWithCredential(EmailAuthProvider.getCredential(
           email: user.email, password: oldPassword));
       await user.updatePassword(newPassword);
     } catch (error) {

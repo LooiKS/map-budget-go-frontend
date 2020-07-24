@@ -10,6 +10,7 @@ import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/screen/expenses/expenses_details.dart';
 import 'package:budgetgo/screen/expenses/expenses_screen.dart';
 import 'package:budgetgo/utils/calendar.dart';
+import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
 import '../../main.dart';
@@ -105,19 +106,20 @@ class _TripsDetailState extends State<TripsDetail> {
                         : () {
                             widget.tripsData.schedules.isEmpty
                                 ? Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ScheduleForm(widget.tripsData, Schedule.empty(mockOwnUser))))
-                                    .then((newSchedule) => newSchedule != null
-                                        ? widget.tripsData.schedules
-                                            .add(newSchedule)
-                                        : null)
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ScheduleForm(
+                                            widget.tripsData,
+                                            Schedule.empty(
+                                                Utils.user,
+                                                widget.tripsData.startDt,
+                                                widget.tripsData.startDt))))
                                 : Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            ScheduleScreen(widget.tripsData, widget.tripsData.schedules)));
+                                        builder: (context) => ScheduleScreen(
+                                            widget.tripsData,
+                                            widget.tripsData.schedules)));
                           })
                 : Text(""),
           ]),
@@ -178,7 +180,7 @@ class _TripsDetailState extends State<TripsDetail> {
 
   Container buildSchedules() {
     return widget.tripsData.schedules.length == 0
-        ? buildNoResultContainer()
+        ? buildNoResultContainer('schedule')
         : Container(
             height: 200.0,
             child: ListView.builder(
@@ -226,11 +228,11 @@ class _TripsDetailState extends State<TripsDetail> {
           );
   }
 
-  Container buildNoResultContainer() {
+  Container buildNoResultContainer(String title) {
     return Container(
       child: Center(
         child: Text(
-          "No schedule yet. Please create one.",
+          "No $title yet. Please create one.",
           style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300),
         ),
       ),
@@ -239,7 +241,7 @@ class _TripsDetailState extends State<TripsDetail> {
 
   Container buildExpenses() {
     return widget.tripsData.expenses.length == 0
-        ? buildNoResultContainer()
+        ? buildNoResultContainer('expense')
         : Container(
             height: 200.0,
             child: ListView.builder(

@@ -77,23 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
   getPage(int page) {
     switch (page) {
       case 0:
-        return Center(
-          child: Container(
-            child: Text("Home"),
-          ),
-        );
-
-      case 1:
         return TripsMainPage(user: _user);
 
-      case 2:
-        return Center(
-          child: Container(
-            child: Text("Budget"),
-          ),
-        );
-
-      case 3:
+      case 1:
         return FriendList(user: _user);
     }
   }
@@ -103,15 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
       currentPage = index;
       switch (index) {
         case 0:
-          appBarTitle = "Home";
-          break;
-        case 1:
           appBarTitle = "Trips";
           break;
-        case 2:
-          appBarTitle = "Budget";
-          break;
-        case 3:
+        case 1:
           appBarTitle = "Friends";
           break;
       }

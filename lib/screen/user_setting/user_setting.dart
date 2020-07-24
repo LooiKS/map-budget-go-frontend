@@ -26,7 +26,7 @@ class _UserSettingState extends State<UserSetting> {
   @override
   void initState() {
     super.initState();
-    var pref = Preference.pref;
+    var pref = Utils.pref;
     sharedPreferences = pref;
     themeValue = pref.getString('brightness') == 'Brightness.light' ? 10 : 100;
     defCurrency = pref.getString('defCurrency') == null
@@ -167,7 +167,7 @@ class _UserSettingState extends State<UserSetting> {
 
   void _chengeTheme(int theme, Brightness brightness, BuildContext context) {
     setState(() => themeValue = theme);
-    Preference.pref.setString('brightness', brightness.toString());
+    Utils.pref.setString('brightness', brightness.toString());
     widget.toggleBrightness();
     Navigator.of(context).pop();
   }

@@ -1,11 +1,13 @@
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/model/trips_class.dart';
+import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
 import 'package:budgetgo/screen/schedule/schedule_form.dart';
 import 'package:budgetgo/services/authentication_service.dart';
 import 'package:budgetgo/services/schedule_data_service.dart';
 import 'package:budgetgo/services/trip_data_service.dart';
+import 'package:budgetgo/services/users_date_service.dart';
 // import 'package:budgetgo/screen/trips/schedule_form.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
@@ -23,11 +25,15 @@ class ScheduleScreen extends StatefulWidget {
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
   ScheduleDataService scheduleDataService = ScheduleDataService();
-  FirebaseUser user;
+  FirebaseUser fuser;
+  User user;
 
   @override
   void initState() {
-    Auth().getCurrentUser().then((firebaseUser) => user = firebaseUser);
+    Auth().getCurrentUser().then((firebaseUser) {
+      fuser = firebaseUser;
+      userDataService.getUser(id: fuser.uid).then((u) => user = u);
+    });
     super.initState();
   }
 
@@ -66,10 +72,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ScheduleForm(
-                          widget.trip, Schedule.empty(mockOwnUser))))
+                          widget.trip,
+                          Schedule.empty(
+                              user, widget.trip.startDt, widget.trip.startDt))))
               .then((newSchedule) {
-            if (newSchedule != null)
-              setState(() => widget.schedules.add(newSchedule));
+            // if (newSchedule != null)
+            // setState(() => widget.schedules.add(newSchedule));
           });
         },
       ),
@@ -118,7 +126,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 // setState(() => widget.schedules[index] = updatedSchedule);
                 // }
                 ),
-            onLongPress: () => widget.schedules[index].createdBy.id == user.uid
+            onLongPress: () => widget.schedules[index].createdBy.id == user.id
                 ? showDialog(
                     context: context,
                     builder: (context) => AlertDialog(

@@ -16,8 +16,8 @@ class Schedule {
       : this(from.id, from.startDt, from.endDt, from.activityTitle,
             from.activityDesc, from.createdBy, from.createdDt);
 
-  Schedule.empty(User user)
-      : this('', DateTime.now(), DateTime.now(), '', '', user, DateTime.now());
+  Schedule.empty(User user, DateTime start, DateTime end)
+      : this('', start, end, '', '', user, DateTime.now());
 
   DateTime get startDt => this._startDt;
   DateTime get endDt => this._endDt;

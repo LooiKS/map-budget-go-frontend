@@ -6,13 +6,14 @@ import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/screen/schedule/schedule_form.dart';
 import 'package:budgetgo/screen/trips/trips_detail.dart';
 import 'package:budgetgo/utils/calendar.dart';
+import 'package:budgetgo/utils/preference.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleDetailScreen extends StatefulWidget {
   final Trips trip;
   final Schedule index;
-  ScheduleDetailScreen(this.trip,this.index);
+  ScheduleDetailScreen(this.trip, this.index);
 
   @override
   _ScheduleScreenState createState() => _ScheduleScreenState();
@@ -35,15 +36,15 @@ class _ScheduleScreenState extends State<ScheduleDetailScreen> {
             style: TextStyle(color: Colors.white),
           ),
           shape: CustomShapeBorder(),
-          actions: (loggedInUser.id == schedule.createdBy.id)
+          actions: (Utils.user.id == schedule.createdBy.id)
               ? <Widget>[
                   IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          ScheduleForm(widget.trip, widget.index)))
+                                      builder: (context) => ScheduleForm(
+                                          widget.trip, widget.index)))
                               .then((newSchedule) {
                             // if (newSchedule != null)
                             // setState(() => widget.index.activityTitle = newSchedule);
@@ -139,7 +140,7 @@ class _ScheduleScreenState extends State<ScheduleDetailScreen> {
                                       children: <Widget>[
                                         _buildCreatedByCreatedOnColumn(
                                             'Created By:',
-                                            schedule.createdBy.firstName),
+                                            schedule.createdBy.firstName ?? ''),
                                         _buildCreatedByCreatedOnColumn(
                                           'Created on:',
                                           '${Month[schedule.createdDt.month]} ${schedule.createdDt.day.toString()}, ${schedule.createdDt.year}',

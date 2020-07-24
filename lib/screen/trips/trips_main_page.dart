@@ -18,6 +18,7 @@ class TripsMainPage extends StatefulWidget {
 }
 
 class _TripsMainPageState extends State<TripsMainPage> {
+  Future<List<Trips>> tripsFuture;
   List<Trips> _trips = [];
   List<Trips> _tempTrips = [];
   //String _tempUser = "BG0011";
@@ -56,15 +57,25 @@ class _TripsMainPageState extends State<TripsMainPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    tripsFuture = dataService.getAllTrips();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Trips>>(
-        future: dataService.getAllTrips(),
+        future: tripsFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             _tempTrips = snapshot.data;
             _trips.clear();
             for (int j = 0; j < _tempTrips.length; j++) {
-              if ((_tempTrips[j].members.any((user)=>user.id == widget.user.id))||_tempTrips[j].owner.id == widget.user.id){
+              if ((_tempTrips[j]
+                      .members
+                      .any((user) => user.id == widget.user.id)) ||
+                  _tempTrips[j].owner.id == widget.user.id) {
                 _trips.add(_tempTrips[j]);
               }
             }

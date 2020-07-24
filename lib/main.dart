@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/screen/home_page/home_page.dart';
 import 'package:budgetgo/screen/login/login.dart';
+import 'package:budgetgo/screen/register/register.dart';
 import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
 import 'package:budgetgo/screen/splash_screen/splash_screen.dart';
 import 'package:budgetgo/utils/preference.dart';
@@ -12,7 +13,7 @@ import './services/authentication_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Preference.pref = await SharedPreferences.getInstance();
+  Utils.pref = await SharedPreferences.getInstance();
   runApp(MyApp());
 }
 
@@ -60,28 +61,29 @@ class MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BudgetGo',
-      onGenerateRoute: (RouteSettings settings) {
-        switch (settings.name) {
-          case '/scheduledetails':
-          dynamic args = jsonDecode(settings.arguments);
-            return MaterialPageRoute(
-                settings: RouteSettings(name: settings.name),
-                builder: (context) => ScheduleDetailScreen(args['trip'], args['schedule']));
-          default:
-            return null;
-        }
-      },
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: brightness,
-        primarySwatch: Colors.orange,
-      ),
-      home: SplashScreen(
-        toggleBrightness: toggleBrightness,
-        auth: new Auth(),
-      ),
-      // home: LoginPage(toggleBrightness: toggleBrightness, auth: new Auth()),
-    );
+        title: 'BudgetGo',
+        onGenerateRoute: (RouteSettings settings) {
+          switch (settings.name) {
+            case '/scheduledetails':
+              dynamic args = jsonDecode(settings.arguments);
+              return MaterialPageRoute(
+                  settings: RouteSettings(name: settings.name),
+                  builder: (context) =>
+                      ScheduleDetailScreen(args['trip'], args['schedule']));
+            default:
+              return null;
+          }
+        },
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          brightness: brightness,
+          primarySwatch: Colors.orange,
+        ),
+        home: RegistrationPage() //  SplashScreen(
+        //   toggleBrightness: toggleBrightness,
+        //   auth: new Auth(),
+        // ),
+        // home: LoginPage(toggleBrightness: toggleBrightness, auth: new Auth()),
+        );
   }
 }

@@ -17,10 +17,8 @@ class AnimatedBottomNav extends StatelessWidget {
       decoration: BoxDecoration(color: Colors.white),
       child: Row(
         children: <Widget>[
-          buildExpanded(0, Icons.home, "Home"),
-          buildExpanded(1, Icons.place, "Trips"),
-          buildExpanded(2, Icons.monetization_on, "Budget"),
-          buildExpanded(3, Icons.person, "Friends"),
+          buildExpanded(0, Icons.place, "Trips"),
+          buildExpanded(1, Icons.person, "Friends"),
         ],
       ),
     );

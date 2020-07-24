@@ -36,7 +36,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          schedule.activityTitle.isEmpty ? 'New Schedule' : 'Edit Schedule',
+          schedule.id.isEmpty ? 'New Schedule' : 'Edit Schedule',
           style: TextStyle(color: Colors.white),
         ),
         shape: CustomShapeBorder(),
@@ -237,6 +237,12 @@ class _ScheduleFormState extends State<ScheduleForm> {
     else if (schedule.startDt.add(Duration(seconds: 1)).isAfter(schedule.endDt))
       errorMsg =
           'Activity must end after start time. Please change the date or time.';
+    else if (schedule.startDt.isBefore(widget.trip.startDt))
+      errorMsg =
+          'Activity must start after the trip. Please change the date or time.';
+    else if (schedule.endDt.isAfter(widget.trip.endDt.add(Duration(hours: 24))))
+      errorMsg =
+          'Activity must end before the trip. Please change the date or time.';
     if (errorMsg.isNotEmpty)
       showDialog(
           context: context,

@@ -1,6 +1,4 @@
 import 'package:budgetgo/model/base_auth.dart';
-import 'package:budgetgo/model/mockdata.dart';
-import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/login/login.dart';
 import 'package:budgetgo/services/authentication_service.dart';
 import 'package:flutter/material.dart';
@@ -35,54 +33,58 @@ class RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Container(
-            child: Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 125,
-                      ),
-                      _title(),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 18.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Registration',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                      _usernamePasswordWidget(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _submitButton(),
-                      SizedBox(height: 10),
-                      _divider(),
-                      _googleFacebookLogin(),
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: _createAccountLabel(),
-                      ),
-                    ],
+        child: _buildForm(context),
+      ),
+    );
+  }
+
+  Form _buildForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Container(
+        child: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 125,
                   ),
-                ),
-                Positioned(
-                    top: -MediaQuery.of(context).size.height * .15,
-                    right: -MediaQuery.of(context).size.width * .4,
-                    child: BezierContainer())
-              ],
+                  _title(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 18.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Registration',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  _usernamePasswordWidget(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _submitButton(),
+                  SizedBox(height: 10),
+                  _divider(),
+                  _googleFacebookLogin(),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: _createAccountLabel(),
+                  ),
+                ],
+              ),
             ),
-          ),
+            Positioned(
+                top: -MediaQuery.of(context).size.height * .15,
+                right: -MediaQuery.of(context).size.width * .4,
+                child: BezierContainer())
+          ],
         ),
       ),
     );
@@ -143,77 +145,41 @@ class RegistrationPageState extends State<RegistrationPage> {
   Widget _submitButton() {
     return InkWell(
       onTap: () async {
+        _showDialog('Loading ...', []);
         if (_formKey.currentState.validate()) {
-          showDialog(
-              context: context,
-              builder: (_) => Dialog(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: CircularProgressIndicator()),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Loading...',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ));
           String res = await Auth().signUp(_email.text, _password.text);
           Navigator.pop(context);
           switch (res) {
             case null:
-              showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                        title: Text('Message'),
-                        content: Text(
-                            'The email is used, please try another or login using the account.'),
-                        actions: <Widget>[
-                          FlatButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('OK'))
-                        ],
-                      ));
+              _showDialog(
+                'The email is used, please try another or login using the account.',
+                <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('OK'))
+                ],
+              );
               break;
             default:
-              showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                        title: Text('Message'),
-                        content: Text(
-                            'Registration Done. Please verify your email.'),
-                        actions: <Widget>[
-                          FlatButton(
-                              onPressed: () {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            LoginPage(toggleBrightness: null)),
-                                    (predicate) => false);
-                                _email.clear();
-                                _username.clear();
-                                _password.clear();
-                                _retypePassword.clear();
-                              },
-                              child: Text('OK'))
-                        ],
-                      ));
+              _showDialog(
+                'Registration Done. Please verify your email.',
+                <Widget>[
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                    LoginPage(toggleBrightness: null)),
+                            (predicate) => false);
+                        _email.clear();
+                        _username.clear();
+                        _password.clear();
+                        _retypePassword.clear();
+                      },
+                      child: Text('OK'))
+                ],
+              );
               break;
           }
         }
@@ -284,7 +250,7 @@ class RegistrationPageState extends State<RegistrationPage> {
           Expanded(
             flex: 1,
             child: FacebookSignInButton(
-              text: 'Facebookk',
+              text: 'Facebook',
               onPressed: () => signInFb(),
               textStyle: TextStyle(
                   fontSize: 18.0,
@@ -394,60 +360,32 @@ class RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Future<void> _loginErrorAlert(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login Error'),
-          content: const Text(
-              'The username and password are not matched. Please try again'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   signInGoogle() async {
     try {
       var result = await auth.signInViaGoogle();
-      showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-                title: Text('Message'),
-                content: Text(
-                    'Account registered successfully. You will be redirected to home page now.'),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (_) => MyHomePage()),
-                          (_) => false),
-                      child: Text('OK'))
-                ],
-              ));
+      _showDialog(
+        'Account registered successfully. You will be redirected to home page now.',
+        <Widget>[
+          FlatButton(
+              onPressed: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => MyHomePage()),
+                  (_) => false),
+              child: Text('OK'))
+        ],
+      );
     } on PlatformException catch (e) {
-      showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-                title: Text('Message'),
-                content: Text('Error occurred. ${e.message}'),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (_) => MyHomePage()),
-                          (_) => false),
-                      child: Text('OK'))
-                ],
-              ));
+      _showDialog(
+        'Error occurred. ${e.message}',
+        <Widget>[
+          FlatButton(
+              onPressed: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => MyHomePage()),
+                  (_) => false),
+              child: Text('OK'))
+        ],
+      );
     }
   }
 
@@ -455,33 +393,43 @@ class RegistrationPageState extends State<RegistrationPage> {
     try {
       var result = await auth.signInViaFacebook();
       if (result != null)
-        showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-                  title: Text('Message'),
-                  content: Text(
-                      'Account registered successfully. You will be redirected to home page now.'),
-                  actions: <Widget>[
-                    FlatButton(
-                        onPressed: () => Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (_) => MyHomePage()),
-                            (_) => false),
-                        child: Text('OK'))
-                  ],
-                ));
+        _showDialog(
+          'Account registered successfully. You will be redirected to home page now.',
+          <Widget>[
+            FlatButton(
+                onPressed: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => MyHomePage()),
+                    (_) => false),
+                child: Text('OK'))
+          ],
+        );
     } on PlatformException catch (e) {
-      showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-                title: Text('Message'),
-                content: Text('Error occurred. ${e.message}'),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('OK'))
-                ],
-              ));
+      _showDialog(
+        'Error occurred. ${e.message}',
+        <Widget>[
+          FlatButton(onPressed: () => Navigator.pop(context), child: Text('OK'))
+        ],
+      );
     }
+  }
+
+  _showDialog(String content, [List<Widget> list]) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+            title: Text('Message'),
+            content: content.contains('Loading')
+                ? Row(
+                    children: <Widget>[
+                      CircularProgressIndicator(),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(content),
+                    ],
+                  )
+                : Text(content),
+            actions: list));
   }
 }
