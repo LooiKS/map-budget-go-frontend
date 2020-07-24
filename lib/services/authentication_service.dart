@@ -72,7 +72,7 @@ class Auth implements BaseAuth {
 
   Future<FirebaseUser> signInViaGoogle() async {
     FirebaseUser user;
-    signOut();
+
     try {
       bool isSignedIn = await _googleSignIn.isSignedIn();
 
