@@ -122,6 +122,19 @@ class TripModel {
         }
         return trip;
     }
+
+    async getTripExpenses(expenseID) {
+        const trips = await database.getList("trips");
+        if (trips != null) {
+            for (var i = 0; i < trips.length; i++) {
+                var trip = trips[i];
+                if (trip["expenses"].indexOf(expenseID) > -1) {
+                    return trip;
+                }
+            }
+        }
+        return null;
+    }
 }
 
 module.exports = new TripModel();

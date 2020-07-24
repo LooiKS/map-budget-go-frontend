@@ -476,6 +476,7 @@ class ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
   }
 
   Future buildSaveDialog(BuildContext context) {
+    Duration(seconds: 3);
     return showDialog(
         context: context,
         builder: (BuildContext context) {

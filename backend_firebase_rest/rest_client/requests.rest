@@ -74,15 +74,32 @@ GET {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
 ###  Add a new expense
 POST {{baseUrl}}/expenses
 Content-Type: application/json
-{
 
+{
+    "amount":250,
+    "payBy":"BG0002",
+    "title":"Mc D",
+    "createdDt":"2020-04-10 00:00:00.000",
+    "createdBy":"BG0002",
+    "sharedBy":["BG0001","BG0003"],
+    "category":"Food & Beverage",
+    "desc":"Lunch"
 }
 
 ### Update a expense partly
-PATCH {{baseUrl}}/expenses/Miz8ghbGjlulbiFC0dva
+PATCH {{baseUrl}}/expenses/2
 Content-Type: application/json
-{
 
+{
+"amount":250,
+    "payBy":"BG0002",
+    "title":"Mc D",
+    "createdDt":"2020-04-10 00:00:00.000",
+    "createdBy":"BG0002",
+    "sharedBy":["BG0001","BG0002","BG0003"],
+    "id":"2",
+    "category":"Food & Beverage",
+    "desc":"Lunch"
 }
 
 ### Replace an existing expense entirely

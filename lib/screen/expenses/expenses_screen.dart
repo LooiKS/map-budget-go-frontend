@@ -22,15 +22,13 @@ class ExpensesScreenState extends State<ExpensesScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => AddExpenseScreen(
-          widget.trips.expenses,
-          widget.trips.members,
-          widget.trips.owner,
+          widget.trips,
         ),
       ),
     );
     if (returnData != null) {
       setState(() {
-        // widget.trips.expenses.add(returnData);
+        buildCreatedDialog(context);
       });
     }
   }
@@ -168,9 +166,9 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                             FlatButton(
                               onPressed: () {
                                 setState(() {
-                                  widget.trips.expenses.removeAt(index);
                                   expensesDataService.deleteExpense(
                                       widget.trips.expenses[index].id);
+                                  widget.trips.expenses.removeAt(index);
                                 });
                                 Navigator.pop(context);
                               },
@@ -209,6 +207,36 @@ class ExpensesScreenState extends State<ExpensesScreen> {
         ),
       ),
     );
+  }
+
+  Future buildCreatedDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          Future.delayed(Duration(milliseconds: 1000), () {
+            Navigator.of(context).pop(true);
+          });
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 50.0,
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Created!",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   Icon buildExpensesIcon(String category) {

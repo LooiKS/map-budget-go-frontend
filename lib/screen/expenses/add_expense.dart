@@ -1,17 +1,16 @@
 import 'package:budgetgo/model/trip_expenses_class.dart';
-import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'package:budgetgo/services/expense_data_service.dart';
+import 'package:budgetgo/services/trip_data_service.dart';
 
 class AddExpenseScreen extends StatefulWidget {
-  final List<TripExpenses> tripExpenses;
-  final List<User> member;
-  final User owner;
+  final Trips trip;
 
-  AddExpenseScreen(this.tripExpenses, this.member, this.owner);
+  AddExpenseScreen(this.trip);
   @override
   AddExpenseScreenState createState() => AddExpenseScreenState();
 }
@@ -29,6 +28,7 @@ class AddExpenseScreenState extends State<AddExpenseScreen> {
   String title, description;
   double total;
   ExpensesDataService expensesDataService = ExpensesDataService();
+  TripDataService tripDataService = TripDataService();
 
   @override
   Widget build(BuildContext context) {
@@ -191,13 +191,16 @@ class AddExpenseScreenState extends State<AddExpenseScreen> {
                                   category: _categoty,
                                   createdDt: DateTime.now(),
                                   amount: total,
-                                  payBy: widget.owner,
-                                  createdBy: widget.owner,
-                                  sharedBy: widget.member,
+                                  payBy: widget.trip.owner,
+                                  createdBy: widget.trip.owner,
+                                  sharedBy: widget.trip.members,
                                 );
-                                await expensesDataService
+                                TripExpenses expense = await expensesDataService
                                     .createExpense(_expense);
-                                Navigator.pop(context, _expense);
+                                widget.trip.expenses.add(expense);
+                                tripDataService.updateTrip(
+                                    widget.trip.id, widget.trip);
+                                Navigator.pop(context, expense);
                               }
                             },
                             shape: new RoundedRectangleBorder(
