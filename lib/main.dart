@@ -1,9 +1,4 @@
 import 'dart:convert';
-
-import 'package:budgetgo/model/mockdata.dart';
-import 'package:budgetgo/screen/home_page/home_page.dart';
-import 'package:budgetgo/screen/login/login.dart';
-import 'package:budgetgo/screen/register/register.dart';
 import 'package:budgetgo/screen/schedule/schedule_detail_screen.dart';
 import 'package:budgetgo/screen/splash_screen/splash_screen.dart';
 import 'package:budgetgo/utils/preference.dart';

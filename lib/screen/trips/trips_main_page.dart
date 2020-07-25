@@ -1,7 +1,6 @@
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/trips/trips_create.dart';
-import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +48,6 @@ class _TripsMainPageState extends State<TripsMainPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     tripsFuture = dataService.getAllTrips();
     super.initState();
   }

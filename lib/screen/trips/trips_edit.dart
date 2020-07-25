@@ -1,9 +1,7 @@
 import 'package:budgetgo/constant/currency.dart';
-import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
-import 'package:budgetgo/screen/home_page/home_page.dart';
 import 'package:budgetgo/screen/trips/add_members.dart';
 import 'package:budgetgo/services/trip_data_service.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';

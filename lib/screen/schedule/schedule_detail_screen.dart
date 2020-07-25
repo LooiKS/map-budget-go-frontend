@@ -1,10 +1,7 @@
 import 'dart:async';
-
-import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/screen/schedule/schedule_form.dart';
-import 'package:budgetgo/screen/trips/trips_detail.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/utils/preference.dart';
 import 'package:budgetgo/widget/custom_shape.dart';

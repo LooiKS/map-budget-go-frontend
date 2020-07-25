@@ -1,5 +1,4 @@
 import 'package:budgetgo/constant/currency.dart';
-import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/trips/trips_users_edit.dart';

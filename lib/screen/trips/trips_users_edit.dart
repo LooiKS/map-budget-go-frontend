@@ -16,8 +16,6 @@ class _EditUserState extends State<EditUserList> {
 
   @override
   Widget build(BuildContext context) {
-    //List<User> members = widget.user.friend;
-
     return new Scaffold(
         appBar: new AppBar(
           title: new Text("Edit User"),

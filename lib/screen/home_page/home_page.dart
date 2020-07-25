@@ -1,7 +1,6 @@
 import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/friend_list/friend_list.dart';
-import 'package:budgetgo/screen/login/login.dart';
 import 'package:budgetgo/screen/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import '../../widget/custom_shape.dart';
