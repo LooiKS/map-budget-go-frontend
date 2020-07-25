@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'package:budgetgo/model/user.dart';
+import 'package:budgetgo/services/users_date_service.dart';
+import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../model/base_auth.dart';
@@ -12,12 +15,16 @@ class Auth implements BaseAuth {
 
   Future<String> signIn(String email, String password) async {
     AuthResult result;
-    FirebaseUser user;
+    FirebaseUser fuser;
     try {
       result = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      user = result.user;
-      return user.uid;
+      fuser = result.user;
+
+      User user = await userDataService.getUser(id: fuser.uid);
+      Utils.fuser = fuser;
+      Utils.user = user;
+      return fuser.uid;
       // if (user.isEmailVerified) return user.uid;
       // return null;
     } catch (error) {
@@ -71,13 +78,13 @@ class Auth implements BaseAuth {
   }
 
   Future<FirebaseUser> signInViaGoogle() async {
-    FirebaseUser user;
+    FirebaseUser fuser;
 
     try {
       bool isSignedIn = await _googleSignIn.isSignedIn();
 
       if (isSignedIn) {
-        user = await _firebaseAuth.currentUser();
+        fuser = await _firebaseAuth.currentUser();
       } else {
         final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
         final GoogleSignInAuthentication googleAuth =
@@ -85,9 +92,12 @@ class Auth implements BaseAuth {
         final AuthCredential credential = GoogleAuthProvider.getCredential(
             idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
-        user = (await _firebaseAuth.signInWithCredential(credential)).user;
+        fuser = (await _firebaseAuth.signInWithCredential(credential)).user;
       }
-      return user;
+      User user = await userDataService.getUser(id: fuser.uid);
+      Utils.fuser = fuser;
+      Utils.user = user;
+      return fuser;
     } catch (error) {
       switch (error.code) {
         case "ERROR_SIGN_IN_CANCELLED":
@@ -177,7 +187,12 @@ class Auth implements BaseAuth {
         AuthCredential credential =
             FacebookAuthProvider.getCredential(accessToken: token);
         print('ok');
-        return (await _firebaseAuth.signInWithCredential(credential)).user;
+        FirebaseUser fuser =
+            (await _firebaseAuth.signInWithCredential(credential)).user;
+        User user = await userDataService.getUser(id: fuser.uid);
+        Utils.fuser = fuser;
+        Utils.user = user;
+        return fuser;
         break;
       case FacebookLoginStatus.cancelledByUser:
         break;

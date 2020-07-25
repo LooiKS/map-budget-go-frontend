@@ -484,13 +484,15 @@ class _TripsMainPageState extends State<TripsMainPage> {
   ClipOval buildMemberAvatar(
       int index, List<User> memberList, BuildContext context) {
     return ClipOval(
-      child: FadeInImage.assetNetwork(
-        placeholder: "assets/images/loading.gif",
-        image: memberList[index].profilePic,
-        fit: BoxFit.contain,
-        width: 30.0,
-        height: 30.0,
-      ),
+      child: memberList[index].profilePic == null
+          ? Image.asset('assets\images\default_profile.png')
+          : FadeInImage.assetNetwork(
+              placeholder: "assets/images/loading.gif",
+              image: memberList[index].profilePic,
+              fit: BoxFit.contain,
+              width: 30.0,
+              height: 30.0,
+            ),
     );
   }
 

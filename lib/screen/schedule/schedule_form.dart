@@ -3,6 +3,7 @@ import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/services/schedule_data_service.dart';
 import 'package:budgetgo/services/trip_data_service.dart';
 import 'package:budgetgo/utils/calendar.dart';
+import 'package:budgetgo/utils/preference.dart';
 import 'package:budgetgo/widget/custom_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -33,6 +34,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
 
   @override
   Widget build(BuildContext context) {
+    print(Utils.user);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -320,8 +322,10 @@ class _ScheduleFormState extends State<ScheduleForm> {
                   FlatButton(
                     child: Text('Yes'),
                     onPressed: () {
-                      Navigator.popUntil(
-                          context, ModalRoute.withName('/scheduledetails'));
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      // Until(
+                      // context, ModalRoute.withName('/scheduledetails'));
                     },
                   ),
                   FlatButton(
