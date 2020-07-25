@@ -5,7 +5,7 @@ class TripMainMemberList extends StatefulWidget {
   //final Function(String) onTap;
   final List<User> members;
   final User user;
-  TripMainMemberList(this.members,this.user);
+  TripMainMemberList(this.members, this.user);
 
   @override
   _TripMainMemberListState createState() => _TripMainMemberListState();
@@ -16,7 +16,7 @@ class _TripMainMemberListState extends State<TripMainMemberList> {
 
   @override
   Widget build(BuildContext context) {
-    memberList.clear(); 
+    memberList.clear();
     memberList.add(widget.user);
     memberList.addAll(widget.members);
     return Container(
@@ -40,31 +40,29 @@ class _TripMainMemberListState extends State<TripMainMemberList> {
       onTap: () {},
       child: Column(
         children: <Widget>[
-          index != memberList.length 
+          index != memberList.length
               ? ClipOval(
                   child: FadeInImage.assetNetwork(
-                    placeholder: "assets/images/loading.gif",
-                    image: memberList[index].profilePic,
+                    placeholder: memberList[index].profilePic == null
+                        ? "assets/images/default_profile.png"
+                        : "assets/images/loading.gif",
+                    image: memberList[index].profilePic == null
+                        ? ""
+                        : '${memberList[index].profilePic}',
                     fit: BoxFit.contain,
                     width: 30.0,
                     height: 30.0,
                   ),
                 )
               : ClipOval(
-                  child: Icon(Icons.more_horiz,
-                  size: 30.0,
-                    color: Colors.black,),
-                
-                    //     backgroundColor:
-                    //         key.currentState.brightness == Brightness.dark
-                    //             ? Colors.white
-                    //             : Colors.black54),
+                  child: Icon(
+                    Icons.more_horiz,
+                    size: 30.0,
+                    color: Colors.black,
+                  ),
                 ),
-          //const SizedBox(height: 5.0),
-          
         ],
       ),
     );
   }
-  
 }

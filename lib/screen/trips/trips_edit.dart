@@ -50,8 +50,7 @@ class _TripsEditState extends State<TripsEdit> {
   }
 
   void _navigateAddFriend() async {
-    final returnData = await 
-    Navigator.push(
+    final returnData = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => AddMember(Trips.copy(widget._tripData))),
@@ -97,7 +96,7 @@ class _TripsEditState extends State<TripsEdit> {
               DateTime.parse(_startDate.text.substring(0, 10));
           widget._tripData.endDt =
               DateTime.parse(_endDate.text.substring(0, 10));
-          dataService.updateTrip(widget._tripData.id ,widget._tripData);    
+          dataService.updateTrip(widget._tripData.id, widget._tripData);
         });
         _tripEdittedAlert(context);
       } else {
@@ -139,7 +138,6 @@ class _TripsEditState extends State<TripsEdit> {
                 setState(() {
                   dataService.deleteTrip(widget._tripData.id);
                   Navigator.of(context).popUntil((route) => route.isFirst);
-     
                 });
               },
             )
@@ -367,8 +365,12 @@ class _TripsEditState extends State<TripsEdit> {
           index < memberList.length
               ? ClipOval(
                   child: FadeInImage.assetNetwork(
-                    placeholder: "assets/images/loading.gif",
-                    image: memberList[index].profilePic,
+                    placeholder: memberList[index].profilePic == null
+                        ? "assets/images/default_profile.png"
+                        : "assets/images/loading.gif",
+                    image: memberList[index].profilePic == null
+                        ? ""
+                        : '${memberList[index].profilePic}',
                     fit: BoxFit.contain,
                     width: 30.0,
                     height: 30.0,

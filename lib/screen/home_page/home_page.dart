@@ -27,7 +27,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int currentPage;
-  String appBarTitle = "Home";
+  String appBarTitle = "BudgetGO";
 
   User _user;
 

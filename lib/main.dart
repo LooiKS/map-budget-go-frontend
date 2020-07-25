@@ -61,29 +61,29 @@ class MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'BudgetGo',
-        onGenerateRoute: (RouteSettings settings) {
-          switch (settings.name) {
-            case '/scheduledetails':
-              dynamic args = jsonDecode(settings.arguments);
-              return MaterialPageRoute(
-                  settings: RouteSettings(name: settings.name),
-                  builder: (context) =>
-                      ScheduleDetailScreen(args['trip'], args['schedule']));
-            default:
-              return null;
-          }
-        },
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          brightness: brightness,
-          primarySwatch: Colors.orange,
-        ),
-        home: RegistrationPage() //  SplashScreen(
-        //   toggleBrightness: toggleBrightness,
-        //   auth: new Auth(),
-        // ),
-        // home: LoginPage(toggleBrightness: toggleBrightness, auth: new Auth()),
-        );
+      title: 'BudgetGo',
+      onGenerateRoute: (RouteSettings settings) {
+        switch (settings.name) {
+          case '/scheduledetails':
+            dynamic args = jsonDecode(settings.arguments);
+            return MaterialPageRoute(
+                settings: RouteSettings(name: settings.name),
+                builder: (context) =>
+                    ScheduleDetailScreen(args['trip'], args['schedule']));
+          default:
+            return null;
+        }
+      },
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: brightness,
+        primarySwatch: Colors.orange,
+      ),
+      home: SplashScreen(
+        toggleBrightness: toggleBrightness,
+        auth: new Auth(),
+      ),
+      // home: LoginPage(toggleBrightness: toggleBrightness, auth: new Auth()),
+    );
   }
 }

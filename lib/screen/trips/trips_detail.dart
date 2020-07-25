@@ -1,4 +1,3 @@
-import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
@@ -154,8 +153,12 @@ class _TripsDetailState extends State<TripsDetail> {
         children: <Widget>[
           ClipOval(
             child: FadeInImage.assetNetwork(
-              placeholder: "assets/images/loading.gif",
-              image: memberList[index].profilePic,
+              placeholder: memberList[index].profilePic == null
+                  ? "assets/images/default_profile.png"
+                  : "assets/images/loading.gif",
+              image: memberList[index].profilePic == null
+                  ? ""
+                  : '${memberList[index].profilePic}',
               fit: BoxFit.contain,
               width: 30.0,
               height: 30.0,
