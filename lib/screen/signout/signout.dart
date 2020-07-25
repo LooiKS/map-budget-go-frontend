@@ -25,10 +25,8 @@ class _LogoutPageState extends State<LogoutPage> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) => LoginPage(
-                      toggleBrightness: widget.toggleBrightness,
-                      auth: widget.auth,
-                    )),
+                builder: (context) =>
+                    LoginPage(toggleBrightness: widget.toggleBrightness)),
             (_) => false);
       },
       child: Container(

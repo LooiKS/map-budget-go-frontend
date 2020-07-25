@@ -55,35 +55,3 @@ exports.functionsTimeOut = functions.runWith({
 });
 
 exports.setupdb = functions.https.onRequest(require("./setup_database"));
-
-exports.uploadimg = functions.https.onRequest(function () {
-  //-
-  // It's not always that easy. You will likely want to specify the filename
-  // used when your new file lands in your bucket.
-  //
-  // You may also want to set metadata or customize other options.
-  //-
-  const options = {
-    destination: "new-image.png",
-    // resumable: true,
-    // validation: "crc32c",
-    metadata: {
-      metadata: {
-        event: "Fall trip to the zoo",
-      },
-    },
-  };
-  const { Storage } = require("@google-cloud/storage");
-  const storage = new Storage();
-  const bucket = storage.bucket("albums");
-
-  // return db.admin
-  bucket.upload("local-image.jpg", function (err, file, apiResponse) {
-    // Your bucket now contains:
-    // - "image.png" (with the contents of `/local/path/image.png')
-    // `file` is an instance of a File object that refers to your new file.
-  });
-
-  // return db.admin.storage().bucket().upload("local-image.jpg", options);
-});
-exports.setupdb = functions.https.onRequest(require("./setup_database"));

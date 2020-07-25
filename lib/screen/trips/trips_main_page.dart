@@ -1,7 +1,6 @@
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/trips/trips_create.dart';
-import 'package:budgetgo/services/users_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
@@ -21,27 +20,18 @@ class _TripsMainPageState extends State<TripsMainPage> {
   Future<List<Trips>> tripsFuture;
   List<Trips> _trips = [];
   List<Trips> _tempTrips = [];
-  //String _tempUser = "BG0011";
   final dataService = TripDataService();
   List<Trips> progressTrips = [];
   List<Trips> upcomingTrips = [];
   List<Trips> pastTrips = [];
 
   void _navigateTripDetails(int index) async {
-    //Trips returnData = await
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => TripsDetail(_trips[index]),
       ),
     );
-    // if (returnData != null) {
-    //   setState(() => _trips[index] = returnData);
-    //   setState(() {
-    //     _trips.removeWhere((item) => item.tripDetail == 'cancel');
-    //   });
-
-    // } else {}
   }
 
   void _navigateCreateTrip() async {
@@ -58,7 +48,6 @@ class _TripsMainPageState extends State<TripsMainPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     tripsFuture = dataService.getAllTrips();
     super.initState();
   }
@@ -484,15 +473,17 @@ class _TripsMainPageState extends State<TripsMainPage> {
   ClipOval buildMemberAvatar(
       int index, List<User> memberList, BuildContext context) {
     return ClipOval(
-      child: memberList[index].profilePic == null
-          ? Image.asset('assets\images\default_profile.png')
-          : FadeInImage.assetNetwork(
-              placeholder: "assets/images/loading.gif",
-              image: memberList[index].profilePic,
-              fit: BoxFit.contain,
-              width: 30.0,
-              height: 30.0,
-            ),
+      child: FadeInImage.assetNetwork(
+        placeholder: memberList[index].profilePic == null
+            ? "assets/images/default_profile.png"
+            : "assets/images/loading.gif",
+        image: memberList[index].profilePic == null
+            ? ""
+            : '${memberList[index].profilePic}',
+        fit: BoxFit.contain,
+        width: 30.0,
+        height: 30.0,
+      ),
     );
   }
 

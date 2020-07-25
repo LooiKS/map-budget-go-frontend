@@ -1,6 +1,7 @@
 import 'package:budgetgo/screen/login/forgot_password.dart';
 import 'package:budgetgo/screen/register/register.dart';
 import 'package:budgetgo/model/base_auth.dart';
+import 'package:budgetgo/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -10,9 +11,8 @@ import '../home_page/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   final toggleBrightness;
-  final BaseAuth auth;
-  LoginPage({Key key, @required this.toggleBrightness, this.auth})
-      : super(key: key);
+  final BaseAuth auth = new Auth();
+  LoginPage({Key key, @required this.toggleBrightness}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();

@@ -1,4 +1,3 @@
-import 'package:budgetgo/model/mockdata.dart';
 import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
@@ -149,23 +148,22 @@ class _TripsDetailState extends State<TripsDetail> {
   }
 
   GestureDetector buildMemberAvatar(int index, List<User> memberList) {
+    print('member ${memberList[index].firstName}');
     return GestureDetector(
       child: Column(
         children: <Widget>[
           ClipOval(
-            child: memberList[index].profilePic == null
-                ? Image.asset(
-                    'assets/images/default_profile.png',
-                    width: 30.0,
-                    height: 30.0,
-                  )
-                : FadeInImage.assetNetwork(
-                    placeholder: "assets/images/loading.gif",
-                    image: memberList[index].profilePic,
-                    fit: BoxFit.contain,
-                    width: 30.0,
-                    height: 30.0,
-                  ),
+            child: FadeInImage.assetNetwork(
+              placeholder: memberList[index].profilePic == null
+                  ? "assets/images/default_profile.png"
+                  : "assets/images/loading.gif",
+              image: memberList[index].profilePic == null
+                  ? ""
+                  : '${memberList[index].profilePic}',
+              fit: BoxFit.contain,
+              width: 30.0,
+              height: 30.0,
+            ),
           ),
           const SizedBox(height: 5.0),
           SizedBox(

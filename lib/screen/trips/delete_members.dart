@@ -58,7 +58,6 @@ class _DelMembersState extends State<DelMembers> {
         for (User member in _selectedMember) {
           widget.tripData.members.remove(member);
           dataService.updateTrip(widget.tripData.id, widget.tripData);
-
         }
       });
       Navigator.of(context).pop(widget.tripData);
@@ -266,8 +265,12 @@ class _DelMembersState extends State<DelMembers> {
               leading: ClipOval(
                 child: FadeInImage.assetNetwork(
                   fadeInCurve: Curves.bounceIn,
-                  placeholder: "assets/images/loading.gif",
-                  image: _memberList[index].profilePic,
+                  placeholder: _memberList[index].profilePic == null
+                      ? "assets/images/default_profile.png"
+                      : "assets/images/loading.gif",
+                  image: _memberList[index].profilePic == null
+                      ? ""
+                      : '${_memberList[index].profilePic}',
                   fit: BoxFit.contain,
                   width: 40.0,
                   height: 40.0,

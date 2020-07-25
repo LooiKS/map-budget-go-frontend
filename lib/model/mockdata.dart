@@ -2,8 +2,6 @@ import 'package:budgetgo/model/schedule.dart';
 import 'package:budgetgo/model/trip_expenses_class.dart';
 import 'package:budgetgo/model/trips_class.dart';
 import 'package:budgetgo/model/user.dart';
-import 'package:date_format/date_format.dart';
-import 'package:flutter/cupertino.dart';
 
 final User mockOwnUser = User(
     id: "BG0011",

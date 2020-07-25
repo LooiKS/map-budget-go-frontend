@@ -50,10 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => LoginPage(
-                  toggleBrightness: widget.toggleBrightness,
-                  auth: widget.auth,
-                ),
+                builder: (context) =>
+                    LoginPage(toggleBrightness: widget.toggleBrightness),
               ));
           break;
 
@@ -77,10 +75,8 @@ class _SplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => LoginPage(
-                  toggleBrightness: widget.toggleBrightness,
-                  auth: widget.auth,
-                ),
+                builder: (context) =>
+                    LoginPage(toggleBrightness: widget.toggleBrightness),
               ));
       }
     });

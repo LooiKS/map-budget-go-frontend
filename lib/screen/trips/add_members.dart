@@ -13,7 +13,7 @@ class AddMember extends StatefulWidget {
 }
 
 class _AddMemberState extends State<AddMember> {
-  final dataService = TripDataService(); 
+  final dataService = TripDataService();
   List<User> _friendList = [];
   List<User> _fixedMember = [];
   List<User> _selectedMember = [];
@@ -22,17 +22,17 @@ class _AddMemberState extends State<AddMember> {
     _friendList.addAll(widget.tripData.owner.friend);
     for (User friend in widget.tripData.owner.friend) {
       friend.isChecked = false;
-      for (User member in widget.tripData.members){
-      if (friend.id == member.id) {
-        setState(() {
-          friend.isChecked = true;
-        });
-      }
+      for (User member in widget.tripData.members) {
+        if (friend.id == member.id) {
+          setState(() {
+            friend.isChecked = true;
+          });
+        }
       }
     }
-    for (User friend in _friendList){
-      if (friend.isChecked == true){
-          _fixedMember.add(friend);
+    for (User friend in _friendList) {
+      if (friend.isChecked == true) {
+        _fixedMember.add(friend);
       }
     }
     super.initState();
@@ -66,7 +66,6 @@ class _AddMemberState extends State<AddMember> {
       setState(() {
         widget.tripData.members.addAll(_selectedMember);
         dataService.updateTrip(widget.tripData.id, widget.tripData);
-
       });
     }
     Navigator.of(context).pop(widget.tripData);
@@ -111,97 +110,62 @@ class _AddMemberState extends State<AddMember> {
         _backButton();
         return new Future(() => false);
       },
-      child: DefaultTabController(
-        length: 3,
-        initialIndex: 0,
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            leading: IconButton(
-              onPressed: () => _backButton(),
-              icon: Icon(Icons.arrow_back),
-            ),
-            title: Text(
-              "Add Member",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            bottom: buildTab(),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () => _backButton(),
+            icon: Icon(Icons.arrow_back),
           ),
-          body: buildTabBarView(context),
+          title: Text(
+            "Add Member",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
+        body: buildTabBarView(context),
       ),
     );
   }
 
-  TabBarView buildTabBarView(BuildContext context) {
-    return TabBarView(
-          children: <Widget>[
-            Container(
-              child: Column(
+  Container buildTabBarView(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          buildSearchBar(context),
+          if (_selectedMember.length > 0)
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  buildSearchBar(context),
-                  if (_selectedMember.length > 0)
-                    Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Text(
-                              "Selected: ${_selectedMember.length}",
-                              style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          ButtonBar(
-                            children: <Widget>[
-                              buildSaveCancelBtn("Save"),
-                              buildSaveCancelBtn("Cancel"),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  buildFriendList(),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 2.0),
+                    padding: const EdgeInsets.only(left: 15.0),
                     child: Text(
-                      "Total Friend: ${_friendList.length}",
-                      style: TextStyle(color: Colors.green),
+                      "Selected: ${_selectedMember.length}",
+                      style: TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.bold),
                     ),
-                  )
+                  ),
+                  ButtonBar(
+                    children: <Widget>[
+                      buildSaveCancelBtn("Save"),
+                      buildSaveCancelBtn("Cancel"),
+                    ],
+                  ),
                 ],
               ),
             ),
-            Container(
-              color: Colors.pink,
-              child: Center(child: Text("Call Tab")),
+          buildFriendList(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2.0),
+            child: Text(
+              "Total Friend: ${_friendList.length}",
+              style: TextStyle(color: Colors.green),
             ),
-            Container(
-              color: Colors.blue,
-              child: Center(child: Text("Call Tab")),
-            ),
-          ],
-        );
-  }
-
-  PreferredSize buildTab() {
-    return PreferredSize(
-            preferredSize: Size(10.0, 55.0),
-            child: TabBar(indicatorColor: Colors.purple, tabs: [
-              buildTabBarItem(
-                  ExactAssetImage('assets/images/contact_book.png'),
-                  "Friend List"),
-              buildTabBarItem(
-                  ExactAssetImage('assets/images/qrcode.png'), "QR Code"),
-              buildTabBarItem(
-                  ExactAssetImage('assets/images/search_icon.png'),
-                  "ID/Phone No.")
-            ]),
-          );
+          )
+        ],
+      ),
+    );
   }
 
   Container buildTabBarItem(ExactAssetImage image, String title) {
@@ -292,19 +256,20 @@ class _AddMemberState extends State<AddMember> {
               leading: ClipOval(
                 child: FadeInImage.assetNetwork(
                   fadeInCurve: Curves.bounceIn,
-                  placeholder: "assets/images/loading.gif",
-                  image: _friendList[index].profilePic,
+                  placeholder: _friendList[index].profilePic == null
+                      ? "assets/images/default_profile.png"
+                      : "assets/images/loading.gif",
+                  image: _friendList[index].profilePic == null
+                      ? ""
+                      : '${_friendList[index].profilePic}',
                   fit: BoxFit.contain,
                   width: 40.0,
                   height: 40.0,
                 ),
               ),
               title: Text(_friendList[index].username),
-              trailing:
-              //  widget.tripData.owner.friend[index].isChecked 
-              // &&
-              //         widget.tripData.members
-                          _fixedMember.contains(widget.tripData.owner.friend[index])
+              trailing: _fixedMember
+                      .contains(widget.tripData.owner.friend[index])
                   ? Checkbox(
                       onChanged: null,
                       value: widget.tripData.owner.friend[index].isChecked,
