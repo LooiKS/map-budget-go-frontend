@@ -27,10 +27,15 @@ class MapScreenState extends State<ProfilePage>
 
   @override
   void initState() {
-    _username = TextEditingController(text: ('${widget.user.username}'));
-    _firstName = TextEditingController(text: ('${widget.user.firstName}'));
-    _lastName = TextEditingController(text: ('${widget.user.lastName}'));
-    _mobilePhone = TextEditingController(text: ('${widget.user.phoneNum}'));
+    _username = TextEditingController(
+        text: widget.user.username == null ? "" : ('${widget.user.username}'));
+    _firstName = TextEditingController(
+        text:
+            widget.user.firstName == null ? "" : ('${widget.user.firstName}'));
+    _lastName = TextEditingController(
+        text: widget.user.lastName == null ? "" : ('${widget.user.lastName}'));
+    _mobilePhone = TextEditingController(
+        text: widget.user.phoneNum == null ? "" : ('${widget.user.phoneNum}'));
     if (widget.user.gender == null || widget.user.gender == "-1")
       _genderValue = -1;
     widget.user.gender == "Male" ? _genderValue = 0 : _genderValue = 1;
@@ -71,10 +76,12 @@ class MapScreenState extends State<ProfilePage>
 
   void _handleCancel() {
     setState(() {
-      _username.text = widget.user.username;
-      _firstName.text = widget.user.firstName;
-      _lastName.text = widget.user.lastName;
-      _mobilePhone.text = widget.user.phoneNum;
+      _username.text = widget.user.username == null ? "" : widget.user.username;
+      _firstName.text =
+          widget.user.firstName == null ? "" : widget.user.firstName;
+      _lastName.text = widget.user.lastName == null ? "" : widget.user.lastName;
+      _mobilePhone.text =
+          widget.user.phoneNum == null ? "" : widget.user.phoneNum;
       if (widget.user.gender == null) _genderValue = -1;
       widget.user.gender == "Male" ? _genderValue = 0 : _genderValue = 1;
       _status = true;
