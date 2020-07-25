@@ -73,14 +73,13 @@ class _LoginPageState extends State<LoginPage> {
     try {
       var result = await widget.auth.signInViaFacebook();
       if (result != null)
-        Navigator.pushAndRemoveUntil(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (_) => MyHomePage(
                     toggleBrightness: widget.toggleBrightness,
                     auth: widget.auth,
-                    uid: result.uid)),
-            (_) => false);
+                    uid: result.uid)));
     } on PlatformException catch (e) {
       showDialog(
           context: context,

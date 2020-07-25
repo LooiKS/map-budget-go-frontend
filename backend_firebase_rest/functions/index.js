@@ -7,14 +7,7 @@ const usersRouter = require("./api/controllers/users_controller");
 const tripsRouter = require("./api/controllers/trips_controller");
 const users_model = require("./api/models/users_model");
 const db = require("./api/database");
-// var bodyParser = require("body-parser");
-// app.use(bodyParser.json()); // to support JSON-encoded bodies
-// app.use(
-//   bodyParser.urlencoded({
-//     // to support URL-encoded bodies
-//     extended: false,
-//   })
-// );
+
 const expensesRoute = require("./api/controllers/expenses_controller");
 
 app.use(express.json());

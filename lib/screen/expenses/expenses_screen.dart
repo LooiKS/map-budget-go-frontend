@@ -97,7 +97,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
               ),
             ),
             Container(
-              height: 520.0,
+              // height: 520.0,
               child: ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) => Card(
@@ -196,7 +196,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    "Total Expenses: ${calculateTotal(widget.trips.expenses)}",
+                    "Total Expenses (${widget.trips.currency}): ${calculateTotal(widget.trips.expenses)}",
                     style:
                         TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
