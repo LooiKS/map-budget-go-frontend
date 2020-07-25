@@ -191,14 +191,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       )),
                   SizedBox(height: 5.0),
                   Text(
-                    _user.firstName == "" || _user.lastName == ""
+                    _user.firstName == null || _user.lastName == null
                         ? ""
                         : "${_user.firstName} ${_user.lastName}",
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    _user.username == "" ? '' : '@${_user.username}',
+                    _user.username == null ? '' : '@${_user.username}',
                     style: TextStyle(
                       fontSize: 16.0,
                     ),
