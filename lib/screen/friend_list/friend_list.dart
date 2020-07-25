@@ -234,7 +234,7 @@ class _FriendListState extends State<FriendList> {
               title: FlatButton(
                 child: SizedBox(
                     width: double.infinity,
-                    child: _friendList[index].username == ""
+                    child: _friendList[index].username == "" || _friendList[index].username == null
                         ? _buildListTitleText(
                             title: "${_friendList[index].email}", index: index)
                         : _buildListTitleText(
