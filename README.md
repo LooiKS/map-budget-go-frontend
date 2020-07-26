@@ -17,7 +17,7 @@ This application aims to help travellers in planning group trips and managing th
 - Name 3: Asment Tan Yi Hao
 - Name 4: Looi Kian Seng
 
-## Video URL: ........................
+## Video URL: https://youtu.be/a9lt5zbLaWs
 
 ## REST API URL/Project URL on Firebase or heroku : https://us-central1-map-budget-go.cloudfunctions.net/api
 
