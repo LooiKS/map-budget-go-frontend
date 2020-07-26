@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:budgetgo/model/user.dart';
-import 'package:budgetgo/services/users_date_service.dart';
+import 'package:budgetgo/services/users_data_service.dart';
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';

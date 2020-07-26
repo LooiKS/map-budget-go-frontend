@@ -6,7 +6,7 @@ import 'package:budgetgo/screen/schedule/schedule_form.dart';
 import 'package:budgetgo/services/authentication_service.dart';
 import 'package:budgetgo/services/schedule_data_service.dart';
 import 'package:budgetgo/services/trip_data_service.dart';
-import 'package:budgetgo/services/users_date_service.dart';
+import 'package:budgetgo/services/users_data_service.dart';
 // import 'package:budgetgo/screen/trips/schedule_form.dart';
 import 'package:budgetgo/utils/calendar.dart';
 import 'package:budgetgo/widget/custom_shape.dart';

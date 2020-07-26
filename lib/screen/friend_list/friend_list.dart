@@ -1,4 +1,4 @@
-import 'package:budgetgo/services/users_date_service.dart';
+import 'package:budgetgo/services/users_data_service.dart';
 import 'package:flutter/material.dart';
 import '../../model/user.dart';
 
@@ -234,7 +234,8 @@ class _FriendListState extends State<FriendList> {
               title: FlatButton(
                 child: SizedBox(
                     width: double.infinity,
-                    child: _friendList[index].username == "" || _friendList[index].username == null
+                    child: _friendList[index].username == "" ||
+                            _friendList[index].username == null
                         ? _buildListTitleText(
                             title: "${_friendList[index].email}", index: index)
                         : _buildListTitleText(

@@ -1,7 +1,7 @@
 import 'package:budgetgo/model/base_auth.dart';
 import 'package:budgetgo/model/user.dart';
 import 'package:budgetgo/screen/profile/update_password.dart';
-import 'package:budgetgo/services/users_date_service.dart';
+import 'package:budgetgo/services/users_data_service.dart';
 import 'package:budgetgo/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';

@@ -10,7 +10,7 @@ import './animatedBottomNav.dart';
 import '../signout/signout.dart';
 import '../trips/trips_main_page.dart';
 import '../notification/notification_page.dart';
-import '../../services/users_date_service.dart';
+import '../../services/users_data_service.dart';
 
 class MyHomePage extends StatefulWidget {
   final toggleBrightness;
