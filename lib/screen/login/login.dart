@@ -36,15 +36,14 @@ class _LoginPageState extends State<LoginPage> {
     _showSigninLoadingDialog();
     try {
       final uid = await widget.auth.signIn(email, password);
+      Navigator.pop(context);
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => MyHomePage(
-              toggleBrightness: widget.toggleBrightness,
-              auth: widget.auth,
-              uid: uid,
-            ),
-          ));
+              builder: (_) => MyHomePage(
+                  toggleBrightness: widget.toggleBrightness,
+                  auth: widget.auth,
+                  uid: uid)));
     } catch (error) {
       _showErrorDialog(error);
     }
@@ -58,11 +57,10 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => MyHomePage(
-                  toggleBrightness: widget.toggleBrightness,
-                  auth: widget.auth,
-                  uid: result.uid),
-            ));
+                builder: (_) => MyHomePage(
+                    toggleBrightness: widget.toggleBrightness,
+                    auth: widget.auth,
+                    uid: result.uid)));
       }
     } catch (error) {
       _showErrorDialog(error);
