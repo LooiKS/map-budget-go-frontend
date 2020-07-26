@@ -394,8 +394,7 @@ class RegistrationPageState extends State<RegistrationPage> {
           <Widget>[
             FlatButton(
                 onPressed: () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => MyHomePage()))
+                    context, MaterialPageRoute(builder: (_) => MyHomePage())),
                 child: Text('OK'))
           ],
         );
