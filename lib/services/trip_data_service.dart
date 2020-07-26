@@ -13,7 +13,6 @@ class TripDataService {
   final endpoint = 'trips';
 
   Future<List<Trips>> getAllTrips() async {
-    print('get trips');
     final listJson = await rest.get('trips');
     return (listJson as List)
         .map((itemJson) => Trips.fromJson(itemJson))
@@ -39,7 +38,6 @@ class TripDataService {
 // }
 
 // Future<Schedule> updateSchedule(String id, Schedule schedule) async {
-//   print('$endpoint/$id'); //, data: schedule);
 //   return Schedule.fromJson(await rest.patch('$endpoint/$id', data: schedule));
 // }
 

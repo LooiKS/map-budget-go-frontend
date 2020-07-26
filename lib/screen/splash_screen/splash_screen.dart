@@ -28,7 +28,6 @@ class _SplashScreenState extends State<SplashScreen> {
       user = await userDataService.getUser(id: result.uid);
       setState(() {
         uid = result?.uid;
-        print('Got userID: $uid');
       });
     }
     authStatus =
@@ -71,7 +70,6 @@ class _SplashScreenState extends State<SplashScreen> {
           break;
 
         default:
-          print("Default");
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(

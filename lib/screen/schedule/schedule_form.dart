@@ -34,7 +34,6 @@ class _ScheduleFormState extends State<ScheduleForm> {
 
   @override
   Widget build(BuildContext context) {
-    print(Utils.user);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -294,18 +293,13 @@ class _ScheduleFormState extends State<ScheduleForm> {
                 ),
               ));
       if (widget.schedule.id == '') {
-        print('lol1');
         _schedule = await scheduleDataService.createSchedule(schedule);
         widget.trip.schedules.add(_schedule);
         TripDataService().updateTrip(widget.trip.id, widget.trip);
-        print('lol2');
       } else {
-        print('lol3');
         _schedule = await scheduleDataService.updateSchedule(
             widget.schedule.id, schedule);
-        print('lol4');
       }
-      print('lol5');
       Navigator.pop(context);
       Navigator.pop(context, _schedule);
     }

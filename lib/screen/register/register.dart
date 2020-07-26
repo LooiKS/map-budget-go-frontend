@@ -15,7 +15,6 @@ class RegistrationPage extends StatefulWidget {
 class RegistrationPageState extends State<RegistrationPage> {
   bool _passwordObsure = true;
   bool _retypePasswordObsure = true;
-  final _username = TextEditingController();
   final _password = TextEditingController();
   final _retypePassword = TextEditingController();
   final _email = TextEditingController();
@@ -24,7 +23,6 @@ class RegistrationPageState extends State<RegistrationPage> {
 
   @override
   void dispose() {
-    _username.dispose();
     _password.dispose();
     super.dispose();
   }
@@ -145,8 +143,9 @@ class RegistrationPageState extends State<RegistrationPage> {
   Widget _submitButton() {
     return InkWell(
       onTap: () async {
-        _showDialog('Loading ...', []);
+        print(_formKey.currentState.validate());
         if (_formKey.currentState.validate()) {
+          _showDialog('Loading ...', []);
           String res =
               await Auth().signUp(_email.text.trim(), _password.text.trim());
           Navigator.pop(context);
@@ -167,13 +166,9 @@ class RegistrationPageState extends State<RegistrationPage> {
                 <Widget>[
                   FlatButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    LoginPage(toggleBrightness: null)));
+                        Navigator.pop(context);
+                        Navigator.pop(context);
                         _email.clear();
-                        _username.clear();
                         _password.clear();
                         _retypePassword.clear();
                       },
@@ -294,7 +289,6 @@ class RegistrationPageState extends State<RegistrationPage> {
     return Column(
       children: <Widget>[
         _entryField("Email Address", validateEmail, _email, false),
-        // _entryField("Username", validateUsername, _username, false),
         _entryField("Password", validatePassword, _password, _passwordObsure),
         _entryField("Confirm Password", validateRetypePassword, _retypePassword,
             _retypePasswordObsure),
@@ -361,44 +355,42 @@ class RegistrationPageState extends State<RegistrationPage> {
   }
 
   signInGoogle() async {
+    _showDialog('Loading ...');
     try {
       var result = await auth.signInViaGoogle();
+      Navigator.pop(context);
       _showDialog(
-        'Account registered successfully. You will be redirected to home page now.',
+        'Account registered successfully.',
         <Widget>[
-          FlatButton(
-              onPressed: () => Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => MyHomePage())),
-              child: Text('OK'))
+          FlatButton(onPressed: () => Navigator.pop(context), child: Text('OK'))
         ],
       );
     } on PlatformException catch (e) {
+      Navigator.pop(context);
       _showDialog(
         'Error occurred. ${e.message}',
         <Widget>[
-          FlatButton(
-              onPressed: () => Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => MyHomePage())),
-              child: Text('OK'))
+          FlatButton(onPressed: () => Navigator.pop(context), child: Text('OK'))
         ],
       );
     }
   }
 
   signInFb() async {
+    _showDialog('Loading ...');
     try {
       var result = await auth.signInViaFacebook();
+      Navigator.pop(context);
       if (result != null)
         _showDialog(
-          'Account registered successfully. You will be redirected to home page now.',
+          'Account registered successfully.',
           <Widget>[
             FlatButton(
-                onPressed: () => Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => MyHomePage())),
-                child: Text('OK'))
+                onPressed: () => Navigator.pop(context), child: Text('OK'))
           ],
         );
     } on PlatformException catch (e) {
+      Navigator.pop(context);
       _showDialog(
         'Error occurred. ${e.message}',
         <Widget>[

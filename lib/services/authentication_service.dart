@@ -186,7 +186,6 @@ class Auth implements BaseAuth {
         String token = result.accessToken.token;
         AuthCredential credential =
             FacebookAuthProvider.getCredential(accessToken: token);
-        print('ok');
         FirebaseUser fuser =
             (await _firebaseAuth.signInWithCredential(credential)).user;
         User user = await userDataService.getUser(id: fuser.uid);

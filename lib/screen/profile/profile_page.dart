@@ -64,7 +64,6 @@ class MapScreenState extends State<ProfilePage>
     if (_genderValue == null || _genderValue == -1) user.gender = "-1";
     _genderValue == 1 ? user.gender = "Female" : user.gender = "Male";
 
-    print(user.phoneNum);
     await userDataService.updateUser(id: widget.user.id, user: user);
     Utils.user = user;
     setState(() {
@@ -377,7 +376,6 @@ class MapScreenState extends State<ProfilePage>
                           .then((pickedFile) async {
                         if (pickedFile != null) {
                           var bytes = await pickedFile.readAsBytes();
-                          print(pickedFile.path.split('/').last);
                           userDataService.uploadPhoto(
                               bytes: bytes,
                               fileName: pickedFile.path.split('/').last,

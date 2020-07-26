@@ -148,7 +148,6 @@ class _TripsDetailState extends State<TripsDetail> {
   }
 
   GestureDetector buildMemberAvatar(int index, List<User> memberList) {
-    print('member ${memberList[index].firstName}');
     return GestureDetector(
       child: Column(
         children: <Widget>[

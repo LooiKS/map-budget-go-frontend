@@ -183,7 +183,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                   TripDataService()
                                       .updateTrip(widget.trip.id, widget.trip);
                                   setState(() {});
-                                  print('doneeeee');
                                   Navigator.pop(context);
                                 },
                                 child: Text('Yes'))

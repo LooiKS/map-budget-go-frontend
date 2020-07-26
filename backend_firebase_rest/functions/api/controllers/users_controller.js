@@ -3,7 +3,6 @@ const db = require("../database");
 const express = require("express");
 const router = express.Router();
 
-// under development, do not use
 router.post("/profile", function (req, res) {
   const path = require("path");
   const os = require("os");
