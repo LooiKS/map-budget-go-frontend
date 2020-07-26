@@ -29,3 +29,7 @@ This application aims to help travellers in planning group trips and managing th
 
 1. user's credential: email address - "kianseng213@gmail.com", password - "aaaBB123"
 2. admin's credential: N/A
+
+## Remarks
+
+The git log of backend is empty because we placed both frontend and backend in the same repo.
