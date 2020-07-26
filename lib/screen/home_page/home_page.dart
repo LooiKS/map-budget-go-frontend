@@ -113,6 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Scaffold _buildLoading() {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(appBarTitle),
         shape: CustomShapeBorder(),
       ),
