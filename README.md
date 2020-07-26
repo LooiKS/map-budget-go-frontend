@@ -21,9 +21,9 @@ This application aims to help travellers in planning group trips and managing th
 
 ## REST API URL/Project URL on Firebase or heroku : https://us-central1-map-budget-go.cloudfunctions.net/api
 
-## Git Repo URL on github (front-end): ........................
+## Git Repo URL on github (front-end): https://github.com/LooiKS/map-budget-go-frontend
 
-## Git Repo URL on github (back-end) : ........................
+## Git Repo URL on github (back-end) : https://github.com/LooiKS/backend_firebase_rest
 
 ## User credential (username and passwords) to test out your app:
 
