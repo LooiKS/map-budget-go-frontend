@@ -36,16 +36,14 @@ class _LoginPageState extends State<LoginPage> {
     _showSigninLoadingDialog();
     try {
       final uid = await widget.auth.signIn(email, password);
-      Navigator.pushAndRemoveUntil(
+      Navigator.pop(context);
+      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => MyHomePage(
-              toggleBrightness: widget.toggleBrightness,
-              auth: widget.auth,
-              uid: uid,
-            ),
-          ),
-          (_) => false);
+              builder: (_) => MyHomePage(
+                  toggleBrightness: widget.toggleBrightness,
+                  auth: widget.auth,
+                  uid: uid)));
     } catch (error) {
       _showErrorDialog(error);
     }
@@ -56,15 +54,13 @@ class _LoginPageState extends State<LoginPage> {
       final result = await widget.auth.signInViaGoogle();
 
       if (result != null) {
-        Navigator.pushAndRemoveUntil(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => MyHomePage(
-                  toggleBrightness: widget.toggleBrightness,
-                  auth: widget.auth,
-                  uid: result.uid),
-            ),
-            (_) => false);
+                builder: (_) => MyHomePage(
+                    toggleBrightness: widget.toggleBrightness,
+                    auth: widget.auth,
+                    uid: result.uid)));
       }
     } catch (error) {
       _showErrorDialog(error);

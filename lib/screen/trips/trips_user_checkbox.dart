@@ -19,7 +19,7 @@ class FriendUserState extends State<FriendUserList> {
         onTap:null,
          leading: new CircleAvatar(
            //backgroundColor: Colors.blue,
-           child: new Image.network(user.profilePic),
+           child: user.profilePic == null ? Image.asset('assets/images/default_profile.png') : Image.network(user.profilePic),
          ),
         title: new Row(
           children: <Widget>[
