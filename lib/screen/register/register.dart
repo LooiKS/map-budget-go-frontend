@@ -147,7 +147,8 @@ class RegistrationPageState extends State<RegistrationPage> {
       onTap: () async {
         _showDialog('Loading ...', []);
         if (_formKey.currentState.validate()) {
-          String res = await Auth().signUp(_email.text, _password.text);
+          String res =
+              await Auth().signUp(_email.text.trim(), _password.text.trim());
           Navigator.pop(context);
           switch (res) {
             case null:
@@ -166,12 +167,11 @@ class RegistrationPageState extends State<RegistrationPage> {
                 <Widget>[
                   FlatButton(
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(
+                        Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (_) =>
-                                    LoginPage(toggleBrightness: null)),
-                            (predicate) => false);
+                                    LoginPage(toggleBrightness: null)));
                         _email.clear();
                         _username.clear();
                         _password.clear();
@@ -367,10 +367,8 @@ class RegistrationPageState extends State<RegistrationPage> {
         'Account registered successfully. You will be redirected to home page now.',
         <Widget>[
           FlatButton(
-              onPressed: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => MyHomePage()),
-                  (_) => false),
+              onPressed: () => Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (_) => MyHomePage())),
               child: Text('OK'))
         ],
       );
@@ -379,10 +377,8 @@ class RegistrationPageState extends State<RegistrationPage> {
         'Error occurred. ${e.message}',
         <Widget>[
           FlatButton(
-              onPressed: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => MyHomePage()),
-                  (_) => false),
+              onPressed: () => Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (_) => MyHomePage())),
               child: Text('OK'))
         ],
       );
@@ -397,10 +393,8 @@ class RegistrationPageState extends State<RegistrationPage> {
           'Account registered successfully. You will be redirected to home page now.',
           <Widget>[
             FlatButton(
-                onPressed: () => Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (_) => MyHomePage()),
-                    (_) => false),
+                onPressed: () => Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => MyHomePage())),
                 child: Text('OK'))
           ],
         );

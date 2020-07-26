@@ -182,8 +182,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                       s.id == widget.schedules[index].id);
                                   TripDataService()
                                       .updateTrip(widget.trip.id, widget.trip);
-                                  setState(
-                                      () => widget.schedules.removeAt(index));
+                                  setState(() {});
                                   print('doneeeee');
                                   Navigator.pop(context);
                                 },

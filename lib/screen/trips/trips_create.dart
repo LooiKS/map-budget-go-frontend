@@ -26,7 +26,6 @@ class _TripsCreateState extends State<TripsCreatePage> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   void _navigateEditFriend() async {
-
     List<User> userList = widget.ownerUser.friend;
     for (User u in userList) {
       if (currentUsers.contains(u)) {
@@ -129,8 +128,12 @@ class _TripsCreateState extends State<TripsCreatePage> {
           index != memberList.length
               ? ClipOval(
                   child: FadeInImage.assetNetwork(
-                    placeholder: "assets/images/loading.gif",
-                    image: memberList[index].profilePic,
+                    placeholder: memberList[index].profilePic == null
+                        ? "assets/images/default_profile.png"
+                        : "assets/images/loading.gif",
+                    image: memberList[index].profilePic == null
+                        ? ""
+                        : '${memberList[index].profilePic}',
                     fit: BoxFit.contain,
                     width: 30.0,
                     height: 30.0,
@@ -313,10 +316,9 @@ class _TripsCreateState extends State<TripsCreatePage> {
                                 expenses: [],
                                 createdDt: DateTime.now(),
                                 currency: _inputCurrency,
-                                status:"upcoming"
-                                );
-                               tripsDataService.createTrip(trip : _newTrip);
-                               Navigator.pop(context, 'Added');
+                                status: "upcoming");
+                            tripsDataService.createTrip(trip: _newTrip);
+                            Navigator.pop(context, 'Added');
                           });
                         } else {
                           _dateErrorAlert(context);
@@ -332,8 +334,6 @@ class _TripsCreateState extends State<TripsCreatePage> {
           ),
         ));
   }
-  
-
 
   Future<void> _dateErrorAlert(BuildContext context) {
     return showDialog<void>(

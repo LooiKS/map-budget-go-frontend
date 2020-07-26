@@ -52,3 +52,42 @@ This application aims to help travellers in planning group trips and managing th
 
 1. Edit expense screen
    provide a form for user to edit the expense information such as title, description, category, amount, payer and user who share the expense.
+
+Mobile Application Programming, SCSJ3623
+School of Computing, UTM
+June 2020
+
+# Group Project Final Version
+
+## Project Title: ............................
+
+## Project Synopis:
+
+................................................................................................................
+
+_Note: Briefly describe what your app is all about_
+
+## Group Members
+
+- Name 1: .....................
+- Name 2: .....................
+- Name 3: .....................
+- Name 4: .....................
+
+## Video URL: ........................
+
+_Note:_
+
+- Video must be uploaded to youtube.
+- Provide timestamps to your video.
+
+## REST API URL/Project URL on Firebase or heroku : ........................
+
+## Git Repo URL on github (front-end): ........................
+
+## Git Repo URL on github (back-end) : ........................
+
+## User credential (username and passwords) to test out your app:
+
+1. user's credential ........................
+2. admin's credential ........................
